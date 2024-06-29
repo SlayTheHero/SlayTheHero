@@ -45,4 +45,8 @@ public class GameManager : MonoBehaviour
             Destroy(gameObject);
         }
     }
+
+    private void Start()
+    { 
+    }
 }

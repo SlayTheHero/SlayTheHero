@@ -13,18 +13,24 @@ public class UI_CharacterSelect : UI_Base
         UI_CharacterListGridPanel,
         UI_CharacterDialoguePanel,
         UI_SkillGridPanel,
-        UI_SkillDialoguePanel,
         UI_CharacterSelectGirdPanel
     }
 
     enum Images
     {
         UI_Character_1, UI_Character_2, UI_Character_3, UI_Character_4, UI_Character_5, UI_Character_6, UI_Character_7, UI_Character_8,
-        UI_BaseAttack, UI_Skill_1, UI_Skill_2, UI_Skill_3, UI_CharacterSlot_1, UI_CharacterSlot_2, UI_CharacterSlot_3, UI_StartButton,UI_SettingButton
+        UI_RaceIcon, UI_ClassIcon, UI_TraitIcon, UI_Portrait,
+        UI_Skill_1, UI_Skill_2, UI_Skill_3, UI_Skill_4, 
+        UI_CharacterSlot_1, UI_CharacterSlot_2, UI_CharacterSlot_3, 
+        UI_StartButton,UI_SettingButton
     }
     enum Texts
     {
-        UI_CharacterText,UI_SkillText
+        UI_RaceText, UI_ClassText, UI_TraitText, UI_Name
+    }
+    enum Buttons
+    {
+        UI_StartButton, UI_SettingButton
     }
 
     protected override void Init()
