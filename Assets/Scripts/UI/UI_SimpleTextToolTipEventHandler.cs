@@ -15,22 +15,23 @@ public class UI_SimpleTextToolTipEventHandler : UI_BaseToolTipEventHandler
     {
         InitWithName("UI_SimpleTextToolTip");
 
-        // 크기조정
-        RectTransform ToolTipRect = ToolTipInstance.GetComponent<RectTransform>();
-        TextMeshProUGUI textMesh = ToolTipInstance.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
-        float textWidth = textMesh.preferredWidth;
-        float textHeight = textMesh.preferredHeight;
-        ToolTipRect.sizeDelta = new Vector2(textWidth, textHeight);
     }
 
     /// <summary>
-    /// 임시. GameObject의 데이터를 부모의 데이터로 바꿉니다.
+    /// 형식적인 부분
+    /// GameObject의 데이터를 부모의 데이터로 바꿉니다.
     /// </summary>
     protected override void setData()
     {
         GameObject go = ToolTipInstance.transform.GetChild(0).gameObject;
         TextMeshProUGUI textMeshPro = go.GetComponent<TextMeshProUGUI>();
         textMeshPro.text = this.name;
+        // 크기조정
+        RectTransform ToolTipRect = ToolTipInstance.GetComponent<RectTransform>();
+        TextMeshProUGUI textMesh = ToolTipInstance.transform.GetChild(0).gameObject.GetComponent<TextMeshProUGUI>();
+        float textWidth = textMesh.preferredWidth;
+        float textHeight = textMesh.preferredHeight;
+        ToolTipRect.sizeDelta = new Vector2(textWidth, textHeight);
     }
 
 }

@@ -14,7 +14,7 @@ using UnityEngine.EventSystems;
 /// </summary>
 public class UI_BaseToolTipEventHandler : UI_EventHandler 
 { 
-
+    protected static Dictionary<string,GameObject> ToolTipInstanceDict = new Dictionary<string,GameObject>();
     /// <summary>
     /// InitWithName 을 통해 이름 입력 후 사용합니다
     /// 해당 툴팁 종류에 맞는 GameObject입니다.
@@ -54,16 +54,26 @@ public class UI_BaseToolTipEventHandler : UI_EventHandler
         // 툴팁 프리팹
         if (ToolTipInstance == null && ToolTipName != "")
         {
-            ToolTipInstance = GameObject.Instantiate(Resources.Load<GameObject>($"Prefabs/UI/{ToolTipName}"));
-            if (ToolTipInstance == null) return;
+            //Dict에서 찾기
+            if(ToolTipInstanceDict.ContainsKey(ToolTipName))
+            {
+                ToolTipInstance = ToolTipInstanceDict[ToolTipName];
+            }
+            else
+            {
+                ToolTipInstance = GameObject.Instantiate(Resources.Load<GameObject>($"Prefabs/UI/{ToolTipName}"));
+                ToolTipInstanceDict.Add(ToolTipName, ToolTipInstance);
+            }
+            if (ToolTipInstance == null)
+            {
+                Debug.Log($"ToolTipInstance Instnatiate Failed Resources/Prefabs/UI/{ToolTipName}");
+            }
             ToolTipInstance.transform.SetParent(ToolTipGroupObject.transform);
             ToolTipRect = ToolTipInstance.GetComponent<RectTransform>();
             OnPointerEnterHandler += setActiveToolTip;
             OnPointerMoveHandler += moveToolTip;
             OnPointerExitHandler += setInActiveToolTip;
 
-            // virtual 함수
-            setData();
              
             ToolTipInstance.SetActive(false);
         }
@@ -98,6 +108,10 @@ public class UI_BaseToolTipEventHandler : UI_EventHandler
         {
             ToolTipInstance.transform.SetParent(canvas.transform);
             ToolTipInstance.transform.position = adjustToolTipPosition(data);
+
+            // virtual 함수
+            setData();
+
             ToolTipInstance.SetActive(true);
 
         }
@@ -143,5 +157,13 @@ public class UI_BaseToolTipEventHandler : UI_EventHandler
             newPosition.y = data.position.y - offSet.y - ToolTipRect.rect.height;
         }
         return newPosition;
+    }
+
+    private void OnDestroy()
+    {
+        if(ToolTipInstanceDict.ContainsKey(ToolTipName))
+        {
+            ToolTipInstanceDict.Remove(ToolTipName);
+        }
     }
 }
