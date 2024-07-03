@@ -1,0 +1,7 @@
+Index,SpeakerName,Content,BranchCount,B1,B2,B3,B4,L1,L2,L3,L4,ContextSwitch,EndOfDialog
+0,DemonKing,hi,0,,,,,0,,,,,
+1,Player,,3,hi,no,im'fine,,2,3,4,,,
+2,DemonKing,good,0,,,,,5,,,,,
+3,DemonKing,what?,0,,,,,0,,,,DialogTest2,
+4,DemonKing,good too,0,,,,,5,,,,,
+5,Player,end,0,,,,,,,,,,END
