@@ -71,7 +71,7 @@ public abstract class UI_Base : MonoBehaviour
     /// </summary>
     /// <param name="index">(int)enum 값을 인자에 넣습니다.</param>
     /// <returns></returns>
-    public Image GetImage(int index) { return GetUI<Image>(index); }
+    public Image GetImage(int index) { return GetUI<Image>(index); } 
     /// <summary>
     /// Enum 값을 이용해 Enum 값에 해당하는 GameObject를 가져옵니다.
     /// </summary>

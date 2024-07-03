@@ -5,32 +5,24 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_CharacterSelect : UI_Base
+public class UI_BattleScene : UI_Base
 {
     enum GameObjects
     {
-        UI_CharaterListScrollBar,
-        UI_CharacterListGridPanel,
-        UI_CharacterDialoguePanel,
-        UI_SkillGridPanel,
-        UI_CharacterSelectGirdPanel
+
     }
 
     enum Images
     {
-        UI_Character_1, UI_Character_2, UI_Character_3, UI_Character_4, UI_Character_5, UI_Character_6, UI_Character_7, UI_Character_8,
-        UI_RaceIcon, UI_ClassIcon, UI_TraitIcon, UI_Portrait,
-        UI_Skill_1, UI_Skill_2, UI_Skill_3, UI_Skill_4, 
-        UI_CharacterSlot_1, UI_CharacterSlot_2, UI_CharacterSlot_3, 
-        UI_StartButton,UI_SettingButton
+        UI_TurnImage, UI_Turn_1, UI_Turn_2, UI_Turn_3, UI_Turn_4, UI_Turn_5, UI_Turn_6, UI_Turn_7, UI_Turn_8,
+        UI_Player_1, UI_Player_2, UI_Player_3, UI_Player_4, UI_Enemy_1, UI_Enemy_2, UI_Enemy_3, UI_Enemy_4,
+        UI_Portrait, UI_BaseAttack, UI_Skill_1, UI_Skill_2, UI_Skill_3, UI_SpecialSkill
     }
     enum Texts
     {
-        UI_RaceText, UI_ClassText, UI_TraitText, UI_Name
     }
     enum Buttons
     {
-        UI_StartButton, UI_SettingButton
     }
 
     protected override void Init()
@@ -61,6 +53,6 @@ public class UI_CharacterSelect : UI_Base
     // Update is called once per frame
     void Update()
     {
-        
+
     }
 }

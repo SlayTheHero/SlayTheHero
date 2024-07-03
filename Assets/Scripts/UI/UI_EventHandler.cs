@@ -5,7 +5,7 @@ using System.Drawing;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UI_EventHandler : MonoBehaviour, IDragHandler, IPointerClickHandler, IPointerEnterHandler,IPointerExitHandler
+public class UI_EventHandler : MonoBehaviour, IDragHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler
 {
     public enum UIEvent
     {
@@ -17,6 +17,7 @@ public class UI_EventHandler : MonoBehaviour, IDragHandler, IPointerClickHandler
     public Action<PointerEventData> OnDragHandler = null;
     public Action<PointerEventData> OnClickHandler = null;
     public Action<PointerEventData> OnPointerEnterHandler = null;
+    public Action<PointerEventData> OnPointerMoveHandler = null;
     public Action<PointerEventData> OnPointerExitHandler = null;
 
     public void OnDrag(PointerEventData eventData)
@@ -42,6 +43,13 @@ public class UI_EventHandler : MonoBehaviour, IDragHandler, IPointerClickHandler
         if (OnPointerExitHandler != null)
             OnPointerExitHandler.Invoke(eventData);
     }
+
+    public void OnPointerMove(PointerEventData eventData)
+    {
+        if (OnPointerMoveHandler != null)
+            OnPointerMoveHandler.Invoke(eventData);
+    }
+
     // Start is called before the first frame update
     void Start()
     {
