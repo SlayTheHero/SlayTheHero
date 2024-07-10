@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -53,4 +54,30 @@ public class Utility
         return transform.gameObject;
     }
 
+
+    /// <summary>
+    /// 문자열을 Enum 값에 맞게 파싱해줍니다.
+    /// </summary>
+    /// <typeparam name="T"> Enum 클래스</typeparam>
+    /// <param name="enumName"> Enum 내부의 값의 문자열</param>
+    /// <returns></returns>
+    public static T StringToEnum<T>(string enumName) where T : struct, Enum
+    {
+        try
+        {
+            if (Enum.TryParse(enumName, true, out T enumValue))
+            {
+                return enumValue;
+            }
+            else
+            {
+                throw new ArgumentException($"'{enumName}' is not a valid name for enum '{typeof(T).Name}'.");
+            }
+        }
+        catch (ArgumentException ex)
+        {
+            Debug.Log(ex.Message);
+            return default;
+        }
+    }
 }

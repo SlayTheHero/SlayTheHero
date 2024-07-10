@@ -1,0 +1,4 @@
+Skill_ID,Name,Description,Type,Attribute,ChangeType,Range,Impact
+0,BaseSwordAttack,칼로 적을 공격합니다,Active,Health,Modification,1,1
+1,BaseBowAttack,활로 적을 공격합니다,Active,Health,Modification,4,2
+2,BaseMagicAttack,마법으로 적을 공격합니다,Active,Health,Modification,4,2
