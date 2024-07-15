@@ -1,4 +1,4 @@
-Skill_ID,Name,Description,Type,Attribute,ChangeType,Range,Impact
-0,BaseSwordAttack,ì¹¼ë¡œ ì ì„ ê³µê²©í•©ë‹ˆë‹¤,Active,Health,Modification,1,1
-1,BaseBowAttack,í™œë¡œ ì ì„ ê³µê²©í•©ë‹ˆë‹¤,Active,Health,Modification,4,2
-2,BaseMagicAttack,ë§ˆë²•ìœ¼ë¡œ ì ì„ ê³µê²©í•©ë‹ˆë‹¤,Active,Health,Modification,4,2
+Skill_ID,Name,Description,DurationType,BehaviorType,Attribute,ChangeType,Range,Impact,Duration,CoolTime
+0,BaseSwordAttack,Ä®·Î ÀûÀ» °ø°İÇÕ´Ï´Ù,Active,Melee,Health,Modification,1,-1,0,1
+1,BaseBowAttack,È°·Î ÀûÀ» °ø°İÇÕ´Ï´Ù,Active,Projectile,Health,Modification,4,2,0,1
+2,BaseMagicAttack,¸¶¹ıÀ¸·Î ÀûÀ» °ø°İÇÕ´Ï´Ù,Active,Buff,Health,Modification,4,2,0,1

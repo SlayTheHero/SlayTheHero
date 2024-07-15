@@ -2,12 +2,23 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public readonly struct Skill
+public class Skill
 {
     /// <summary>
-    /// 스킬의 타입
+    /// 스킬의 작용에 따른 타입
     /// </summary>
-    public enum SK_Type
+    public enum SK_BehaviorType
+    {
+        Melee,           // ex. 이동
+        Projectile,      // ex. 투사체
+        Buff,             // ex. 투사체 없이 타겟에게 특정 애니메이션
+        Special           // 특수
+    }
+
+    /// <summary>
+    /// 스킬의 지속시간에 따른 타입
+    /// </summary>
+    public enum SK_DurationType
     {
         Passive, Active, Buff, Special
     }
@@ -17,7 +28,7 @@ public readonly struct Skill
     public enum SK_Attribute
     {
         Speed, Health, Attack, Defence, Resist,  // 속도, HP, 공격력, 방어력, 저항
-        CritChance, CritDamage, Penetration, Stun, Confusion, Evasion, // 크리확률, 크리뎀, 방어관통, 스턴확률, 혼란확률, 회피확률
+        CritChance, CritDamage, Penetration, Stun, Confusion, Dodge, // 크리확률, 크리뎀, 방어관통, 스턴확률, 혼란확률, 회피확률
         BaseAttack, Skill_1, Skill_2, Skill_3 // 행동
     }
     /// <summary>
@@ -25,54 +36,73 @@ public readonly struct Skill
     /// </summary>
     public enum SK_ChangeType
     {
-        Modification, Multiplier
+        Modification, Multiplication
     }
 
     // 기본정보
-    public readonly int skillCode;
-    public readonly string name;
-    public readonly string description;
+    public int id;
+    public string name;
+    public string description;
 
     // 타입정보
-    public readonly SK_Type sk_Type;
-    public readonly SK_Attribute sK_Attribute;
-    public readonly SK_ChangeType sK_ChangeType;
+    public SK_BehaviorType sK_BehaviorType;
+    public SK_DurationType sk_DurationType;
+    public SK_Attribute sK_Attribute;
+    public SK_ChangeType sK_ChangeType;
+
     // 애니메이션?
 
     // 세부정보
-    public readonly int range; // 캐릭터부터 사용할 수 있는 최대 거리
-    public readonly int impact; // 스킬의 강도.변화타입이 Multiplier 일땐 100을 나누어 변환 ex. 120이면 1.2 배
+    public int range; // 캐릭터부터 사용할 수 있는 최대 거리
+    public int impact; // 스킬의 강도.변화타입이 Multiplier 일땐 100을 나누어 변환 ex. 120이면 1.2 배
+    public int duration; //  스킬 지속시간 
+    public int coolTime; //  스킬 쿨타임
+    public int nowCoolDown = 0; // 현재 쿨타임
 
     /// <summary>
     /// 스킬 생성자
     /// </summary>
-    /// <param name="skillCode">스킬 코드</param>
+    /// <param name="id">스킬 코드</param>
     /// <param name="name">스킬 이름</param>
     /// <param name="description">스킬 설명</param>
-    /// <param name="sk_Type">스킬 타입</param>
+    /// <param name="sK_BehaviorType">스킬 행동 타입</param>
+    /// <param name="sk_DurationType">스킬 지속시간 타입</param>
     /// <param name="sK_Attribute">변화시킬 캐릭터의 속성</param>
     /// <param name="sK_ChangeType">변화 타입</param>
     /// <param name="range">스킬 범위</param>
-    /// <param name="impact">스킬의 강도</param>
+    /// <param name="impact">스킬 강도</param>
+    /// <param name="duration">스킬 지속시간</param>
+    /// <param name="coolTime">스킬 쿨타임</param>
     public Skill(
-        int skillCode,
+        int id,
         string name,
         string description,
-        SK_Type sk_Type,
+        SK_BehaviorType sK_BehaviorType,
+        SK_DurationType sk_DurationType,
         SK_Attribute sK_Attribute,
         SK_ChangeType sK_ChangeType,
         int range,
-        int impact
+        int impact,
+        int duration,
+        int coolTime
     )
     {
-        this.skillCode = skillCode;
+        this.id = id;
         this.name = name;
         this.description = description;
-        this.sk_Type = sk_Type;
+        this.sK_BehaviorType = sK_BehaviorType;
+        this.sk_DurationType = sk_DurationType;
         this.sK_Attribute = sK_Attribute;
         this.sK_ChangeType = sK_ChangeType;
         this.range = range;
         this.impact = impact;
+        this.duration = duration;
+        this.coolTime = coolTime;
+    }
+   
+    public void Invoke(UnitBase Attacker, UnitBase Target)
+    {
+        SkillExecuter.Execute(Attacker,Target,this);
     }
 }
 public static class SkillDB
@@ -93,7 +123,7 @@ public static class SkillDB
         if (id >= SkillList.Count)
         {
             Debug.Log($"{id} is not Valid Skill ID");
-            return new Skill();
+            return null;
         }
 
         return SkillList[id];
@@ -105,15 +135,19 @@ public static class SkillDB
         List<Dictionary<string, object>> dict = CSVReader.Read("Csvs/SkillInfo");
         foreach (Dictionary<string, object> item in dict)
         {
-            int skillCode = (int)item["Skill_ID"];
+            int id = (int)item["Skill_ID"];
             string name = (string)item["Name"];
             string description = (string)item["Description"];
-            Skill.SK_Type type = Utility.StringToEnum<Skill.SK_Type>((string)item["Type"]);
+            Skill.SK_DurationType durType = Utility.StringToEnum<Skill.SK_DurationType>((string)item["DurationType"]);
+            Skill.SK_BehaviorType Behavtype = Utility.StringToEnum<Skill.SK_BehaviorType>((string)item["BehaviorType"]);
             Skill.SK_Attribute attr = Utility.StringToEnum<Skill.SK_Attribute>((string)item["Attribute"]);
             Skill.SK_ChangeType cType = Utility.StringToEnum<Skill.SK_ChangeType>((string)item["ChangeType"]);
             int range = (int)item["Range"];
             int impact = (int)item["Impact"];
-            Skill tempSkill = new Skill(skillCode, name, description, type, attr, cType, range, impact);
+            int duration = (int)item["Duration"];
+            int coolDown = (int)item["CoolTime"];
+
+            Skill tempSkill = new Skill(id, name, description, Behavtype, durType, attr, cType, range, impact,duration,coolDown);
             SkillList.Add(tempSkill);
         }
     }
