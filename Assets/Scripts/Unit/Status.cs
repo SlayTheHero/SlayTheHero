@@ -19,6 +19,7 @@ public class Status
     double stun;
     double confusion;
     double dodge;
+    double speed;
 
     public double HP { get { return hp; } set { hp = value; OnStatusChange.Invoke("HP", value); } }
     public double MaxHP { get { return maxHP; } set { maxHP = value; OnStatusChange.Invoke("MaxHP", value); } }
@@ -31,6 +32,7 @@ public class Status
     public double StunChance { get { return stun; } set { stun = value; OnStatusChange.Invoke("StunChance", value); } }
     public double ConfusionChance { get { return confusion; } set { confusion = value; OnStatusChange.Invoke("ConfusionChance", value); } }
     public double DodgeChance { get { return dodge; } set { dodge = value; OnStatusChange.Invoke("DodgeChance", value); } }
+    public double Speed { get { return speed; } set { speed = value; OnStatusChange.Invoke("Speed",value); } }
 
     public static Status operator +(Status left, Status right)
     {
@@ -47,6 +49,7 @@ public class Status
             StunChance = left.StunChance + right.StunChance,
             ConfusionChance = left.ConfusionChance + right.ConfusionChance,
             DodgeChance = left.DodgeChance + right.DodgeChance,
+            Speed = left.Speed + right.Speed,
         };
         return ret;
     }

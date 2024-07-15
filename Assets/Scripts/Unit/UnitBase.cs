@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class UnitBase
+public class UnitBase : MonoBehaviour
 {
     public int ID;
     public string Name;
@@ -10,5 +10,7 @@ public class UnitBase
     public Job Job;
     public Feature Feature;
     public Race Race;
-    //스킬 1 2 3 추가?
+    public int Skill1_ID;
+    public int Skill2_ID;
+    public int Skill3_ID;
 }
