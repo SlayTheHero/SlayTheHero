@@ -50,4 +50,22 @@ public class Status
         };
         return ret;
     }
+
+    // 디폴트 생성자
+    public Status() {}
+
+    // 복사 생성자
+    public Status(Status other)
+    {
+        HP = other.HP; 
+        MaxHP = other.MaxHP;
+        ATK = other.ATK;
+        DEF = other.DEF;
+        Penetration = other.Penetration;
+        Resistance = other.Resistance;
+        CriticalChance = other.CriticalChance;
+        CriticalDamage = other.CriticalDamage;
+        ConfusionChance = other.ConfusionChance;
+        DodgeChance = other.DodgeChance;
+    }
 }
