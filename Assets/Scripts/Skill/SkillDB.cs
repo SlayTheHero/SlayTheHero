@@ -58,6 +58,7 @@ public class Skill
     public int duration; //  스킬 지속시간 
     public int coolTime; //  스킬 쿨타임
     public int nowCoolDown = 0; // 현재 쿨타임
+    public int nowDuration = 0; // 현재 지속시간
 
     /// <summary>
     /// 스킬 생성자
@@ -99,7 +100,21 @@ public class Skill
         this.duration = duration;
         this.coolTime = coolTime;
     }
-   
+    // 복사 생성자
+    public Skill(Skill other)
+    {
+        this.id = other.id;
+        this.name = other.name;
+        this.description = other.description;
+        this.sK_BehaviorType = other.sK_BehaviorType;
+        this.sk_DurationType = other.sk_DurationType;
+        this.sK_Attribute = other.sK_Attribute;
+        this.sK_ChangeType = other.sK_ChangeType;
+        this.range = other.range;
+        this.impact = other.impact;
+        this.duration = other.duration;
+        this.coolTime = other.coolTime;
+    }
     public void Invoke(UnitBase Attacker, UnitBase Target)
     {
         SkillExecuter.Execute(Attacker,Target,this);
@@ -126,7 +141,7 @@ public static class SkillDB
             return null;
         }
 
-        return SkillList[id];
+        return new Skill(SkillList[id]);
     }
     public static void initializeSkillList()
     {
