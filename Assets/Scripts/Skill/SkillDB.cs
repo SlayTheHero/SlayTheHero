@@ -27,9 +27,10 @@ public class Skill
     /// </summary>
     public enum SK_Attribute
     {
-        Speed, Health, Attack, Defence, Resist,  // 속도, HP, 공격력, 방어력, 저항
-        CritChance, CritDamage, Penetration, Stun, Confusion, Dodge, // 크리확률, 크리뎀, 방어관통, 스턴확률, 혼란확률, 회피확률
-        BaseAttack, Skill_1, Skill_2, Skill_3 // 행동
+        Speed, MaxHealth ,Health, Attack, Defence, Resist,  // 속도, MaxHP ,HP, 공격력, 방어력, 저항
+        CritChance, CritDamage, Penetration, StunChance, ConfusionChance, Dodge, // 크리확률, 크리뎀, 방어관통, 스턴확률, 혼란확률, 회피확률
+        BaseAttack, Skill_1, Skill_2, Skill_3, // 행동
+        Stun, Confusion
     }
     /// <summary>
     /// 변화가 증감인지 배수인지
@@ -118,6 +119,11 @@ public class Skill
     public void Invoke(UnitBase Attacker, UnitBase Target)
     {
         SkillExecuter.Execute(Attacker,Target,this);
+    }
+    UnitBase blankUnit = new UnitBase();
+    public void Invoke(UnitBase Target)
+    {
+        SkillExecuter.Execute(blankUnit, Target, this);
     }
 }
 public static class SkillDB
