@@ -8,10 +8,11 @@ public enum Job
 }
 public enum Feature
 {
-
-    Swiftness,SuspiciousGhost,Sloth,Envy
+    Swiftness,SuspiciousGhost,Sloth,Envy,
+    Enemy
 }
 public enum Race
 {
-    Vampire,DemonBeast,NightMare,Ghost
+    Vampire,DemonBeast,NightMare,Ghost,
+    Human
 }

@@ -7,32 +7,32 @@ using UnityEngine;
 [Serializable]
 public class Status
 {
-    public event Action<string,double> OnStatusChange;
-    double hp;
-    double maxHP;
-    double atk;
-    double def;
-    double pen;
-    double res;
-    double criticalChance;
-    double criticalDamage;
-    double stun;
-    double confusion;
-    double dodge;
-    double speed;
+    public event Action<string,int> OnStatusChange;
+    int hp;
+    int maxHP;
+    int atk;
+    int def;
+    int pen;
+    int res;
+    int criticalChance;
+    int criticalDamage;
+    int stun;
+    int confusion;
+    int dodge;
+    int speed;
 
-    public double HP { get { return hp; } set { hp = value; OnStatusChange.Invoke("HP", value); } }
-    public double MaxHP { get { return maxHP; } set { maxHP = value; OnStatusChange.Invoke("MaxHP", value); } }
-    public double ATK { get { return atk; } set { atk = value; OnStatusChange.Invoke("ATK", value); } }
-    public double DEF { get { return def; } set { def = value; OnStatusChange.Invoke("DEF", value); } }
-    public double Penetration { get { return pen; } set { pen = value; OnStatusChange.Invoke("Penetration", value); } }
-    public double Resistance { get { return res; } set { res = value; OnStatusChange.Invoke("Resistance", value); } }
-    public double CriticalChance { get { return criticalChance; } set { criticalChance = value; OnStatusChange.Invoke("CriticalChance", value); } }
-    public double CriticalDamage { get { return criticalDamage; } set { criticalDamage = value; OnStatusChange.Invoke("CriticalDamage", value); } }
-    public double StunChance { get { return stun; } set { stun = value; OnStatusChange.Invoke("StunChance", value); } }
-    public double ConfusionChance { get { return confusion; } set { confusion = value; OnStatusChange.Invoke("ConfusionChance", value); } }
-    public double DodgeChance { get { return dodge; } set { dodge = value; OnStatusChange.Invoke("DodgeChance", value); } }
-    public double Speed { get { return speed; } set { speed = value; OnStatusChange.Invoke("Speed",value); } }
+    public int HP { get { return hp; } set { hp = value; OnStatusChange.Invoke("HP", value); } }
+    public int MaxHP { get { return maxHP; } set { maxHP = value; OnStatusChange.Invoke("MaxHP", value); } }
+    public int ATK { get { return atk; } set { atk = value; OnStatusChange.Invoke("ATK", value); } }
+    public int DEF { get { return def; } set { def = value; OnStatusChange.Invoke("DEF", value); } }
+    public int Penetration { get { return pen; } set { pen = value; OnStatusChange.Invoke("Penetration", value); } }
+    public int Resistance { get { return res; } set { res = value; OnStatusChange.Invoke("Resistance", value); } }
+    public int CriticalChance { get { return criticalChance; } set { criticalChance = value; OnStatusChange.Invoke("CriticalChance", value); } }
+    public int CriticalDamage { get { return criticalDamage; } set { criticalDamage = value; OnStatusChange.Invoke("CriticalDamage", value); } }
+    public int StunChance { get { return stun; } set { stun = value; OnStatusChange.Invoke("StunChance", value); } }
+    public int ConfusionChance { get { return confusion; } set { confusion = value; OnStatusChange.Invoke("ConfusionChance", value); } }
+    public int DodgeChance { get { return dodge; } set { dodge = value; OnStatusChange.Invoke("DodgeChance", value); } }
+    public int Speed { get { return speed; } set { speed = value; OnStatusChange.Invoke("Speed",value); } }
 
     public static Status operator +(Status left, Status right)
     {
@@ -57,6 +57,24 @@ public class Status
     // 디폴트 생성자
     public Status() {}
 
+    // 파라미터 생성자
+    // int 파라미터 받는 생성자 추가
+    public Status(int hp, int maxHP, int atk, int def, int penetration, int resistance, int criticalChance, int criticalDamage, int stunChance, int confusionChance, int dodgeChance, int speed)
+    {
+        HP = hp;
+        MaxHP = maxHP;
+        ATK = atk;
+        DEF = def;
+        Penetration = penetration;
+        Resistance = resistance;
+        CriticalChance = criticalChance;
+        CriticalDamage = criticalDamage;
+        StunChance = stunChance;
+        ConfusionChance = confusionChance;
+        DodgeChance = dodgeChance;
+        Speed = speed;
+    }
+
     // 복사 생성자
     public Status(Status other)
     {
@@ -68,7 +86,9 @@ public class Status
         Resistance = other.Resistance;
         CriticalChance = other.CriticalChance;
         CriticalDamage = other.CriticalDamage;
+        StunChance = other.StunChance;
         ConfusionChance = other.ConfusionChance;
         DodgeChance = other.DodgeChance;
+        Speed = other.Speed;
     }
 }
