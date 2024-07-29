@@ -11,6 +11,8 @@ public static class SkillExecuter
     delegate void SkillDelegate(UnitBase Attacker, UnitBase Target, Skill skill);
     public static void Execute(UnitBase Attacker, UnitBase Target, Skill skill)
     {
+        if (skill.sk_DurationType == Skill.SK_DurationType.Passive) return;
+
         //행동
         RunBehaviorLogic(Attacker, Target, skill);
         //지속시간
