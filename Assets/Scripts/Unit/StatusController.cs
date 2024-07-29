@@ -21,12 +21,12 @@ public static class StatusController
                 break;
         }
         int impactValue = skill.impact;
-        double attributeValue = 0;
+        int attributeValue = 0;
 
         switch (skill.sK_Attribute)
         {
             case Skill.SK_Attribute.Speed:
-                // attributeValue = Target.Speed 속도 x
+                attributeValue = target.Speed;
                 break;
             case Skill.SK_Attribute.Health:
                 attributeValue = target.HP;
@@ -49,10 +49,10 @@ public static class StatusController
             case Skill.SK_Attribute.Penetration:
                 attributeValue = target.Penetration;
                 break;
-            case Skill.SK_Attribute.Stun:
+            case Skill.SK_Attribute.StunChance:
                 attributeValue = target.StunChance;
                 break;
-            case Skill.SK_Attribute.Confusion:
+            case Skill.SK_Attribute.ConfusionChance:
                 attributeValue = target.ConfusionChance;
                 break;
             case Skill.SK_Attribute.Dodge:
@@ -66,12 +66,18 @@ public static class StatusController
                 break;
             case Skill.SK_Attribute.Skill_3:
                 break;
+            case Skill.SK_Attribute.Stun:
+                attributeValue = target.StunChance;
+                break;
+            case Skill.SK_Attribute.Confusion:
+                attributeValue = target.ConfusionChance;
+                break;
         }
         nowOperator.Invoke(attributeValue, impactValue);
         switch (skill.sK_Attribute)
         {
             case Skill.SK_Attribute.Speed:
-                //  Target.Speed  = attributeValue 속도 x
+                target.Speed = attributeValue;
                 break;
             case Skill.SK_Attribute.Health:
                 target.HP = attributeValue;

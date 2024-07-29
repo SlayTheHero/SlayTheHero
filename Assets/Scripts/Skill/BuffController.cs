@@ -28,11 +28,12 @@ public class BuffController
     }
     /// <summary>
     /// 스킬에 맞는 상태를 등록한 Unit에 반영합니다
-    /// 스킬은 DurationType이 Active가 아니여야합니다
+    /// 스킬은 DurationType이 Active이면 넣지 않습니다
     /// </summary>
     /// <param name="skill"></param>
     public void AddBuff(Skill skill)
     {
+        if (skill.sk_DurationType == Skill.SK_DurationType.Active) return;
         switch(skill.sk_DurationType)
         {
             case Skill.SK_DurationType.Passive:
@@ -99,7 +100,7 @@ public class BuffController
             StatusController.ApplyAttribute(new Status(), status, skill);
             BuffQueue.Enqueue(skill);
         }
-        double hp = Unit.Status.HP;
+        int hp = Unit.Status.HP;
         Unit.Status = new Status(status);
         Unit.Status.HP = hp > Unit.Status.MaxHP ? hp : Unit.Status.MaxHP;
     }
