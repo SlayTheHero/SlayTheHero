@@ -1,0 +1,12 @@
+Race, Job, Feature의 경우 UnitEnum.cs의 Enum값과 1대1 대응됩니다.
+추가할 분류가 있다면 Enum값에 추가하고 CSV에 추가하시면 됩니다.
+
+Unit_ID : 인덱스이자 ID입니다.
+Name : 유닛의 이름입니다.
+Race : 유닛의 종족입니다.  Vampire,DemonBeast,NightMare,Ghost,  Human
+Job : 유닛의 직업입니다.   SwordMan,Archer,Magician
+Feature : 유닛의 특성입니다.   Swiftness,SuspiciousGhost,Sloth,Envy, Enemy
+
+Speed ~ DodgeChance : 스탯 수치입니다. int 값을 넣으면 고정, a~b 이면 a~b 사이의 랜덤한 값이 유닛 생성시에 적용됩니다.
+Skill_Id_0~3 : 스킬 ID입니다. 없다면 '-' 를 넣어주시면 됩니다.
+
