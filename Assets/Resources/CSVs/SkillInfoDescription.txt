@@ -15,6 +15,6 @@ Attribute : 스킬이 영향을 주는 스탯입니다.
 ChangeType : 변화의 유형입니다. Modification, Multiplication (Modification 은 Impact만큼 변경시킵니다., Multiplication은 100으로 나눈 값 원래값에 곱해 더합니다)
              ex) Impact == 20, if(Modification) Health += 20; if(Multiplication) Health * (1 + (float)Impact / 100.0);
 Range : 스킬이 적용가능한 범위입니다.
-Impact : 변화의 강도입니다. 
+Impact : 변화의 강도입니다. {Attack}을 작성할 시에 공격력만큼 데미지를 가합니다. // 차후 계산이 필요하다면 말씀해주시면 됩니다. ex) {Attack} + 10 
 Duration : 스킬의 지속시간입니다.
 CoolTime : 스킬의 재사용 대기시간입니다.

@@ -1,6 +1,8 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
 public class Skill
@@ -180,6 +182,14 @@ public static class SkillDB
             Skill.SK_ChangeType cType = Utility.StringToEnum<Skill.SK_ChangeType>((string)item["ChangeType"]);
             int range = (int)item["Range"];
             int impact = (int)item["Impact"];
+            if (((string)item["Impact"]).Contains("{Attack}"))
+            {
+                impact = 0;
+            }
+            else
+            {
+                impact = (int)item["Impact"];
+            }
             int duration = (int)item["Duration"];
             int coolDown = (int)item["CoolTime"];
 

@@ -81,15 +81,12 @@ public class UnitBase : MonoBehaviour
 
             }
 
-            int damage = (int)((double)endDamage * (double)(100 - Status.DEF + Attacker.Penetration) / 100.0);
+            Status.OnDamage(endDamage, Attacker);
             
-            // 사망 로직
-            if(Status.HP <= damage)
+            // 사망 로직 Status쪽에서 해도 될지도
+            if(Status.HP <= 0)
             {
 
-            }else
-            {
-                Status.HP -= damage;
             }
         }
     }

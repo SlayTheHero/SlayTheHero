@@ -19,7 +19,7 @@ public static class SkillExecuter
         switch(skill.sk_DurationType)
         {
             case Skill.SK_DurationType.Active:
-                StatusController.ApplyAttribute(Attacker.Status, Target.Status, skill);
+                StatusController.ApplyAttribute(Attacker, Target, skill);
                 break;
             case Skill.SK_DurationType.Passive:
                 ApplyBuff(Attacker, Target, skill);

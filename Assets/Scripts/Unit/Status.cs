@@ -7,7 +7,7 @@ using UnityEngine;
 [Serializable]
 public class Status
 {
-    public event Action<string,int> OnStatusChange;
+    public event Action<string, int> OnStatusChange;
     int hp;
     int maxHP;
     int atk;
@@ -32,7 +32,7 @@ public class Status
     public int StunChance { get { return stun; } set { stun = value; OnStatusChange.Invoke("StunChance", value); } }
     public int ConfusionChance { get { return confusion; } set { confusion = value; OnStatusChange.Invoke("ConfusionChance", value); } }
     public int DodgeChance { get { return dodge; } set { dodge = value; OnStatusChange.Invoke("DodgeChance", value); } }
-    public int Speed { get { return speed; } set { speed = value; OnStatusChange.Invoke("Speed",value); } }
+    public int Speed { get { return speed; } set { speed = value; OnStatusChange.Invoke("Speed", value); } }
 
     public static Status operator +(Status left, Status right)
     {
@@ -55,7 +55,7 @@ public class Status
     }
 
     // 디폴트 생성자
-    public Status() {}
+    public Status() { }
 
     // 파라미터 생성자
     // int 파라미터 받는 생성자 추가
@@ -78,7 +78,7 @@ public class Status
     // 복사 생성자
     public Status(Status other)
     {
-        HP = other.HP; 
+        HP = other.HP;
         MaxHP = other.MaxHP;
         ATK = other.ATK;
         DEF = other.DEF;
@@ -91,4 +91,15 @@ public class Status
         DodgeChance = other.DodgeChance;
         Speed = other.Speed;
     }
+    /// <summary>
+    /// Status용 체력변화
+    /// </summary>
+    /// <param name="endDamage">최종데미지</param>
+    /// <param name="Attacker">공격자</param>
+    public void OnDamage(int endDamage, Status Attacker)
+    {
+        int damage = (int)((double)endDamage * (double)(100 - DEF + Attacker.Penetration) / 100.0);
+        HP -= damage;
+    }
 }
+
