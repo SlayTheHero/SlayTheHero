@@ -9,4 +9,6 @@ Feature : 유닛의 특성입니다.   Swiftness,SuspiciousGhost,Sloth,Envy, Enemy
 
 Speed ~ DodgeChance : 스탯 수치입니다. int 값을 넣으면 고정, a~b 이면 a~b 사이의 랜덤한 값이 유닛 생성시에 적용됩니다.
 Skill_Id_0~3 : 스킬 ID입니다. 없다면 '-' 를 넣어주시면 됩니다.
+			   SkillDB의 Type 값을 넣으면 해당 스킬 중 랜덤한 값이 들어갑니다.
+			   단일 Int 값을 넣으면 해당 스킬이 고정으로 들어갑니다.
 

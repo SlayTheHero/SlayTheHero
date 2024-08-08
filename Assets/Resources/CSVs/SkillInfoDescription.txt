@@ -2,7 +2,7 @@ DurationType,  BehaviorType, Attribute, ChangeType의 경우 SkillDB.cs의 Enum값을 
 추가할 분류가 있다면 Enum값에 추가하고 CSV에 추가하시면 됩니다.
 넣을 필요가 없는 데이터(ex. Active 스킬에 Duration)는 비워주시면 됩니다.
 
-Type : 정리용 태그입니다. 해당 직업군 / 특성 임을 표시합니다. 당장은 데이터로 수집하지 않습니다.
+Type : 정리용 태그입니다. 해당 직업군 / 특성 / 종족 임을 표시합니다.
 Skill_ID : 인덱스이자 ID입니다. SkillDB.GetSkill(id)를 통해 스킬 정보를 가져옵니다
 Name : 스킬 이름입니다.
 Description : 스킬 설명입니다.

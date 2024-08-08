@@ -60,13 +60,21 @@ public static class UnitDB
             List<Skill> skills = new List<Skill>();
             for (int i = 0; i < 4; i++)
             {
-                string temp = (string)item[$"Skill_Id_{i}"];
-                if (temp == "-") continue;
-                skills.Add(SkillDB.GetSkill(int.Parse(temp)));
+                string tempSkill = (string)item[$"Skill_Id_{i}"];
+                if (tempSkill == "-") continue;
+                if(SkillDB.SkillTypeData.ContainsKey(tempSkill))
+                {
+                    int random = UnityEngine.Random.Range(0, SkillDB.SkillTypeData[tempSkill].Count);
+                    skills.Add(SkillDB.GetSkill(SkillDB.SkillTypeData[tempSkill][random]));
+                }
+                else
+                {
+                    skills.Add(SkillDB.GetSkill(int.Parse(tempSkill)));
+                }
             }
 
-            UnitBase tempSkill = new UnitBase(id, name, status, job, feat, race, skills);
-            UnitList.Add(tempSkill);
+            UnitBase tempUnit = new UnitBase(id, name, status, job, feat, race, skills);
+            UnitList.Add(tempUnit);
 
             (int,int) getintTupleValue(string type)
             {

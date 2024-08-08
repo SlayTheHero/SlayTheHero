@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Skill
@@ -128,6 +129,10 @@ public class Skill
 }
 public static class SkillDB
 {
+    /// <summary>
+    /// 유닛의 타입별로 스킬 정보가 할당
+    /// </summary>
+    public static Dictionary<string, List<int>> SkillTypeData = new Dictionary<string, List<int>>();
     private static List<Skill> SkillList = new List<Skill>();
     /// <summary>
     /// 스킬 ID를 통해 스킬 정보를 가져오는 함수
@@ -156,7 +161,17 @@ public static class SkillDB
         List<Dictionary<string, object>> dict = CSVReader.Read("Csvs/SkillInfo");
         foreach (Dictionary<string, object> item in dict)
         {
+            string type = (string)item["Type"];
             int id = (int)item["Skill_ID"];
+            if(SkillTypeData.ContainsKey(type))
+            {
+                SkillTypeData[type].Add(id);
+            }
+            else
+            {
+                SkillTypeData.Add(type,new List<int>() { id });
+            }
+
             string name = (string)item["Name"];
             string description = (string)item["Description"];
             Skill.SK_DurationType durType = Utility.StringToEnum<Skill.SK_DurationType>((string)item["DurationType"]);
