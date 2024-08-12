@@ -1,0 +1,2 @@
+Unit_ID,Name,Race,Job,Feature,Speed,HP,Attack,Defence,Resistance,CritChance,CridDamage,Penetration,StunChance,ConfusionChance,DodgeChance,Skill_Id_0,Skill_Id_1,Skill_Id_2,Skill_Id_3
+0,Farmer,Human,SwordMan,Enemy,90~110,120~150,20~30,5,0,10,100,0,0,0,0,-,-,-,-

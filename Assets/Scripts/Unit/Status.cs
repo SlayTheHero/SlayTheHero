@@ -7,47 +7,47 @@ using UnityEngine;
 [Serializable]
 public class Status
 {
-    public delegate void StatusEventHandler(string name,double value);
+    public delegate void StatusEventHandler(string name,object value);
     public event StatusEventHandler OnStatusChange;
     [SerializeField]
-    double hp;
+    int hp;
     [SerializeField]
-    double maxHP;
+    int maxHP;
     [SerializeField]
-    double atk;
+    int atk;
     [SerializeField]
-    double def;
+    int def;
     [SerializeField]
-    double pen;
+    int pen;
     [SerializeField]
-    double res;
+    int res;
     [SerializeField]
-    double criticalChance;
+    int criticalChance;
     [SerializeField]
-    double criticalDamage;
+    int criticalDamage;
     [SerializeField]
-    double stun;
+    int stun;
     [SerializeField]
-    double confusion;
+    int confusion;
     [SerializeField]
-    double dodge;
+    int dodge;
     [SerializeField]
-    double speed;
+    int speed;
     [SerializeField]
     double waiting;
     [SerializeField]
-    public double HP { get { return hp; } set { hp = value; OnStatusChange?.Invoke("HP", value); } }
-    public double MaxHP { get { return maxHP; } set { maxHP = value; OnStatusChange?.Invoke("MaxHP", value); } }
-    public double ATK { get { return atk; } set { atk = value; OnStatusChange?.Invoke("ATK", value); } }
-    public double DEF { get { return def; } set { def = value; OnStatusChange?.Invoke("DEF", value); } }
-    public double Penetration { get { return pen; } set { pen = value; OnStatusChange?.Invoke("Penetration", value); } }
-    public double Resistance { get { return res; } set { res = value; OnStatusChange?.Invoke("Resistance", value); } }
-    public double CriticalChance { get { return criticalChance; } set { criticalChance = value; OnStatusChange?.Invoke("CriticalChance", value); } }
-    public double CriticalDamage { get { return criticalDamage; } set { criticalDamage = value; OnStatusChange?.Invoke("CriticalDamage", value); } }
-    public double StunChance { get { return stun; } set { stun = value; OnStatusChange?.Invoke("StunChance", value); } }
-    public double ConfusionChance { get { return confusion; } set { confusion = value; OnStatusChange?.Invoke("ConfusionChance", value); } }
-    public double DodgeChance { get { return dodge; } set { dodge = value; OnStatusChange?.Invoke("DodgeChance", value); } }
-    public double Speed { get { return speed; } set { speed = value; OnStatusChange?.Invoke("Speed",value); } }
+    public int HP { get { return hp; } set { hp = value; OnStatusChange?.Invoke("HP", value); } }
+    public int MaxHP { get { return maxHP; } set { maxHP = value; OnStatusChange?.Invoke("MaxHP", value); } }
+    public int ATK { get { return atk; } set { atk = value; OnStatusChange?.Invoke("ATK", value); } }
+    public int DEF { get { return def; } set { def = value; OnStatusChange?.Invoke("DEF", value); } }
+    public int Penetration { get { return pen; } set { pen = value; OnStatusChange?.Invoke("Penetration", value); } }
+    public int Resistance { get { return res; } set { res = value; OnStatusChange?.Invoke("Resistance", value); } }
+    public int CriticalChance { get { return criticalChance; } set { criticalChance = value; OnStatusChange?.Invoke("CriticalChance", value); } }
+    public int CriticalDamage { get { return criticalDamage; } set { criticalDamage = value; OnStatusChange?.Invoke("CriticalDamage", value); } }
+    public int StunChance { get { return stun; } set { stun = value; OnStatusChange?.Invoke("StunChance", value); } }
+    public int ConfusionChance { get { return confusion; } set { confusion = value; OnStatusChange?.Invoke("ConfusionChance", value); } }
+    public int DodgeChance { get { return dodge; } set { dodge = value; OnStatusChange?.Invoke("DodgeChance", value); } }
+    public int Speed { get { return speed; } set { speed = value; OnStatusChange?.Invoke("Speed",value); } }
     public double Waiting { get { return waiting; } set { waiting = value; OnStatusChange?.Invoke("Waiting", value); } }
 
     public static Status operator +(Status left, Status right)
@@ -69,5 +69,45 @@ public class Status
             Waiting = left.Waiting + right.Waiting,
         };
         return ret;
+    }
+
+    // ����Ʈ ������
+    public Status() {}
+
+    // �Ķ���� ������
+    // int �Ķ���� �޴� ������ �߰�
+    public Status(int hp, int maxHP, int atk, int def, int penetration, int resistance, int criticalChance, int criticalDamage, int stunChance, int confusionChance, int dodgeChance, int speed,double waiting)
+    {
+        HP = hp;
+        MaxHP = maxHP;
+        ATK = atk;
+        DEF = def;
+        Penetration = penetration;
+        Resistance = resistance;
+        CriticalChance = criticalChance;
+        CriticalDamage = criticalDamage;
+        StunChance = stunChance;
+        ConfusionChance = confusionChance;
+        DodgeChance = dodgeChance;
+        Speed = speed;
+        Waiting = waiting;
+    }
+
+    // ���� ������
+    public Status(Status other)
+    {
+        HP = other.HP; 
+        MaxHP = other.MaxHP;
+        ATK = other.ATK;
+        DEF = other.DEF;
+        Penetration = other.Penetration;
+        Resistance = other.Resistance;
+        CriticalChance = other.CriticalChance;
+        CriticalDamage = other.CriticalDamage;
+        StunChance = other.StunChance;
+        ConfusionChance = other.ConfusionChance;
+        DodgeChance = other.DodgeChance;
+        Speed = other.Speed;
+        Waiting = other.waiting;
     }
 }

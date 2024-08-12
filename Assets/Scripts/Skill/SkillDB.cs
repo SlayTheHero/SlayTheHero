@@ -28,9 +28,10 @@ public class Skill
     /// </summary>
     public enum SK_Attribute
     {
-        Speed, Health, Attack, Defence, Resist,  // 속도, HP, 공격력, 방어력, 저항
-        CritChance, CritDamage, Penetration, Stun, Confusion, Dodge, // 크리확률, 크리뎀, 방어관통, 스턴확률, 혼란확률, 회피확률
-        BaseAttack, Skill_1, Skill_2, Skill_3 // 행동
+        Speed, MaxHealth ,Health, Attack, Defence, Resist,  // 속도, MaxHP ,HP, 공격력, 방어력, 저항
+        CritChance, CritDamage, Penetration, StunChance, ConfusionChance, Dodge, // 크리확률, 크리뎀, 방어관통, 스턴확률, 혼란확률, 회피확률
+        BaseAttack, Skill_1, Skill_2, Skill_3, // 행동
+        Stun, Confusion
     }
     /// <summary>
     /// 변화가 증감인지 배수인지
@@ -59,6 +60,7 @@ public class Skill
     public int duration; //  스킬 지속시간 
     public int coolTime; //  스킬 쿨타임
     public int nowCoolDown = 0; // 현재 쿨타임
+    public int nowDuration = 0; // 현재 지속시간
 
     /// <summary>
     /// 스킬 생성자
@@ -100,10 +102,29 @@ public class Skill
         this.duration = duration;
         this.coolTime = coolTime;
     }
-   
+    // 복사 생성자
+    public Skill(Skill other)
+    {
+        this.id = other.id;
+        this.name = other.name;
+        this.description = other.description;
+        this.sK_BehaviorType = other.sK_BehaviorType;
+        this.sk_DurationType = other.sk_DurationType;
+        this.sK_Attribute = other.sK_Attribute;
+        this.sK_ChangeType = other.sK_ChangeType;
+        this.range = other.range;
+        this.impact = other.impact;
+        this.duration = other.duration;
+        this.coolTime = other.coolTime;
+    }
     public void Invoke(UnitBase Attacker, UnitBase Target)
     {
         SkillExecuter.Execute(Attacker,Target,this);
+    }
+    UnitBase blankUnit = new UnitBase();
+    public void Invoke(UnitBase Target)
+    {
+        SkillExecuter.Execute(blankUnit, Target, this);
     }
 }
 public static class SkillDB
@@ -127,7 +148,7 @@ public static class SkillDB
             return null;
         }
 
-        return SkillList[id];
+        return new Skill(SkillList[id]);
     }
     public static void initializeSkillList()
     {
