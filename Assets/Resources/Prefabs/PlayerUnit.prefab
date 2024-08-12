@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 3032955712046338778}
   - component: {fileID: 8064787565470755908}
-  - component: {fileID: 6886816304373120666}
   m_Layer: 0
   m_Name: PlayerUnit
   m_TagString: Untagged
@@ -85,36 +84,3 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &6886816304373120666
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 4847574894108237665}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe3d25bafccfc1f458bdd39c7d555f42, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  IsPlayerUnit: 1
-  ID: 0
-  Name: 
-  Status:
-    hp: 0
-    maxHP: 0
-    atk: 0
-    def: 0
-    pen: 0
-    res: 0
-    criticalChance: 0
-    criticalDamage: 0
-    stun: 0
-    confusion: 0
-    dodge: 0
-    speed: 0
-    waiting: 0
-  Job: 0
-  Feature: 0
-  Race: 0
-  Turn: 0

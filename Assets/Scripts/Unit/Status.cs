@@ -76,7 +76,7 @@ public class Status
 
     // �Ķ���� ������
     // int �Ķ���� �޴� ������ �߰�
-    public Status(int hp, int maxHP, int atk, int def, int penetration, int resistance, int criticalChance, int criticalDamage, int stunChance, int confusionChance, int dodgeChance, int speed,double waiting)
+    public Status(int hp, int maxHP, int atk, int def, int penetration, int resistance, int criticalChance, int criticalDamage, int stunChance, int confusionChance, int dodgeChance, int speed)
     {
         HP = hp;
         MaxHP = maxHP;
@@ -90,7 +90,6 @@ public class Status
         ConfusionChance = confusionChance;
         DodgeChance = dodgeChance;
         Speed = speed;
-        Waiting = waiting;
     }
 
     // ���� ������
