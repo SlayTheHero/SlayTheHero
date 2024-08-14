@@ -13,6 +13,7 @@ public class UnitBase : MonoBehaviour
 
     public List<Skill> skillList;
     public BuffController BuffController;
+    public SynergyController SynergyController;
     //스킬 1 2 3 추가?
 
     // 디폴트 생성자
