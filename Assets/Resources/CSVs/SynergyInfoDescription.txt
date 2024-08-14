@@ -1,0 +1,16 @@
+DurationType, Attribute, ChangeType의 경우 SkillDB.cs의 Enum값을 1대1 대응됩니다.
+추가할 분류가 있다면 Enum값에 추가하고 CSV에 추가하시면 됩니다.
+넣을 필요가 없는 데이터(ex. Active 시너지에 Duration)는 비워주시면 됩니다.
+
+Type : 정리용 태그입니다. 해당 직업군 / 특성 / 종족 임을 표시합니다.
+Synergy_ID : 인덱스이자 ID입니다. SynergyDB.GetSynergy(id)를 통해 시너지 정보를 가져옵니다
+Name : 시너지 이름입니다.
+Description : 시너지 설명입니다.
+DurationType : 시너지 지속시간에 따른 분류입니다.  Passive, Active, Buff, Special
+Attribute : 시너지이 영향을 주는 스탯입니다.
+        Speed, MaxHealth ,Health, Attack, Defence, Resist,  // 속도, MaxHP ,HP, 공격력, 방어력, 저항
+        CritChance, CritDamage, Penetration, StunChance, ConfusionChance, Dodge, // 크리확률, 크리뎀, 방어관통, 스턴확률, 혼란확률, 회피확률
+        Stun, Confusion
+ChangeType : 변화의 유형입니다. Modification, Multiplication (Modification 은 Impact만큼 변경시킵니다., Multiplication은 100으로 나눈 값 원래값에 곱해 더합니다)
+             ex) Impact == 20, if(Modification) Health += 20; if(Multiplication) Health * (1 + (float)Impact / 100.0);
+TwoImpact, ThreeImpact : 시너지가 두명, 세명일때 효과이비낟.

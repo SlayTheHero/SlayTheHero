@@ -9,7 +9,7 @@ public class BattleManager : MonoBehaviour
     public List<HeroUnit> HeroTeam;
     public Queue<UnitBase> TurnQueue;
     public UnitBase StagedUnit;
-    public BattleUI BattleUI;
+    // public BattleUI BattleUI;
     public UnityEvent OnTurnEnd;
     // Start is called before the first frame update
     void Start()

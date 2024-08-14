@@ -57,6 +57,7 @@ public class Utility
 
     /// <summary>
     /// 문자열을 Enum 값에 맞게 파싱해줍니다.
+    /// 
     /// </summary>
     /// <typeparam name="T"> Enum 클래스</typeparam>
     /// <param name="enumName"> Enum 내부의 값의 문자열</param>
