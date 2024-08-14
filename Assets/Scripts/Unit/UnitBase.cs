@@ -1,28 +1,31 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 
-public class UnitBase : MonoBehaviour
+public class UnitBase
 {
+    public bool IsPlayerUnit;
     public int ID;
     public string Name;
+    [SerializeField]
     public Status Status;
     public Job Job;
     public Feature Feature;
     public Race Race;
-
-    public List<Skill> skillList;
+    public List<Skill> SkillList;
+    public int Turn;
     public BuffController BuffController;
     public SynergyController SynergyController;
-    //½ºÅ³ 1 2 3 Ãß°¡?
 
-    // µðÆúÆ® »ý¼ºÀÚ
+
+    // ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public UnitBase()
     {
-        skillList = new List<Skill>();
+        SkillList = new List<Skill>();
         BuffController = new BuffController();
     }
-    // ÆÄ¶ó¹ÌÅÍ »ý¼ºÀÚ
+    // ï¿½Ä¶ï¿½ï¿½ï¿½ï¿?ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public UnitBase(int id, string name, Status status, Job job, Feature feature, Race race, List<Skill> skills)
     {
         ID = id;
@@ -31,16 +34,16 @@ public class UnitBase : MonoBehaviour
         Job = job;
         Feature = feature;
         Race = race;
-        skillList = new List<Skill>();
+        SkillList = new List<Skill>();
         for (int i = 0; i < skills.Count; i++)
         {
-            skillList.Add(SkillDB.GetSkill(skills[i].id));
+            SkillList.Add(SkillDB.GetSkill(skills[i].id));
         }
         BuffController = new BuffController();
     }
 
 
-    // º¹»ç »ý¼ºÀÚ
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public UnitBase(UnitBase other)
     {
         ID = other.ID;
@@ -49,35 +52,35 @@ public class UnitBase : MonoBehaviour
         Job = other.Job;
         Feature = other.Feature;
         Race = other.Race;
-        skillList = new List<Skill>();
-        for (int i = 0; i < other.skillList.Count; i++)
+        SkillList = new List<Skill>();
+        for (int i = 0; i < other.SkillList.Count; i++)
         {
-            skillList.Add(other.skillList[i]);
+            SkillList.Add(other.SkillList[i]);
         }
         BuffController = new BuffController();
     }
 
     /// <summary>
-    /// ÇÇ°Ý½Ã ½ÇÇà Å©¸®Æ¼ÄÃ½Ã isCritical¿¡ true
+    /// ï¿½Ç°Ý½ï¿½ ï¿½ï¿½ï¿½ï¿½ Å©ï¿½ï¿½Æ¼ï¿½Ã½ï¿½ isCriticalï¿½ï¿½ true
     /// </summary>
-    /// <param name="endDamage">ÃÖÁ¾µ¥¹ÌÁö</param>
-    /// <param name="Attacker">°ø°ÝÀÚ</param>
-    /// <param name="isCritical">Å©¸®Æ¼ÄÃ¿©ºÎ</param>
+    /// <param name="endDamage">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
+    /// <param name="Attacker">ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</param>
+    /// <param name="isCritical">Å©ï¿½ï¿½Æ¼ï¿½Ã¿ï¿½ï¿½ï¿½</param>
     public void OnDamage(int endDamage,Status Attacker,bool isCritical)
     {
         int random = Random.Range(0,100) / 100;
         if(random < Status.DodgeChance)
         {
-            //È¸ÇÇ È¿°ú
+            //È¸ï¿½ï¿½ È¿ï¿½ï¿½
         }
         else 
         {
-            // Å©¸®Æ¼ÄÃ È¿°ú
+            // Å©ï¿½ï¿½Æ¼ï¿½ï¿½ È¿ï¿½ï¿½
             if(isCritical) 
             {
 
             }
-            else // ÇÇ°ÝÈ¿°ú
+            else // ï¿½Ç°ï¿½È¿ï¿½ï¿½
             {
 
             }

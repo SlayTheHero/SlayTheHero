@@ -15,8 +15,7 @@ public class UI_BattleScene : UI_Base
     enum Images
     {
         UI_TurnImage, UI_Turn_1, UI_Turn_2, UI_Turn_3, UI_Turn_4, UI_Turn_5, UI_Turn_6, UI_Turn_7, UI_Turn_8,
-        UI_Player_1, UI_Player_2, UI_Player_3, UI_Player_4, UI_Enemy_1, UI_Enemy_2, UI_Enemy_3, UI_Enemy_4,
-        UI_Portrait, UI_BaseAttack, UI_Skill_1, UI_Skill_2, UI_Skill_3, UI_SpecialSkill
+        UI_Portrait, UI_BaseAttack, UI_Skill_1, UI_Skill_2, UI_Skill_3, UI_SpecialSkill,UI_BattleSceneBgd
     }
     enum Texts
     {
@@ -48,6 +47,10 @@ public class UI_BattleScene : UI_Base
     void Start()
     {
         Init();
+        GetUI<Image>((int)Images.UI_BaseAttack).gameObject.AddUIEvent((p) => { Debug.Log(BattleManager.Instance); BattleManager.Instance.UseSkill(0); });
+        GetUI<Image>((int)Images.UI_Skill_1).gameObject.AddUIEvent((p) => { BattleManager.Instance.UseSkill(1); });
+        GetUI<Image>((int)Images.UI_Skill_2).gameObject.AddUIEvent((p) => { BattleManager.Instance.UseSkill(2); });
+        GetUI<Image>((int)Images.UI_Skill_3).gameObject.AddUIEvent((p) => { BattleManager.Instance.UseSkill(3); });
     }
 
     // Update is called once per frame
