@@ -64,6 +64,9 @@ public class Skill
     public int nowCoolDown = 0; // 현재 쿨타임
     public int nowDuration = 0; // 현재 지속시간
 
+
+
+
     /// <summary>
     /// 스킬 생성자
     /// </summary>
@@ -181,8 +184,9 @@ public static class SkillDB
             Skill.SK_Attribute attr = Utility.StringToEnum<Skill.SK_Attribute>((string)item["Attribute"]);
             Skill.SK_ChangeType cType = Utility.StringToEnum<Skill.SK_ChangeType>((string)item["ChangeType"]);
             int range = (int)item["Range"];
-            int impact = (int)item["Impact"];
-            if (((string)item["Impact"]).Contains("{Attack}"))
+            string tempImpact = item["Impact"].ToString();
+            int impact = 0;
+            if (tempImpact.Contains("{Attack}"))
             {
                 impact = 0;
             }
