@@ -1,3 +1,7 @@
 Unit_ID,Name,Race,Job,Feature,Speed,HP,Attack,Defence,Resistance,CritChance,CridDamage,Penetration,StunChance,ConfusionChance,DodgeChance,Skill_Id_0,Skill_Id_1,Skill_Id_2,Skill_Id_3
-0,Farmer,Human,SwordMan,Enemy,90~110,120~150,20~30,5,0,10,100,0,0,0,0,-,-,-,-
-,,,,Random,,,,,,,,,,,,,,,
+0,Farmer,Human,SwordMan,Enemy,90~110,120~150,20~30,5,0,10,100,0,0,0,0,0,검사,-,-
+1,Knight,Human,SwordMan,Enemy,90~110,120~150,20~30,5,0,10,100,0,0,0,0,0,검사,-,-
+2,Magician,Human,Magician,Enemy,90~110,120~150,20~30,5,0,10,100,0,0,0,0,2,마법사,-,-
+3,Vampire,Vampire,Magician,Random,90~110,120~150,20~30,5,0,10,100,0,0,0,0,2,마법사,뱀파이어,-
+4,Beast,DemonBeast,SwordMan,Random,90~110,120~150,20~30,5,0,10,100,0,0,0,0,0,검사,마수,-
+5,Ghost,Ghost,Archer,Random,90~110,120~150,20~30,5,0,10,100,0,0,0,0,1,궁수,유령,-

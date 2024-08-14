@@ -29,6 +29,10 @@ public static class UnitDB
         UnitBase unit = UnitList[id];
         // °ª ·£´ý¼³Á¤ ÈÄ À¯´Ö ¹ÝÈ¯ 
         ((RandomStatus)unit.Status).setRandomValue();
+        if (unit.Feature == Feature.Random)
+        {
+            unit.Feature = getRandomFeature();
+        }
         return new UnitBase(unit);
     }
     public static void initializeUnitList()
@@ -98,5 +102,10 @@ public static class UnitDB
     {
         int[] minMax = Array.ConvertAll(input.Split('~'), int.Parse);
         return (minMax[0], minMax[1]);
+    }
+    private static Feature getRandomFeature()
+    {
+        int rand = UnityEngine.Random.Range(0, (int)Feature.Envy + 1);
+        return (Feature)rand;
     }
 }
