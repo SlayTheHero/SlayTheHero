@@ -1,5 +1,6 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Collections.Generic; 
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -61,6 +62,9 @@ public class Skill
     public int coolTime; //  스킬 쿨타임
     public int nowCoolDown = 0; // 현재 쿨타임
     public int nowDuration = 0; // 현재 지속시간
+
+
+
 
     /// <summary>
     /// 스킬 생성자
@@ -129,6 +133,10 @@ public class Skill
 }
 public static class SkillDB
 {
+    /// <summary>
+    /// 유닛의 타입별로 스킬 정보가 할당
+    /// </summary>
+    public static Dictionary<string, List<int>> SkillTypeData = new Dictionary<string, List<int>>();
     private static List<Skill> SkillList = new List<Skill>();
     /// <summary>
     /// 스킬 ID를 통해 스킬 정보를 가져오는 함수
@@ -157,21 +165,53 @@ public static class SkillDB
         List<Dictionary<string, object>> dict = CSVReader.Read("Csvs/SkillInfo");
         foreach (Dictionary<string, object> item in dict)
         {
+            string type = (string)item["Type"];
             int id = (int)item["Skill_ID"];
+            if(SkillTypeData.ContainsKey(type))
+            {
+                SkillTypeData[type].Add(id);
+            }
+            else
+            {
+                SkillTypeData.Add(type,new List<int>() { id });
+            }
+
             string name = (string)item["Name"];
             string description = (string)item["Description"];
             Skill.SK_DurationType durType = Utility.StringToEnum<Skill.SK_DurationType>((string)item["DurationType"]);
             Skill.SK_BehaviorType Behavtype = Utility.StringToEnum<Skill.SK_BehaviorType>((string)item["BehaviorType"]);
             Skill.SK_Attribute attr = Utility.StringToEnum<Skill.SK_Attribute>((string)item["Attribute"]);
             Skill.SK_ChangeType cType = Utility.StringToEnum<Skill.SK_ChangeType>((string)item["ChangeType"]);
-            int range = (int)item["Range"];
-            int impact = (int)item["Impact"];
-            int duration = (int)item["Duration"];
-            int coolDown = (int)item["CoolTime"];
+            int range = getIntValueOrZero("Range");
+            string tempImpact = item["Impact"].ToString();
+            int impact = 0;
+            if (tempImpact.Contains("{Attack}"))
+            {
+                impact = 0;
+            }
+            else
+            {
+                impact = getIntValueOrZero("Impact");
+            }
+            int duration = getIntValueOrZero("Duration");
+            int coolDown = getIntValueOrZero("CoolTime");
 
             Skill tempSkill = new Skill(id, name, description, Behavtype, durType, attr, cType, range, impact,duration,coolDown);
             SkillList.Add(tempSkill);
+
+            int getIntValueOrZero(string type)
+            {
+                if (item[type] == "")
+                {
+                    return 0;
+                }else
+                {
+                    return (int)item[type];
+                }
+            }
+
         }
     }
+
 }
 

@@ -70,7 +70,7 @@ public class BuffController
     /// <param name="skill"></param>
     private void AddPassive(Skill skill)
     {
-        StatusController.ApplyAttribute(new Status(),UnitSave.Status,skill); 
+        StatusController.ApplyAttribute(new UnitBase(),UnitSave,skill); 
         ApplyBuff();
     }
 
@@ -97,7 +97,7 @@ public class BuffController
         for (int i = 0; i < nCount; i++)
         {
             Skill skill = BuffQueue.Dequeue();
-            StatusController.ApplyAttribute(new Status(), status, skill);
+            StatusController.ApplyAttribute(new UnitBase(), UnitSave, skill);
             BuffQueue.Enqueue(skill);
         }
         int hp = Unit.Status.HP;

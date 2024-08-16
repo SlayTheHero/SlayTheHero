@@ -1,0 +1,12 @@
+﻿Type,Synergy_ID,Name,Description,DurationType,Attribute,ChangeType,TwoImpact,ThreeImpact
+뱀파이어,0,뱀파이어,,Special,,,,
+마수,1,마수,,Passive,Health,,,
+몽마,2,몽마,,Passive,ConfusionChance,Modification,10,25
+유령,3,유령,,Passive,StunChance,Modification,,
+검사,4,검사,,Passive,Defence,Multiplication,20,40
+궁사,5,궁사,,Passive,Speed,Multiplication,20,50
+마법사,6,마법사,,Passive,Penetration,Modification,30,50
+신속,7,신속,,Special,,,,
+의심암귀,8,의심암귀,,Passive,ConfusionChance,Modification,10,25
+나태,9,나태,,Special,,,,
+질투,10,질투,,Special,,,,

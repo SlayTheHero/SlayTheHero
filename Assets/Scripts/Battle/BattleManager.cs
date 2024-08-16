@@ -33,6 +33,8 @@ public partial class BattleManager : MonoBehaviour
     public UnitBase StagedUnit;
     public Action OnSkillUsed;
 
+    public UnityEvent OnTurnEnd;
+    
 
     private void Awake()
     {

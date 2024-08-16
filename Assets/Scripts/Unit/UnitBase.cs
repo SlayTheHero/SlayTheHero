@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
@@ -16,15 +16,16 @@ public class UnitBase
     public List<Skill> SkillList;
     public int Turn;
     public BuffController BuffController;
-    //��ų 1 2 3 �߰�?
+    public SynergyController SynergyController;
 
-    // ����Ʈ ������
+
+    // 기본생성자
     public UnitBase()
     {
         SkillList = new List<Skill>();
         BuffController = new BuffController();
     }
-    // �Ķ���� ������
+    // 파라미터 생성자
     public UnitBase(int id, string name, Status status, Job job, Feature feature, Race race, List<Skill> skills)
     {
         ID = id;
@@ -42,7 +43,7 @@ public class UnitBase
     }
 
 
-    // ���� ������
+    // 복사 생성자
     public UnitBase(UnitBase other)
     {
         ID = other.ID;
@@ -60,39 +61,36 @@ public class UnitBase
     }
 
     /// <summary>
-    /// �ǰݽ� ���� ũ��Ƽ�ý� isCritical�� true
+    /// 데미지 피격시 호출할 함수
     /// </summary>
-    /// <param name="endDamage">����������</param>
-    /// <param name="Attacker">������</param>
-    /// <param name="isCritical">ũ��Ƽ�ÿ���</param>
+    /// <param name="endDamage">최종 데미지</param>
+    /// <param name="Attacker">공격자</param>
+    /// <param name="isCritical">크리티컬 여부</param>
     public void OnDamage(int endDamage,Status Attacker,bool isCritical)
     {
         int random = Random.Range(0,100) / 100;
         if(random < Status.DodgeChance)
         {
-            //ȸ�� ȿ��
+            // 회피 로직
         }
         else 
         {
-            // ũ��Ƽ�� ȿ��
+            // 크리 로직
             if(isCritical) 
             {
 
             }
-            else // �ǰ�ȿ��
+            else 
             {
 
             }
 
-            int damage = (int)((double)endDamage * (double)(100 - Status.DEF + Attacker.Penetration) / 100.0);
+            Status.OnDamage(endDamage, Attacker);
             
-            // ��� ����
-            if(Status.HP <= damage)
+            // 사망 로직 Status쪽에서 해도 될지도
+            if(Status.HP <= 0)
             {
 
-            }else
-            {
-                Status.HP -= damage;
             }
         }
     }

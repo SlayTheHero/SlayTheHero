@@ -1,4 +1,4 @@
-,Skill_ID,,Description,DurationType,BehaviorType,Attribute,ChangeType,Range,Impact,Duration,CoolTime
+﻿Type,Skill_ID,Name,Description,DurationType,BehaviorType,Attribute,ChangeType,Range,Impact,Duration,CoolTime
 검사,0,BaseSwordAttack,칼로 적을 공격합니다,Active,Melee,Health,Modification,1,-1,0,1
 궁사,1,BaseBowAttack,활로 적을 공격합니다,Active,Projectile,Health,Modification,4,2,0,1
 마법사,2,BaseMagicAttack,마법으로 적을 공격합니다,Active,Projectile,Health,Modification,4,2,0,1

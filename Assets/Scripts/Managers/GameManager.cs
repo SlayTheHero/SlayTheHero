@@ -1,4 +1,4 @@
-using UnityEngine;
+ï»¿using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
@@ -6,6 +6,10 @@ public class GameManager : MonoBehaviour
 
     UIManager ui = new UIManager();
     public  UIManager UI { get { return ui; } }
+
+    PlayerData nowPlayerData = new PlayerData();
+
+    public PlayerData PlayerData { get {  return nowPlayerData; } }
 
 
     private static void Init()
@@ -20,12 +24,12 @@ public class GameManager : MonoBehaviour
             }
             DontDestroyOnLoad(mg);
             instance = mg.GetComponent<GameManager>();
-            //¼­ºê¸Å´ÏÀú ÃÊ±âÈ­
+            //ì„œë¸Œë§¤ë‹ˆì € ì´ˆê¸°í™”
             instance.ui = new UIManager();
         }
     }
     /// <summary>
-    /// GameManagerÀÇ instance¸¦ ¹İÈ¯ÇÕ´Ï´Ù.
+    /// GameManagerì˜ instanceë¥¼ ë°˜í™˜í•©ë‹ˆë‹¤.
     /// </summary>
     /// <returns></returns>
     public static GameManager getInstance()
@@ -35,7 +39,7 @@ public class GameManager : MonoBehaviour
     }
 
     /// <summary>
-    /// ±âÁ¸ ¾À¿¡ @GameManager ¿ÀºêÁ§Æ® ÀÖÀ»½Ã ·ÎÁ÷ÀÔ´Ï´Ù.
+    /// ê¸°ì¡´ ì”¬ì— @GameManager ì˜¤ë¸Œì íŠ¸ ìˆì„ì‹œ ë¡œì§ì…ë‹ˆë‹¤.
     /// </summary>
     private void Awake()
     {

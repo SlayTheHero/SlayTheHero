@@ -9,7 +9,7 @@ public enum Job
 public enum Feature
 {
     Swiftness,SuspiciousGhost,Sloth,Envy,
-    Enemy
+    Enemy, Random
 }
 public enum Race
 {

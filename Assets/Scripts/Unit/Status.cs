@@ -71,11 +71,12 @@ public class Status
         return ret;
     }
 
-    // ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-    public Status() {}
+    // µðÆúÆ® »ý¼ºÀÚ
+    public Status() { }
+    // ï¿½ï¿½ï¿½ï¿½Æ® ï¿½ï¿½ï¿½ï¿½ï¿½ï
 
-    // ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
-    // int ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ ï¿½Þ´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
+    // ï¿½Ä¶ï¿½ï¿½ï¿½ï¿?ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+    // int ï¿½Ä¶ï¿½ï¿½ï¿½ï¿?ï¿½Þ´ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ß°ï¿½
     public Status(int hp, int maxHP, int atk, int def, int penetration, int resistance, int criticalChance, int criticalDamage, int stunChance, int confusionChance, int dodgeChance, int speed)
     {
         HP = hp;
@@ -95,7 +96,7 @@ public class Status
     // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public Status(Status other)
     {
-        HP = other.HP; 
+        HP = other.HP;
         MaxHP = other.MaxHP;
         ATK = other.ATK;
         DEF = other.DEF;
@@ -109,4 +110,15 @@ public class Status
         Speed = other.Speed;
         Waiting = other.waiting;
     }
+    /// <summary>
+    /// Status¿ë Ã¼·Âº¯È­
+    /// </summary>
+    /// <param name="endDamage">ÃÖÁ¾µ¥¹ÌÁö</param>
+    /// <param name="Attacker">°ø°ÝÀÚ</param>
+    public void OnDamage(int endDamage, Status Attacker)
+    {
+        int damage = (int)((double)endDamage * (double)(100 - DEF + Attacker.Penetration) / 100.0);
+        HP -= damage;
+    }
 }
+

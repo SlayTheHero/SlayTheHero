@@ -5,8 +5,12 @@ using UnityEngine;
 public static class StatusController
 {
     private delegate int operatorDelegate(double attribute, int impact);
-    public static void ApplyAttribute(Status Attacker, Status target, Skill skill)
+    private static UnitBase unit = new UnitBase();
+    public static void ApplyAttribute(UnitBase AttackerUnit, UnitBase targetUnit, Skill skill)
     {
+        Status Attacker = AttackerUnit.Status;
+        Status target = targetUnit.Status;
+
         operatorDelegate nowOperator;
         switch (skill.sK_ChangeType)
         {
@@ -22,14 +26,34 @@ public static class StatusController
         }
         int impactValue = skill.impact;
         int attributeValue = 0;
+        
+        if(skill.sK_Attribute == Skill.SK_Attribute.Health)
+        {
+            int random = Random.Range(0, 100) / 100;
+            bool isCritical = false;
+            if(Attacker.CriticalChance < random)
+            {
+                isCritical = true;
+            }
+
+            if (impactValue == 0)
+            {
+                impactValue = Attacker.ATK;
+            }
+            else
+            {
+                impactValue = skill.impact;
+            }
+
+            float endDamage = impactValue * (float)Attacker.CriticalDamage;
+            targetUnit.OnDamage((int)endDamage, Attacker, isCritical);
+
+        }
 
         switch (skill.sK_Attribute)
         {
             case Skill.SK_Attribute.Speed:
                 attributeValue = target.Speed;
-                break;
-            case Skill.SK_Attribute.Health:
-                attributeValue = target.HP;
                 break;
             case Skill.SK_Attribute.Attack:
                 attributeValue = target.ATK;
@@ -78,9 +102,6 @@ public static class StatusController
         {
             case Skill.SK_Attribute.Speed:
                 target.Speed = attributeValue;
-                break;
-            case Skill.SK_Attribute.Health:
-                target.HP = attributeValue;
                 break;
             case Skill.SK_Attribute.Attack:
                 target.ATK = attributeValue;

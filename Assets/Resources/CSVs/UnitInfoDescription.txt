@@ -1,12 +1,14 @@
-Race, Job, FeatureÀÇ °æ¿ì UnitEnum.csÀÇ Enum°ª°ú 1´ë1 ´ëÀÀµË´Ï´Ù.
-Ãß°¡ÇÒ ºĞ·ù°¡ ÀÖ´Ù¸é Enum°ª¿¡ Ãß°¡ÇÏ°í CSV¿¡ Ãß°¡ÇÏ½Ã¸é µË´Ï´Ù.
+ï»¿Race, Job, Featureì˜ ê²½ìš° UnitEnum.csì˜ Enumê°’ê³¼ 1ëŒ€1 ëŒ€ì‘ë©ë‹ˆë‹¤.
+ì¶”ê°€í•  ë¶„ë¥˜ê°€ ìˆë‹¤ë©´ Enumê°’ì— ì¶”ê°€í•˜ê³  CSVì— ì¶”ê°€í•˜ì‹œë©´ ë©ë‹ˆë‹¤.
 
-Unit_ID : ÀÎµ¦½ºÀÌÀÚ IDÀÔ´Ï´Ù.
-Name : À¯´ÖÀÇ ÀÌ¸§ÀÔ´Ï´Ù.
-Race : À¯´ÖÀÇ Á¾Á·ÀÔ´Ï´Ù.  Vampire,DemonBeast,NightMare,Ghost,  Human
-Job : À¯´ÖÀÇ Á÷¾÷ÀÔ´Ï´Ù.   SwordMan,Archer,Magician
-Feature : À¯´ÖÀÇ Æ¯¼ºÀÔ´Ï´Ù.   Swiftness,SuspiciousGhost,Sloth,Envy, Enemy
+Unit_ID : ì¸ë±ìŠ¤ì´ì IDì…ë‹ˆë‹¤.
+Name : ìœ ë‹›ì˜ ì´ë¦„ì…ë‹ˆë‹¤.
+Race : ìœ ë‹›ì˜ ì¢…ì¡±ì…ë‹ˆë‹¤.  Vampire,DemonBeast,NightMare,Ghost,  Human
+Job : ìœ ë‹›ì˜ ì§ì—…ì…ë‹ˆë‹¤.   SwordMan,Archer,Magician
+Feature : ìœ ë‹›ì˜ íŠ¹ì„±ì…ë‹ˆë‹¤.   Swiftness,SuspiciousGhost,Sloth,Envy, Enemy
 
-Speed ~ DodgeChance : ½ºÅÈ ¼öÄ¡ÀÔ´Ï´Ù. int °ªÀ» ³ÖÀ¸¸é °íÁ¤, a~b ÀÌ¸é a~b »çÀÌÀÇ ·£´ıÇÑ °ªÀÌ À¯´Ö »ı¼º½Ã¿¡ Àû¿ëµË´Ï´Ù.
-Skill_Id_0~3 : ½ºÅ³ IDÀÔ´Ï´Ù. ¾ø´Ù¸é '-' ¸¦ ³Ö¾îÁÖ½Ã¸é µË´Ï´Ù.
+Speed ~ DodgeChance : ìŠ¤íƒ¯ ìˆ˜ì¹˜ì…ë‹ˆë‹¤. int ê°’ì„ ë„£ìœ¼ë©´ ê³ ì •, a~b ì´ë©´ a~b ì‚¬ì´ì˜ ëœë¤í•œ ê°’ì´ ìœ ë‹› ìƒì„±ì‹œì— ì ìš©ë©ë‹ˆë‹¤.
+Skill_Id_0~3 : ìŠ¤í‚¬ IDì…ë‹ˆë‹¤. ì—†ë‹¤ë©´ '-' ë¥¼ ë„£ì–´ì£¼ì‹œë©´ ë©ë‹ˆë‹¤.
+			   SkillDBì˜ Type ê°’ì„ ë„£ìœ¼ë©´ í•´ë‹¹ ìŠ¤í‚¬ ì¤‘ ëœë¤í•œ ê°’ì´ ë“¤ì–´ê°‘ë‹ˆë‹¤.
+			   ë‹¨ì¼ Int ê°’ì„ ë„£ìœ¼ë©´ í•´ë‹¹ ìŠ¤í‚¬ì´ ê³ ì •ìœ¼ë¡œ ë“¤ì–´ê°‘ë‹ˆë‹¤.
 
