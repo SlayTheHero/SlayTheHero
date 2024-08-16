@@ -35,6 +35,10 @@ public class UI_BaseToolTipEventHandler : UI_EventHandler
     /// </summary>
     private void Init()
     {
+        if(transform.parent == null)
+        {
+            Debug.Log($"{transform.name} does not have parent");
+        }
         canvas = transform.GetComponentInParent<Canvas>().gameObject;
         // Á¤·Ä¿ë
         if (ToolTipGroupObject == null)
@@ -61,12 +65,13 @@ public class UI_BaseToolTipEventHandler : UI_EventHandler
             }
             else
             {
-                ToolTipInstance = GameObject.Instantiate(Resources.Load<GameObject>($"Prefabs/UI/{ToolTipName}"));
+                GameObject prefab = Resources.Load<GameObject>($"Prefabs/UI/ToolTip/{ToolTipName}");
+                ToolTipInstance = GameObject.Instantiate(prefab);
                 ToolTipInstanceDict.Add(ToolTipName, ToolTipInstance);
             }
             if (ToolTipInstance == null)
             {
-                Debug.Log($"ToolTipInstance Instnatiate Failed Resources/Prefabs/UI/{ToolTipName}");
+                Debug.Log($"ToolTipInstance Instnatiate Failed Resources/Prefabs/UI/ToolTip/{ToolTipName}");
             }
             ToolTipInstance.transform.SetParent(ToolTipGroupObject.transform);
             ToolTipRect = ToolTipInstance.GetComponent<RectTransform>();

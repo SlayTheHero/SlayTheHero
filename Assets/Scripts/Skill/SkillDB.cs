@@ -182,7 +182,7 @@ public static class SkillDB
             Skill.SK_BehaviorType Behavtype = Utility.StringToEnum<Skill.SK_BehaviorType>((string)item["BehaviorType"]);
             Skill.SK_Attribute attr = Utility.StringToEnum<Skill.SK_Attribute>((string)item["Attribute"]);
             Skill.SK_ChangeType cType = Utility.StringToEnum<Skill.SK_ChangeType>((string)item["ChangeType"]);
-            int range = (int)item["Range"];
+            int range = getIntValueOrZero("Range");
             string tempImpact = item["Impact"].ToString();
             int impact = 0;
             if (tempImpact.Contains("{Attack}"))
@@ -191,14 +191,27 @@ public static class SkillDB
             }
             else
             {
-                impact = (int)item["Impact"];
+                impact = getIntValueOrZero("Impact");
             }
-            int duration = (int)item["Duration"];
-            int coolDown = (int)item["CoolTime"];
+            int duration = getIntValueOrZero("Duration");
+            int coolDown = getIntValueOrZero("CoolTime");
 
             Skill tempSkill = new Skill(id, name, description, Behavtype, durType, attr, cType, range, impact,duration,coolDown);
             SkillList.Add(tempSkill);
+
+            int getIntValueOrZero(string type)
+            {
+                if (item[type] == "")
+                {
+                    return 0;
+                }else
+                {
+                    return (int)item[type];
+                }
+            }
+
         }
     }
+
 }
 

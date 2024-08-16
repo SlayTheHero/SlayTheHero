@@ -7,7 +7,7 @@ public class GameManager : MonoBehaviour
     UIManager ui = new UIManager();
     public  UIManager UI { get { return ui; } }
 
-    PlayerData nowPlayerData;
+    PlayerData nowPlayerData = new PlayerData();
 
     public PlayerData PlayerData { get {  return nowPlayerData; } }
 

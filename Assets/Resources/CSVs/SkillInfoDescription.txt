@@ -1,20 +1,20 @@
-DurationType,  BehaviorType, Attribute, ChangeType�� ��� SkillDB.cs�� Enum���� 1��1 �����˴ϴ�.
-�߰��� �з��� �ִٸ� Enum���� �߰��ϰ� CSV�� �߰��Ͻø� �˴ϴ�.
-���� �ʿ䰡 ���� ������(ex. Active ��ų�� Duration)�� ����ֽø� �˴ϴ�.
+﻿DurationType,  BehaviorType, Attribute, ChangeType의 경우 SkillDB.cs의 Enum값을 1대1 대응됩니다.
+추가할 분류가 있다면 Enum값에 추가하고 CSV에 추가하시면 됩니다.
+넣을 필요가 없는 데이터(ex. Active 스킬에 Duration)는 비워주시면 됩니다.
 
-Type : ������ �±��Դϴ�. �ش� ������ / Ư�� / ���� ���� ǥ���մϴ�.
-Skill_ID : �ε������� ID�Դϴ�. SkillDB.GetSkill(id)�� ���� ��ų ������ �����ɴϴ�
-Name : ��ų �̸��Դϴ�.
-Description : ��ų �����Դϴ�.
-DurationType : ��ų ���ӽð��� ���� �з��Դϴ�.  Passive, Active, Buff, Special
-BehaviorType : ��ų �ൿ�� ���� �з��Դϴ�.   Melee, Projectile, Buff, Special 
-Attribute : ��ų�� ������ �ִ� �����Դϴ�.
-        Speed, MaxHealth ,Health, Attack, Defence, Resist,  // �ӵ�, MaxHP ,HP, ���ݷ�, ����, ����
-        CritChance, CritDamage, Penetration, StunChance, ConfusionChance, Dodge, // ũ��Ȯ��, ũ����, ������, ����Ȯ��, ȥ��Ȯ��, ȸ��Ȯ��
+Type : 정리용 태그입니다. 해당 직업군 / 특성 / 종족 임을 표시합니다.
+Skill_ID : 인덱스이자 ID입니다. SkillDB.GetSkill(id)를 통해 스킬 정보를 가져옵니다
+Name : 스킬 이름입니다.
+Description : 스킬 설명입니다.
+DurationType : 스킬 지속시간에 따른 분류입니다.  Passive, Active, Buff, Special
+BehaviorType : 스킬 행동에 따른 분류입니다.   Melee, Projectile, Buff, Special 
+Attribute : 스킬이 영향을 주는 스탯입니다.
+        Speed, MaxHealth ,Health, Attack, Defence, Resist,  // 속도, MaxHP ,HP, 공격력, 방어력, 저항
+        CritChance, CritDamage, Penetration, StunChance, ConfusionChance, Dodge, // 크리확률, 크리뎀, 방어관통, 스턴확률, 혼란확률, 회피확률
         Stun, Confusion
-ChangeType : ��ȭ�� �����Դϴ�. Modification, Multiplication (Modification �� Impact��ŭ �����ŵ�ϴ�., Multiplication�� 100���� ���� �� �������� ���� ���մϴ�)
+ChangeType : 변화의 유형입니다. Modification, Multiplication (Modification 은 Impact만큼 변경시킵니다., Multiplication은 100으로 나눈 값 원래값에 곱해 더합니다)
              ex) Impact == 20, if(Modification) Health += 20; if(Multiplication) Health * (1 + (float)Impact / 100.0);
-Range : ��ų�� ���밡���� �����Դϴ�.
-Impact : ��ȭ�� �����Դϴ�. {Attack}�� �ۼ��� �ÿ� ���ݷ¸�ŭ �������� ���մϴ�. // ���� ����� �ʿ��ϴٸ� �������ֽø� �˴ϴ�. ex) {Attack} + 10 
-Duration : ��ų�� ���ӽð��Դϴ�.
-CoolTime : ��ų�� ���� ���ð��Դϴ�.
+Range : 스킬이 적용가능한 범위입니다.
+Impact : 변화의 강도입니다. {Attack}을 작성할 시에 공격력만큼 데미지를 가합니다. // 차후 계산이 필요하다면 말씀해주시면 됩니다. ex) {Attack} + 10 
+Duration : 스킬의 지속시간입니다.
+CoolTime : 스킬의 재사용 대기시간입니다.

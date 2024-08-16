@@ -1,12 +1,12 @@
-Type,Synergy_ID,Name,Description,DurationType,Attribute,ChangeType,TwoImpact,ThreeImpact
-¹ìÆÄÀÌ¾î,0,¹ìÆÄÀÌ¾î,,Special,,,,
-¸¶¼ö,1,¸¶¼ö,,Passive,Health,,,
-¸ù¸¶,2,¸ù¸¶,,Passive,ConfusionChance,Modification,10,25
-À¯·É,3,À¯·É,,Passive,StunChance,Modification,,
-°Ë»ç,4,°Ë»ç,,Passive,Defence,Multiplication,20,40
-±Ã»ç,5,±Ã»ç,,Passive,Speed,Multiplication,20,50
-¸¶¹ı»ç,6,¸¶¹ı»ç,,Passive,Penetration,Modification,30,50
-½Å¼Ó,7,½Å¼Ó,,Special,,,,
-ÀÇ½É¾Ï±Í,8,ÀÇ½É¾Ï±Í,,Passive,ConfusionChance,Modification,10,25
-³ªÅÂ,9,³ªÅÂ,,Special,,,,
-ÁúÅõ,10,ÁúÅõ,,Special,,,,
+ï»¿Type,Synergy_ID,Name,Description,DurationType,Attribute,ChangeType,TwoImpact,ThreeImpact
+ë±€íŒŒì´ì–´,0,ë±€íŒŒì´ì–´,,Special,,,,
+ë§ˆìˆ˜,1,ë§ˆìˆ˜,,Passive,Health,,,
+ëª½ë§ˆ,2,ëª½ë§ˆ,,Passive,ConfusionChance,Modification,10,25
+ìœ ë ¹,3,ìœ ë ¹,,Passive,StunChance,Modification,,
+ê²€ì‚¬,4,ê²€ì‚¬,,Passive,Defence,Multiplication,20,40
+ê¶ì‚¬,5,ê¶ì‚¬,,Passive,Speed,Multiplication,20,50
+ë§ˆë²•ì‚¬,6,ë§ˆë²•ì‚¬,,Passive,Penetration,Modification,30,50
+ì‹ ì†,7,ì‹ ì†,,Special,,,,
+ì˜ì‹¬ì•”ê·€,8,ì˜ì‹¬ì•”ê·€,,Passive,ConfusionChance,Modification,10,25
+ë‚˜íƒœ,9,ë‚˜íƒœ,,Special,,,,
+ì§ˆíˆ¬,10,ì§ˆíˆ¬,,Special,,,,

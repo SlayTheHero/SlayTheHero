@@ -9,7 +9,7 @@ public class UI_SkillToolTipEventHandler : UI_BaseToolTipEventHandler
 {
     TextMeshProUGUI SkillName;
     TextMeshProUGUI SkillExplanation;
-    Image SkillType;
+    TextMeshProUGUI SkillType;
 
 
     void Awake()
@@ -17,7 +17,7 @@ public class UI_SkillToolTipEventHandler : UI_BaseToolTipEventHandler
         InitWithName("UI_SkillToolTip");
         SkillName = ToolTipInstance.transform.Find("UI_SkillName").GetComponent<TextMeshProUGUI>();
         SkillExplanation = ToolTipInstance.transform.Find("UI_SkillExplanation").GetComponent<TextMeshProUGUI>();
-        SkillType = ToolTipInstance.transform.Find("UI_SkillType").GetComponent<Image>();
+        SkillType = ToolTipInstance.transform.Find("UI_SkillType").GetComponent<TextMeshProUGUI>();
     }
 
     protected override void setData()

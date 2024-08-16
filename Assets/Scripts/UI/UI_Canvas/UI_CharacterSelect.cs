@@ -33,6 +33,7 @@ public class UI_CharacterSelect : UI_Base
         UI_StartButton, UI_SettingButton
     }
 
+    GameManager manager;
     protected override void Init()
     {
         // GameManager.UI.SetCanvas(this.gameObject, true);
@@ -46,6 +47,15 @@ public class UI_CharacterSelect : UI_Base
             Image image = GetImage(i);
             image.gameObject.AddUIEvent(tempEvent, UI_EventHandler.UIEvent.LClick);
         }
+        manager = GameManager.getInstance();
+
+        for (int i = 0; i < 6; i++)
+        {
+            manager.PlayerData.unitDeque.AddUnit(UnitDB.GetUnit(i));
+        }
+
+        List<UnitBase> li = PlayerUnitContainer.GetUnitList();
+        Console.WriteLine(li.Count);
     }
     public void tempEvent(PointerEventData data)
     {

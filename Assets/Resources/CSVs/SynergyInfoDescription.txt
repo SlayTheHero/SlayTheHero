@@ -1,16 +1,16 @@
-DurationType, Attribute, ChangeTypeÀÇ °æ¿ì SkillDB.csÀÇ Enum°ªÀ» 1´ë1 ´ëÀÀµË´Ï´Ù.
-Ãß°¡ÇÒ ºĞ·ù°¡ ÀÖ´Ù¸é Enum°ª¿¡ Ãß°¡ÇÏ°í CSV¿¡ Ãß°¡ÇÏ½Ã¸é µË´Ï´Ù.
-³ÖÀ» ÇÊ¿ä°¡ ¾ø´Â µ¥ÀÌÅÍ(ex. Active ½Ã³ÊÁö¿¡ Duration)´Â ºñ¿öÁÖ½Ã¸é µË´Ï´Ù.
+ï»¿DurationType, Attribute, ChangeTypeì˜ ê²½ìš° SkillDB.csì˜ Enumê°’ì„ 1ëŒ€1 ëŒ€ì‘ë©ë‹ˆë‹¤.
+ì¶”ê°€í•  ë¶„ë¥˜ê°€ ìˆë‹¤ë©´ Enumê°’ì— ì¶”ê°€í•˜ê³  CSVì— ì¶”ê°€í•˜ì‹œë©´ ë©ë‹ˆë‹¤.
+ë„£ì„ í•„ìš”ê°€ ì—†ëŠ” ë°ì´í„°(ex. Active ì‹œë„ˆì§€ì— Duration)ëŠ” ë¹„ì›Œì£¼ì‹œë©´ ë©ë‹ˆë‹¤.
 
-Type : Á¤¸®¿ë ÅÂ±×ÀÔ´Ï´Ù. ÇØ´ç Á÷¾÷±º / Æ¯¼º / Á¾Á· ÀÓÀ» Ç¥½ÃÇÕ´Ï´Ù.
-Synergy_ID : ÀÎµ¦½ºÀÌÀÚ IDÀÔ´Ï´Ù. SynergyDB.GetSynergy(id)¸¦ ÅëÇØ ½Ã³ÊÁö Á¤º¸¸¦ °¡Á®¿É´Ï´Ù
-Name : ½Ã³ÊÁö ÀÌ¸§ÀÔ´Ï´Ù.
-Description : ½Ã³ÊÁö ¼³¸íÀÔ´Ï´Ù.
-DurationType : ½Ã³ÊÁö Áö¼Ó½Ã°£¿¡ µû¸¥ ºĞ·ùÀÔ´Ï´Ù.  Passive, Active, Buff, Special
-Attribute : ½Ã³ÊÁöÀÌ ¿µÇâÀ» ÁÖ´Â ½ºÅÈÀÔ´Ï´Ù.
-        Speed, MaxHealth ,Health, Attack, Defence, Resist,  // ¼Óµµ, MaxHP ,HP, °ø°İ·Â, ¹æ¾î·Â, ÀúÇ×
-        CritChance, CritDamage, Penetration, StunChance, ConfusionChance, Dodge, // Å©¸®È®·ü, Å©¸®µ©, ¹æ¾î°üÅë, ½ºÅÏÈ®·ü, È¥¶õÈ®·ü, È¸ÇÇÈ®·ü
+Type : ì •ë¦¬ìš© íƒœê·¸ì…ë‹ˆë‹¤. í•´ë‹¹ ì§ì—…êµ° / íŠ¹ì„± / ì¢…ì¡± ì„ì„ í‘œì‹œí•©ë‹ˆë‹¤.
+Synergy_ID : ì¸ë±ìŠ¤ì´ì IDì…ë‹ˆë‹¤. SynergyDB.GetSynergy(id)ë¥¼ í†µí•´ ì‹œë„ˆì§€ ì •ë³´ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤
+Name : ì‹œë„ˆì§€ ì´ë¦„ì…ë‹ˆë‹¤.
+Description : ì‹œë„ˆì§€ ì„¤ëª…ì…ë‹ˆë‹¤.
+DurationType : ì‹œë„ˆì§€ ì§€ì†ì‹œê°„ì— ë”°ë¥¸ ë¶„ë¥˜ì…ë‹ˆë‹¤.  Passive, Active, Buff, Special
+Attribute : ì‹œë„ˆì§€ì´ ì˜í–¥ì„ ì£¼ëŠ” ìŠ¤íƒ¯ì…ë‹ˆë‹¤.
+        Speed, MaxHealth ,Health, Attack, Defence, Resist,  // ì†ë„, MaxHP ,HP, ê³µê²©ë ¥, ë°©ì–´ë ¥, ì €í•­
+        CritChance, CritDamage, Penetration, StunChance, ConfusionChance, Dodge, // í¬ë¦¬í™•ë¥ , í¬ë¦¬ë€, ë°©ì–´ê´€í†µ, ìŠ¤í„´í™•ë¥ , í˜¼ë€í™•ë¥ , íšŒí”¼í™•ë¥ 
         Stun, Confusion
-ChangeType : º¯È­ÀÇ À¯ÇüÀÔ´Ï´Ù. Modification, Multiplication (Modification Àº Impact¸¸Å­ º¯°æ½ÃÅµ´Ï´Ù., MultiplicationÀº 100À¸·Î ³ª´« °ª ¿ø·¡°ª¿¡ °öÇØ ´õÇÕ´Ï´Ù)
+ChangeType : ë³€í™”ì˜ ìœ í˜•ì…ë‹ˆë‹¤. Modification, Multiplication (Modification ì€ Impactë§Œí¼ ë³€ê²½ì‹œí‚µë‹ˆë‹¤., Multiplicationì€ 100ìœ¼ë¡œ ë‚˜ëˆˆ ê°’ ì›ë˜ê°’ì— ê³±í•´ ë”í•©ë‹ˆë‹¤)
              ex) Impact == 20, if(Modification) Health += 20; if(Multiplication) Health * (1 + (float)Impact / 100.0);
-TwoImpact, ThreeImpact : ½Ã³ÊÁö°¡ µÎ¸í, ¼¼¸íÀÏ¶§ È¿°úÀÌºñ³®.
+TwoImpact, ThreeImpact : ì‹œë„ˆì§€ê°€ ë‘ëª…, ì„¸ëª…ì¼ë•Œ íš¨ê³¼ì´ë¹„ë‚Ÿ.

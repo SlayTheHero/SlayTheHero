@@ -1,7 +1,7 @@
-Unit_ID,Name,Race,Job,Feature,Speed,HP,Attack,Defence,Resistance,CritChance,CridDamage,Penetration,StunChance,ConfusionChance,DodgeChance,Skill_Id_0,Skill_Id_1,Skill_Id_2,Skill_Id_3
-0,Farmer,Human,SwordMan,Enemy,90~110,120~150,20~30,5,0,10,100,0,0,0,0,0,°Ë»ç,-,-
-1,Knight,Human,SwordMan,Enemy,90~110,120~150,20~30,5,0,10,100,0,0,0,0,0,°Ë»ç,-,-
-2,Magician,Human,Magician,Enemy,90~110,120~150,20~30,5,0,10,100,0,0,0,0,2,¸¶¹ı»ç,-,-
-3,Vampire,Vampire,Magician,Random,90~110,120~150,20~30,5,0,10,100,0,0,0,0,2,¸¶¹ı»ç,¹ìÆÄÀÌ¾î,-
-4,Beast,DemonBeast,SwordMan,Random,90~110,120~150,20~30,5,0,10,100,0,0,0,0,0,°Ë»ç,¸¶¼ö,-
-5,Ghost,Ghost,Archer,Random,90~110,120~150,20~30,5,0,10,100,0,0,0,0,1,±Ã¼ö,À¯·É,-
+ï»¿Unit_ID,Name,Race,Job,Feature,Speed,HP,Attack,Defence,Resistance,CritChance,CritDamage,Penetration,StunChance,ConfusionChance,DodgeChance,Skill_Id_0,Skill_Id_1,Skill_Id_2,Skill_Id_3
+0,Farmer,Human,SwordMan,Enemy,90~110,120~150,20~30,5,0,10,100,0,0,0,0,0,ê²€ì‚¬,-,-
+1,Knight,Human,SwordMan,Enemy,90~110,120~150,20~30,5,0,10,100,0,0,0,0,0,ê²€ì‚¬,-,-
+2,Magician,Human,Magician,Enemy,90~110,120~150,20~30,5,0,10,100,0,0,0,0,2,ë§ˆë²•ì‚¬,-,-
+3,Vampire,Vampire,Magician,Random,90~110,120~150,20~30,5,0,10,100,0,0,0,0,2,ë§ˆë²•ì‚¬,ë±€íŒŒì´ì–´,-
+4,Beast,DemonBeast,SwordMan,Random,90~110,120~150,20~30,5,0,10,100,0,0,0,0,0,ê²€ì‚¬,ë§ˆìˆ˜,-
+5,Ghost,Ghost,Archer,Random,90~110,120~150,20~30,5,0,10,100,0,0,0,0,1,ê¶ì‚¬,ìœ ë ¹,-

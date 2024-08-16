@@ -43,10 +43,10 @@ public static class UnitDB
         foreach (Dictionary<string, object> item in UnitDict)
         {
             int id = (int)item["Unit_ID"];
-            string name = (string)item["Name"];
-            Race race = Utility.StringToEnum<Race>((string)item["Race"]);
-            Job job = Utility.StringToEnum<Job>((string)item["Job"]);
-            Feature feat = Utility.StringToEnum<Feature>((string)item["Feature"]);
+            string name = item["Name"].ToString();
+            Race race = Utility.StringToEnum<Race>(item["Race"].ToString());
+            Job job = Utility.StringToEnum<Job>(item["Job"].ToString());
+            Feature feat = Utility.StringToEnum<Feature>(item["Feature"].ToString());
 
             (int,int) speed = getintTupleValue("Speed");
             (int,int) HP = getintTupleValue("HP");
@@ -64,7 +64,7 @@ public static class UnitDB
             List<Skill> skills = new List<Skill>();
             for (int i = 0; i < 4; i++)
             {
-                string tempSkill = (string)item[$"Skill_Id_{i}"];
+                string tempSkill = item[$"Skill_Id_{i}"].ToString();
                 if (tempSkill == "-") continue;
                 if(SkillDB.SkillTypeData.ContainsKey(tempSkill))
                 {
@@ -73,7 +73,13 @@ public static class UnitDB
                 }
                 else
                 {
-                    skills.Add(SkillDB.GetSkill(int.Parse(tempSkill)));
+                    int temp = -1;
+                    if(!Int32.TryParse(tempSkill,out temp))
+                    {
+                        Debug.Log($"{tempSkill} is not valid Skill Code");
+                        continue;
+                    }
+                    skills.Add(SkillDB.GetSkill(temp));
                 }
             }
 
@@ -82,9 +88,10 @@ public static class UnitDB
 
             (int,int) getintTupleValue(string type)
             {
-                if (((string)item[type]).Contains('~'))
+                string temp = item[type].ToString();
+                if (temp.Contains('~'))
                 { 
-                    return getRangeInfo((string)item[type]);
+                    return getRangeInfo(temp);
                     
                 }
                 else
