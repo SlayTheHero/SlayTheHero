@@ -16,7 +16,7 @@ public static class SkillExecuter
         //행동
         RunBehaviorLogic(Attacker, Target, skill);
         //지속시간
-        switch(skill.sk_DurationType)
+        switch (skill.sk_DurationType)
         {
             case Skill.SK_DurationType.Active:
                 StatusController.ApplyAttribute(Attacker.Status, Target.Status, skill);
@@ -65,9 +65,17 @@ public static class SkillExecuter
 
     }
 
-    private static Dictionary<int,SkillDelegate> SpecialSkillDict = new Dictionary<int,SkillDelegate>();
+    private static Dictionary<int, SkillDelegate> SpecialSkillDict = new Dictionary<int, SkillDelegate>();
     private static void SpecialBehavior(UnitBase Attacker, UnitBase Target, Skill skill)
     {
+        switch (skill.id)
+        {
+            case -1:
+                Target.OnDamage(10, Attacker.Status, false);
+                BattleManager.Instance.OnSkillUsed.Invoke();
+                break;
+            default: break;
+        }
         //스킬ID로 파싱 후 특수로직 따로 작성
     }
 

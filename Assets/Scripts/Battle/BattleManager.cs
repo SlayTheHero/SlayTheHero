@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Burst.CompilerServices;
@@ -17,18 +18,21 @@ public partial class BattleManager : MonoBehaviour
         }
     }
     [SerializeField]
-    GameObject[] PlayerTeamPosition = new GameObject[3];
+    GameObject[] PlayerTeamPosition = new GameObject[4];
     [SerializeField]
-    GameObject[] HeroTeamPosition = new GameObject[3];
+    GameObject[] HeroTeamPosition = new GameObject[4];
 
     bool is_skill_used = false;
     int skillIndex = -1;
+    UI_BattleScene ui_BattleScene;
 
+    public int CurStage = 0;
     public List<PlayerUnit> PlayerTeam;
     public List<HeroUnit> HeroTeam;
     public List<UnitBase> TurnList;
     public UnitBase StagedUnit;
-    UI_BattleScene ui_BattleScene;
+    public Action OnSkillUsed;
+
 
     private void Awake()
     {
@@ -46,7 +50,8 @@ public partial class BattleManager : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        LoadHeroTeam();
+        SetUnitOnScene();
         InitWaiting();
         PrepareNewTurn();
     }
@@ -71,31 +76,43 @@ public partial class BattleManager : MonoBehaviour
 
     void LoadHeroTeam()
     {
-
+        if (HeroTeam == null)
+            HeroTeam = new List<HeroUnit>();
+        else
+            HeroTeam.Clear();
+        var data = StageDB.GetStageData(CurStage);
+        foreach (var item in data.HeroUnits)
+        {
+            HeroTeam.Add(item);
+        }
     }
 
     void SortUnitOrder()
     {
-        
+
         TurnList.Sort(delegate (UnitBase a, UnitBase b) { return UnitSpeedCompare(a, b); });
-        
+
     }
     void ChangeStagedUnit()
     {
-        
+
         StagedUnit = TurnList[0];
         foreach (UnitBase a in TurnList)
         {
             a.Status.Waiting -= StagedUnit.Status.Waiting > 0 ? StagedUnit.Status.Waiting : 0;
         }
-        
+
     }
     void PrepareNewTurn()
     {
-        
+
         SortUnitOrder();
         ChangeStagedUnit();
-        
+        if (!StagedUnit.IsPlayerUnit)
+        {
+            var h = StagedUnit as HeroUnit;
+            h.Behave();
+        }
     }
     public void UseSkill(int index)
     {
@@ -119,6 +136,24 @@ public partial class BattleManager : MonoBehaviour
         {
             a.Status.Waiting = 1 / a.Status.Speed;
         }
+    }
+    void SetUnitOnScene()
+    {
+        var h = Resources.Load<GameObject>("Prefabs/HeroUnit");
+        var p = Resources.Load<GameObject>("Prefabs/PlayerUnit");
+        for (int i = 0; i < HeroTeam.Count; i++)
+        {
+            Instantiate(h, HeroTeamPosition[i].transform);
+        }
+        for (int i = 0; i < PlayerTeam.Count; i++)
+        {
+            Instantiate(p, PlayerTeamPosition[i].transform);
+        }
+
+    }
+    void OnSkillUsedHandler()
+    {
+        PrepareNewTurn();
     }
 }
 

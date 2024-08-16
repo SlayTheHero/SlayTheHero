@@ -80,4 +80,36 @@ public class CSVReader
         }
         return list;
     }
+    public static Dictionary<int, StageData> ReadStageData(string path) // string -> TextAsset  으로 변경. 파일 링크로 읽기
+    {
+        var dict = new Dictionary<int, StageData>();
+        var data = Resources.Load<TextAsset>(path); // 를 삭제.file 자체가 TextAsset이기 때문
+
+        var lines = Regex.Split(data.text, LINE_SPLIT_RE);
+
+        if (lines.Length <= 1) return dict;
+
+        var header = Regex.Split(lines[0], SPLIT_RE);
+        for (var i = 1; i < lines.Length; i++)
+        {
+
+            var values = Regex.Split(lines[i], SPLIT_RE);
+            if (values.Length == 0 || values[0] == "") continue;
+
+            for (var j = 0; j < header.Length && j < values.Length; j++)
+            {
+                values[j] = values[j].TrimStart(TRIM_CHARS).TrimEnd(TRIM_CHARS).Replace("\\", "");
+            }
+            var units = new List<HeroUnit>();
+            for(var j = 0; j < int.Parse(values[2]); j++)
+            {
+                units.Add(UnitDB.GetSkill(int.Parse(values[j + 3]))as HeroUnit);
+            }
+            StageData s_data = new(int.Parse(values[0]),int.Parse(values[1]),units);
+            dict[s_data.ID] = s_data;
+            
+        }
+        return dict;
+    }
+
 }
