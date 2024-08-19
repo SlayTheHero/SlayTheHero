@@ -56,6 +56,19 @@ public class UI_CharacterSelect : UI_Base
 
         List<UnitBase> li = PlayerUnitContainer.GetUnitList();
         Console.WriteLine(li.Count);
+        for (int i = 0; i < 3; i++)
+        {
+            manager.PlayerData.unitDeque.AddUnit(li[i]);
+        }
+        manager.PlayerData.playerName = "Wdas";
+        manager.PlayerData.playCount = 3;
+        SaveManager.SaveData(manager.PlayerData,0);
+        manager.PlayerData = SaveManager.LoadData(0);
+        SaveManager.SaveData(manager.PlayerData, 1);
+        manager.PlayerData.playerName = "asf";
+        SaveManager.SaveData(manager.PlayerData, 2);
+        SaveManager.SaveFileToClient();
+
     }
     public void tempEvent(PointerEventData data)
     {

@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviour
 
     PlayerData nowPlayerData = new PlayerData();
 
-    public PlayerData PlayerData { get {  return nowPlayerData; } }
+    public PlayerData PlayerData { get { return nowPlayerData; } set { nowPlayerData = value; } }
 
 
     private static void Init()
