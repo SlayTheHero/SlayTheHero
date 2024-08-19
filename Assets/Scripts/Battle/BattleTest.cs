@@ -39,7 +39,7 @@ public partial class BattleManager : MonoBehaviour
         UnitDB.initializeUnitList();
         for (int i = 0; i < 3; i++)
         {
-            HeroTeam.Add(UnitDB.GetSkill(0) as HeroUnit);
+            HeroTeam.Add(UnitDB.GetUnit(0) as HeroUnit);
         }
     }
 }

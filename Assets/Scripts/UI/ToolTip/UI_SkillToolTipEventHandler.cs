@@ -10,7 +10,12 @@ public class UI_SkillToolTipEventHandler : UI_BaseToolTipEventHandler
     TextMeshProUGUI SkillName;
     TextMeshProUGUI SkillExplanation;
     TextMeshProUGUI SkillType;
+    int nowSkillID;
 
+    public void setSkillID(int id)
+    {
+        nowSkillID = id;
+    }
 
     void Awake()
     {
@@ -22,7 +27,7 @@ public class UI_SkillToolTipEventHandler : UI_BaseToolTipEventHandler
 
     protected override void setData()
     {
-        Skill tempSkill = SkillDB.GetSkill(0);
+        Skill tempSkill = SkillDB.GetSkill(nowSkillID);
         SkillName.text = tempSkill.name;
         SkillExplanation.text = tempSkill.description;
         // 크기조정

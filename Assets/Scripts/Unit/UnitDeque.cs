@@ -22,7 +22,8 @@ public class UnitDeque : ISerializableToCSV
         if(index  < 0 || index >= list.Count) return null;
         return list[index];
     }
-
+    public int GetUnitCount()
+     { return list.Count; }
     public string ToCSV()
     {
         StringBuilder sb = new StringBuilder();
