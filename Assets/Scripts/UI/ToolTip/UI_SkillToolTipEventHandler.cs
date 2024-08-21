@@ -1,4 +1,4 @@
-using System.Collections;
+﻿using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
@@ -10,6 +10,7 @@ public class UI_SkillToolTipEventHandler : UI_BaseToolTipEventHandler
     TextMeshProUGUI SkillName;
     TextMeshProUGUI SkillExplanation;
     TextMeshProUGUI SkillType;
+    Image SkillImage;
     int nowSkillID;
 
     public void setSkillID(int id)
@@ -23,14 +24,24 @@ public class UI_SkillToolTipEventHandler : UI_BaseToolTipEventHandler
         SkillName = ToolTipInstance.transform.Find("UI_SkillName").GetComponent<TextMeshProUGUI>();
         SkillExplanation = ToolTipInstance.transform.Find("UI_SkillExplanation").GetComponent<TextMeshProUGUI>();
         SkillType = ToolTipInstance.transform.Find("UI_SkillType").GetComponent<TextMeshProUGUI>();
+        SkillImage = ToolTipInstance.transform.Find("UI_SkillImage").GetComponent<Image>();
     }
 
     protected override void setData()
     {
+        if (nowSkillID == -1)
+        {
+            SkillImage.sprite = null;
+            SkillName.text = "스킬없음";
+            SkillExplanation.text = "스킬없음"; 
+            return;
+        }
         Skill tempSkill = SkillDB.GetSkill(nowSkillID);
         SkillName.text = tempSkill.name;
         SkillExplanation.text = tempSkill.description;
-        // ũ������
+        SkillImage.sprite = ImageDB.GetImage(ImageDB.ImageType.Skill, nowSkillID);
+
+        // 크기조정
         RectTransform ToolTipRect = ToolTipInstance.GetComponent<RectTransform>();
         float textWidth = SkillExplanation.preferredWidth;
         float textHeight = SkillExplanation.preferredHeight + SkillType.preferredHeight;

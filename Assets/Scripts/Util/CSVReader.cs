@@ -103,7 +103,7 @@ public class CSVReader
             var units = new List<HeroUnit>();
             for(var j = 0; j < int.Parse(values[2]); j++)
             {
-                units.Add(UnitDB.GetSkill(int.Parse(values[j + 3]))as HeroUnit);
+                units.Add(UnitDB.GetUnit(int.Parse(values[j + 3]))as HeroUnit);
             }
             StageData s_data = new(int.Parse(values[0]),int.Parse(values[1]),units);
             dict[s_data.ID] = s_data;

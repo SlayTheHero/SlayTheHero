@@ -101,10 +101,12 @@ public class UI_CharacterSelect : UI_Base
             if(i < unit.SkillList.Count)
             {
                 GetGameObject((int)GameObjects.UI_Skill_1 + i).GetComponent<UI_SkillToolTipEventHandler>().setSkillID(unit.SkillList[i].id);
+                GetGameObject((int)GameObjects.UI_Skill_1 + i).GetComponent<Image>().sprite = ImageDB.GetImage(ImageDB.ImageType.Skill, unit.SkillList[i].id);
             }
             else
             {
-
+                GetGameObject((int)GameObjects.UI_Skill_1 + i).GetComponent<UI_SkillToolTipEventHandler>().setSkillID(-1);
+                GetGameObject((int)GameObjects.UI_Skill_1 + i).GetComponent<Image>().sprite = null;
             }
         }
     }
