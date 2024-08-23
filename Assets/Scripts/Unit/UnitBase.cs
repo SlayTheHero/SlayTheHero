@@ -26,6 +26,7 @@ public class UnitBase : ISerializableToCSV
     public UnitBase()
     {
         SkillList = new List<Skill>();
+        Status = new Status();
         BuffController = new BuffController();
     }
     // 파라미터 생성자

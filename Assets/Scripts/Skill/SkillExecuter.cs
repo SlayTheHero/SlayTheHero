@@ -9,12 +9,9 @@ using UnityEngine;
 public static class SkillExecuter
 {
     delegate void SkillDelegate(UnitBase Attacker, UnitBase Target, Skill skill);
-    public static void Execute(UnitBase Attacker, UnitBase Target, Skill skill)
+    public static async void Execute(UnitBase Attacker, UnitBase Target, Skill skill)
     {
-        if (skill.sk_DurationType == Skill.SK_DurationType.Passive) return;
 
-        //행동
-        RunBehaviorLogic(Attacker, Target, skill);
         //지속시간
         switch (skill.sk_DurationType)
         {
@@ -30,43 +27,55 @@ public static class SkillExecuter
             case Skill.SK_DurationType.Special:
                 break;
         }
+        //행동
+        await RunBehaviorLogic(Attacker, Target, skill);
+
+        Debug.Log("Skill Use finished");
+        //OnSkillUsed 삽입
+
     }
 
     #region Behaviors
 
-    private static void RunBehaviorLogic(UnitBase Attacker, UnitBase Target, Skill skill)
+    private static async Task RunBehaviorLogic(UnitBase Attacker, UnitBase Target, Skill skill)
     {
         switch (skill.sK_BehaviorType)
         {
             case Skill.SK_BehaviorType.Melee:
-                MeleeBehavior(Attacker, Target, skill);
+                await MeleeBehavior(Attacker, Target, skill);
                 break;
             case Skill.SK_BehaviorType.Projectile:
-                ProjectileBehavior(Attacker, Target, skill);
+                await ProjectileBehavior(Attacker, Target, skill);
                 break;
             case Skill.SK_BehaviorType.Buff:
-                BuffBehavior(Attacker, Target, skill);
+                await BuffBehavior(Attacker, Target, skill);
                 break;
             case Skill.SK_BehaviorType.Special:
-                SpecialBehavior(Attacker, Target, skill);
+                await SpecialBehavior(Attacker, Target, skill);
                 break;
         }
     }
-    private static void MeleeBehavior(UnitBase Attacker, UnitBase Target, Skill skill)
+    private static async Task MeleeBehavior(UnitBase Attacker, UnitBase Target, Skill skill)
+    {
+        int index = 0;
+        while(index < 5)
+        {
+            Debug.Log($"{index} Count");
+            index++;
+            await Task.Delay(1000);
+        }
+    }
+    private static async Task ProjectileBehavior(UnitBase Attacker, UnitBase Target, Skill skill)
     {
 
     }
-    private static void ProjectileBehavior(UnitBase Attacker, UnitBase Target, Skill skill)
-    {
-
-    }
-    private static void BuffBehavior(UnitBase Attacker, UnitBase Target, Skill skill)
+    private static async Task BuffBehavior(UnitBase Attacker, UnitBase Target, Skill skill)
     {
 
     }
 
     private static Dictionary<int, SkillDelegate> SpecialSkillDict = new Dictionary<int, SkillDelegate>();
-    private static void SpecialBehavior(UnitBase Attacker, UnitBase Target, Skill skill)
+    private static async Task SpecialBehavior(UnitBase Attacker, UnitBase Target, Skill skill)
     {
         switch (skill.id)
         {

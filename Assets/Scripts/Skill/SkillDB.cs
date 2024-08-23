@@ -128,7 +128,7 @@ public class Skill
     UnitBase blankUnit = new UnitBase();
     public void Invoke(UnitBase Target)
     {
-        SkillExecuter.Execute(blankUnit, Target, this);
+        SkillExecuter.Execute(new UnitBase(), Target, this);
     }
 }
 public static class SkillDB

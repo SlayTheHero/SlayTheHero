@@ -44,7 +44,7 @@ public class UI_SkillToolTipEventHandler : UI_BaseToolTipEventHandler
         // 크기조정
         RectTransform ToolTipRect = ToolTipInstance.GetComponent<RectTransform>();
         float textWidth = SkillExplanation.preferredWidth;
-        float textHeight = SkillExplanation.preferredHeight + SkillType.preferredHeight;
+        float textHeight = SkillExplanation.preferredHeight + SkillType.preferredHeight + SkillName.preferredHeight;
         ToolTipRect.sizeDelta = new Vector2(textWidth, textHeight);
     }
 }
