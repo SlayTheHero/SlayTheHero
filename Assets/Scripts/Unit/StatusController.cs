@@ -31,9 +31,10 @@ public static class StatusController
         {
             int random = Random.Range(0, 100) / 100;
             bool isCritical = false;
+            float critical = 1;
             if(Attacker.CriticalChance < random)
             {
-                isCritical = true;
+                isCritical = true; critical = 1 + ((float)Attacker.CriticalDamage / 100);
             }
 
             if (impactValue == 0)
@@ -45,7 +46,7 @@ public static class StatusController
                 impactValue = skill.impact;
             }
 
-            float endDamage = impactValue * (float)Attacker.CriticalDamage;
+            float endDamage = impactValue * critical;
             targetUnit.OnDamage((int)endDamage, Attacker, isCritical);
 
         }
