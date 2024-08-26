@@ -18,7 +18,6 @@ public class UI_SaveSelcet : UI_Base
     GameManager manager;
     protected override void Init()
     {
-        Debug.Log("ok?");
         // GameManager.UI.SetCanvas(this.gameObject, true);
         Bind<GameObject>(typeof(GameObjects));
 
@@ -59,6 +58,7 @@ public class UI_SaveSelcet : UI_Base
             }
         }
 
+        Debug.Log("SaveLoad Complete");
 
 
     }
