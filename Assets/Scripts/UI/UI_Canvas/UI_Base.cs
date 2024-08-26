@@ -50,7 +50,7 @@ public abstract class UI_Base : MonoBehaviour
     /// <returns></returns>
     protected T GetUI<T>(int index) where T : UnityEngine.Object
     {
-        if (_objects[typeof(T)] == null)
+        if (!_objects.ContainsKey(typeof(T)))
             return null;
 
         return _objects[typeof(T)][index] as T;

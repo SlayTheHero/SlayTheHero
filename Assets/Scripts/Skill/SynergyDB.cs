@@ -81,16 +81,29 @@ public static class SynergyDB
         foreach (Dictionary<string, object> item in dict)
         {
             string type = (string)item["Type"];
-            int id = (int)item["Synegy_ID"];
+            int id = (int)item["Synergy_ID"];
             string name = (string)item["Name"];
             string description = (string)item["Description"];
             Skill.SK_DurationType durType = Utility.StringToEnum<Skill.SK_DurationType>((string)item["DurationType"]);
             Skill.SK_Attribute attr = Utility.StringToEnum<Skill.SK_Attribute>((string)item["Attribute"]);
             Skill.SK_ChangeType cType = Utility.StringToEnum<Skill.SK_ChangeType>((string)item["ChangeType"]);
-            int twoImpact = (int)item["TwoImpact"];
-            int threeImpact = (int)item["ThreeImpact"];
+            int twoImpact = getIntValueOrZero("TwoImpact");
+            int threeImpact = getIntValueOrZero("ThreeImpact");
             Synergy tempSkill = new Synergy(id, name, description, durType, attr, cType, twoImpact,threeImpact);
             SynergyList.Add(tempSkill);
+            
+            
+            int getIntValueOrZero(string type)
+            {
+                if (item[type] == "")
+                {
+                    return 0;
+                }
+                else
+                {
+                    return (int)item[type];
+                }
+            }
         }
     }
 }

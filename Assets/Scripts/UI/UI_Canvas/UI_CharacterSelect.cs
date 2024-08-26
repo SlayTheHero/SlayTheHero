@@ -5,6 +5,7 @@ using TMPro;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UI_CharacterSelect : UI_Base
@@ -17,6 +18,7 @@ public class UI_CharacterSelect : UI_Base
         UI_SkillGridPanel,
         UI_CharacterSelectGirdPanel,
         UI_Skill_1, UI_Skill_2, UI_Skill_3, UI_Skill_4,
+        UI_RaceIcon, UI_ClassIcon, UI_TraitIcon
     }
 
     enum Images
@@ -52,7 +54,11 @@ public class UI_CharacterSelect : UI_Base
         }
         manager = GameManager.getInstance();
 
-        for (int i = 0; i < 6; i++)
+        for (int i = 3; i < 6; i++)
+        {
+            manager.PlayerData.unitDeque.AddUnit(UnitDB.GetUnit(i));
+        }
+        for (int i = 3; i < 6; i++)
         {
             manager.PlayerData.unitDeque.AddUnit(UnitDB.GetUnit(i));
         }
@@ -95,7 +101,7 @@ public class UI_CharacterSelect : UI_Base
         GetTextMeshPro((int)Texts.UI_TraitText).text = unit.Feature.ToString();
         GetTextMeshPro((int)Texts.UI_ClassText).text = unit.Job.ToString();
         GetTextMeshPro((int)Texts.UI_RaceText).text = unit.Race.ToString();
-
+        unit.SkillList[0].Invoke(new UnitBase());
         for (int i = 0; i < 3; i++)
         {
             if(i < unit.SkillList.Count)
@@ -109,11 +115,18 @@ public class UI_CharacterSelect : UI_Base
                 GetGameObject((int)GameObjects.UI_Skill_1 + i).GetComponent<Image>().sprite = null;
             }
         }
+        GetImage((int)Images.UI_RaceIcon).sprite = ImageDB.GetImage(ImageDB.ImageType.Synergy, (int)unit.Race);
+        GetImage((int)Images.UI_ClassIcon).sprite = ImageDB.GetImage(ImageDB.ImageType.Synergy, (int)unit.Job + 4);
+        GetImage((int)Images.UI_TraitIcon).sprite = ImageDB.GetImage(ImageDB.ImageType.Synergy, (int)unit.Feature + 7);
+        GetGameObject((int)GameObjects.UI_RaceIcon).GetComponent<UI_SynergyToolTipEventHandler>().setSynergyID((int)unit.Race);
+        GetGameObject((int)GameObjects.UI_ClassIcon).GetComponent<UI_SynergyToolTipEventHandler>().setSynergyID((int)unit.Job + 4);
+        GetGameObject((int)GameObjects.UI_TraitIcon).GetComponent<UI_SynergyToolTipEventHandler>().setSynergyID((int)unit.Feature + 7);
     }
 
     public void tempEvent(PointerEventData data)
     {
         data.pointerClick.GetComponent<Image>().color = Color.red;
+        SceneController.ChangeScene(SceneController.SceneType.SaveSelect);
     }
 
     // Start is called before the first frame update

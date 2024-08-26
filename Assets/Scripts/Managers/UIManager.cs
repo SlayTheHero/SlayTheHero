@@ -86,7 +86,7 @@ public class UIManager
     /// </summary>
     /// <param name="go"> Canvas GameObject</param>
     /// <param name="sort"> 팝업 관리용. 기본은 true.</param>
-    private void SetCanvas(GameObject go, bool sort = true)
+    public void SetCanvas(GameObject go, bool sort = true)
     {
         Canvas canvas = Utility.GetOrAddComponent<Canvas>(go);
         canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -138,7 +138,7 @@ public class UIManager
     {
         if (string.IsNullOrEmpty(name))
             name = typeof(T).Name;
-        GameObject prefab = Resources.Load<GameObject>($"Prefabs/UI/{name}");
+        GameObject prefab = Resources.Load<GameObject>($"Prefabs/UI/Canvas/{name}");
         GameObject go = GameObject.Instantiate(prefab);
         SetCanvas(go, sort);
         T scene = Utility.GetOrAddComponent<T>(go);
