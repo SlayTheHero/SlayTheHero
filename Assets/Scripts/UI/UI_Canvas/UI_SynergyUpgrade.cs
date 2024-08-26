@@ -5,23 +5,23 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
-public class UI_Maintenance : UI_Base
+public class UI_SynergyUpgrade : UI_Base
 {
     enum GameObjects
     {
+        UI_CharacterListPanel, UI_CharacterListGridPanel
     }
 
     enum Images
     {
-        UI_Select_1, UI_Select_2, UI_Select_3, UI_Deque,
-        UI_CharacterImage
+        UI_BackGround, UI_Output, UI_Input_1, UI_Input_2
     }
     enum Texts
     {
     }
     enum Buttons
     {
-        UI_Select_1, UI_Select_2, UI_Select_3, UI_Deque
+        UI_StartButton
     }
     GameManager manager;
     protected override void Init()
@@ -31,7 +31,6 @@ public class UI_Maintenance : UI_Base
         Bind<GameObject>(typeof(GameObjects));
         Bind<Image>(typeof(Images));
         Bind<Text>(typeof(Texts));
-        Bind<Button>(typeof(Buttons));
 
         string[] names = Enum.GetNames(typeof(Images));
         for (int i = 0; i < names.Length; i++)
@@ -39,7 +38,6 @@ public class UI_Maintenance : UI_Base
             Image image = GetImage(i);
             image.gameObject.AddUIEvent(tempEvent, UI_EventHandler.UIEvent.LClick);
         }
-        GetButton((int)Buttons.UI_Select_1).gameObject.AddUIEvent((p) => manager.UI.ShowPopupUI<UI_SynergyUpgrade>(),UI_EventHandler.UIEvent.LClick);
     }
     public void tempEvent(PointerEventData data)
     {
