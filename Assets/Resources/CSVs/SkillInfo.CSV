@@ -1,7 +1,7 @@
 ﻿Type,Skill_ID,Name,Description,DurationType,BehaviorType,Attribute,ChangeType,Range,Impact,Duration,CoolTime
-검사,0,BaseSwordAttack,칼로 적을 공격합니다,Active,Melee,Health,Modification,1,-1,0,1
-궁사,1,BaseBowAttack,활로 적을 공격합니다,Active,Projectile,Health,Modification,4,2,0,1
-마법사,2,BaseMagicAttack,마법으로 적을 공격합니다,Active,Projectile,Health,Modification,4,2,0,1
+검사,0,BaseSwordAttack,칼로 적을 공격합니다,Active,Melee,Health,Modification,1,{Attack},0,1
+궁사,1,BaseBowAttack,활로 적을 공격합니다,Active,Projectile,Health,Modification,4,{Attack},0,1
+마법사,2,BaseMagicAttack,마법으로 적을 공격합니다,Active,Projectile,Health,Modification,4,{Attack},0,1
 검사,3,석화,이후 자신이 받는 대미지를 1턴간 무효화한다.,Active,Buff,Defence,Modification,0,200,1,4
 검사,4,도전,적에게 스턴 상태를 부여한다. (적의 저항을 무시한다),Active,Buff,,,,1,1,4
 검사,5,맞다이로 들어와,방어력이 100% 증가한다.,Passive,,Defence,Multiplication,,100,,
