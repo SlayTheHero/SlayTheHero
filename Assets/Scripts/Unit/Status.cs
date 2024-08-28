@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using System.Text;
 using UnityEngine;
+using UnityEngine.Windows;
 [Serializable]
-public class Status
+public class Status : ISerializableToCSV
 {
     public delegate void StatusEventHandler(string name,object value);
     public event StatusEventHandler OnStatusChange;
@@ -119,6 +121,50 @@ public class Status
     {
         int damage = (int)((double)endDamage * (double)(100 - DEF + Attacker.Penetration) / 100.0);
         HP -= damage;
+    }
+
+
+    public string ToCSV()
+    {
+        StringBuilder sb = new StringBuilder();
+
+        sb.Append("Status").Append(",");
+        sb.Append(HP).Append(",");
+        sb.Append(MaxHP).Append(",");
+        sb.Append(ATK).Append(",");
+        sb.Append(DEF).Append(",");
+        sb.Append(Penetration).Append(",");
+        sb.Append(Resistance).Append(",");
+        sb.Append(CriticalChance).Append(",");
+        sb.Append(CriticalDamage).Append(",");
+        sb.Append(StunChance).Append(",");
+        sb.Append(ConfusionChance).Append(",");
+        sb.Append(DodgeChance).Append(",");
+        sb.Append(Speed).Append("");
+
+        return sb.ToString();
+    }
+
+    public void FromCSV(string data)
+    {
+        string[] statusInfo = data.Split(',');
+        if (statusInfo[0] != "Status")
+        {
+            Debug.Log($"{data} is not Valid Status");
+            return;
+        }
+        hp = int.Parse(statusInfo[1]);
+        maxHP = int.Parse(statusInfo[2]);
+        atk = int.Parse(statusInfo[3]);
+        def = int.Parse(statusInfo[4]);
+        pen = int.Parse(statusInfo[5]);
+        res = int.Parse(statusInfo[6]);
+        criticalChance = int.Parse(statusInfo[7]);
+        criticalDamage = int.Parse(statusInfo[8]);
+        stun = int.Parse(statusInfo[9]);
+        confusion = int.Parse(statusInfo[10]);
+        dodge = int.Parse(statusInfo[11]);
+        speed = int.Parse(statusInfo[12]);
     }
 }
 

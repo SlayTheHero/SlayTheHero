@@ -1,29 +1,30 @@
-using System;
+ï»¿using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Diagnostics;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 
 /// <summary>
-/// UI ºÎ¸ğ°¡ µÇ´Â Å¬·¡½º. ¾Àº°·Î »ó¼Ó¹Ş¾Æ »ç¿ëÇÏ½Ã¸é µË´Ï´Ù.
-/// Hierarchy¿¡ ÀÖ´Â Äµ¹ö½º¿¡ ³Ö½À´Ï´Ù.
+/// UI ë¶€ëª¨ê°€ ë˜ëŠ” í´ë˜ìŠ¤. ì”¬ë³„ë¡œ ìƒì†ë°›ì•„ ì‚¬ìš©í•˜ì‹œë©´ ë©ë‹ˆë‹¤.
+/// Hierarchyì— ìˆëŠ” ìº”ë²„ìŠ¤ì— ë„£ìŠµë‹ˆë‹¤.
 /// </summary>
 public abstract class UI_Base : MonoBehaviour
 {
     /// <summary>
-    /// ÀúÀå¿ë Dictionary Á÷Á¢ Á¢±ÙÇÏÁö ¾Ê½À´Ï´Ù.
+    /// ì €ì¥ìš© Dictionary ì§ì ‘ ì ‘ê·¼í•˜ì§€ ì•ŠìŠµë‹ˆë‹¤.
     /// </summary>
     private Dictionary<Type, UnityEngine.Object[]> _objects = new Dictionary<Type, UnityEngine.Object[]>();
     protected abstract void Init();
 
     /// <summary>
-    /// Type¿¡ Enum °ªÀ» ³ÖÀ¸¸é Enum ¸ñ·ÏÀ» stringÀ¸·Î º¯È¯ÇÏ¿© ÀÚ½ÄÁß¿¡ ¿ÀºêÁ§Æ®°¡ ÀÖ´Ù¸é ¿¬°áÇÕ´Ï´Ù.
-    /// ÀÌÈÄ¿¡ GetUI ¸¦ÅëÇØ ¿¬°áµÈ °ªÀ» Dictionary¿¡¼­ ¹Ş¾Æ¿É´Ï´Ù.
+    /// Typeì— Enum ê°’ì„ ë„£ìœ¼ë©´ Enum ëª©ë¡ì„ stringìœ¼ë¡œ ë³€í™˜í•˜ì—¬ ìì‹ì¤‘ì— ì˜¤ë¸Œì íŠ¸ê°€ ìˆë‹¤ë©´ ì—°ê²°í•©ë‹ˆë‹¤.
+    /// ì´í›„ì— GetUI ë¥¼í†µí•´ ì—°ê²°ëœ ê°’ì„ Dictionaryì—ì„œ ë°›ì•„ì˜µë‹ˆë‹¤.
     /// </summary>
-    /// <typeparam name="T"> ¿øÇÏ´Â Å¸ÀÔ(Image, Text, GameObject etc..) </typeparam>
-    /// <param name="type"> typeof(Enum) ÇüÅÂ·Î ÀÎÀÚ¿¡ Àü´ŞÇÕ´Ï´Ù. </param>
+    /// <typeparam name="T"> ì›í•˜ëŠ” íƒ€ì…(Image, Text, GameObject etc..) </typeparam>
+    /// <param name="type"> typeof(Enum) í˜•íƒœë¡œ ì¸ìì— ì „ë‹¬í•©ë‹ˆë‹¤. </param>
     protected void Bind<T>(Type type) where T : UnityEngine.Object
     {
         string[] names = Enum.GetNames(type);
@@ -42,49 +43,56 @@ public abstract class UI_Base : MonoBehaviour
         _objects.Add(typeof(T), objects);
     }
     /// <summary>
-    /// Enum °ªÀ» ÀÌ¿ëÇØ Enum °ª¿¡ ÇØ´çÇÏ´Â ÄÄÆ÷³ÍÆ®¸¦ °¡Á®¿É´Ï´Ù.
+    /// Enum ê°’ì„ ì´ìš©í•´ Enum ê°’ì— í•´ë‹¹í•˜ëŠ” ì»´í¬ë„ŒíŠ¸ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
     /// </summary>
-    /// <typeparam name="T"> ÄÄÆ÷³ÍÆ® Á¾·ù </typeparam>
-    /// <param name="index">(int)enum °ªÀ» ÀÎÀÚ¿¡ ³Ö½À´Ï´Ù.</param>
+    /// <typeparam name="T"> ì»´í¬ë„ŒíŠ¸ ì¢…ë¥˜ </typeparam>
+    /// <param name="index">(int)enum ê°’ì„ ì¸ìì— ë„£ìŠµë‹ˆë‹¤.</param>
     /// <returns></returns>
     protected T GetUI<T>(int index) where T : UnityEngine.Object
     {
-        if (_objects[typeof(T)] == null)
+        if (!_objects.ContainsKey(typeof(T)))
             return null;
 
         return _objects[typeof(T)][index] as T;
     }
     /// <summary>
-    /// Enum °ªÀ» ÀÌ¿ëÇØ Enum °ª¿¡ ÇØ´çÇÏ´Â ÅØ½ºÆ®¸¦ °¡Á®¿É´Ï´Ù.
+    /// Enum ê°’ì„ ì´ìš©í•´ Enum ê°’ì— í•´ë‹¹í•˜ëŠ” í…ìŠ¤íŠ¸ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
+    /// (Text)ê°€ ì•„ë‹Œ TextMeshProUGUIë¥¼ ì‚¬ìš©í•˜ë¯€ë¡œ ì‚¬ìš©í•  ìˆ˜ ì—†ìŠµë‹ˆë‹¤
     /// </summary>
-    /// <param name="index">(int)enum °ªÀ» ÀÎÀÚ¿¡ ³Ö½À´Ï´Ù.</param>
+    /// <param name="index">(int)enum ê°’ì„ ì¸ìì— ë„£ìŠµë‹ˆë‹¤.</param>
     /// <returns></returns>
     public Text GetText(int index) { return GetUI<Text>(index); }
     /// <summary>
-    /// Enum °ªÀ» ÀÌ¿ëÇØ Enum °ª¿¡ ÇØ´çÇÏ´Â ¹öÆ°À» °¡Á®¿É´Ï´Ù.
+    /// Enum ê°’ì„ ì´ìš©í•´ Enum ê°’ì— í•´ë‹¹í•˜ëŠ” ë²„íŠ¼ì„ ê°€ì ¸ì˜µë‹ˆë‹¤.
     /// </summary>
-    /// <param name="index">(int)enum °ªÀ» ÀÎÀÚ¿¡ ³Ö½À´Ï´Ù.</param>
+    /// <param name="index">(int)enum ê°’ì„ ì¸ìì— ë„£ìŠµë‹ˆë‹¤.</param>
     /// <returns></returns>
     public Button GetButton(int index) { return GetUI<Button>(index); }
     /// <summary>
-    /// Enum °ªÀ» ÀÌ¿ëÇØ Enum °ª¿¡ ÇØ´çÇÏ´Â ÀÌ¹ÌÁö¸¦ °¡Á®¿É´Ï´Ù.
+    /// Enum ê°’ì„ ì´ìš©í•´ Enum ê°’ì— í•´ë‹¹í•˜ëŠ” ì´ë¯¸ì§€ë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
     /// </summary>
-    /// <param name="index">(int)enum °ªÀ» ÀÎÀÚ¿¡ ³Ö½À´Ï´Ù.</param>
+    /// <param name="index">(int)enum ê°’ì„ ì¸ìì— ë„£ìŠµë‹ˆë‹¤.</param>
     /// <returns></returns>
     public Image GetImage(int index) { return GetUI<Image>(index); } 
     /// <summary>
-    /// Enum °ªÀ» ÀÌ¿ëÇØ Enum °ª¿¡ ÇØ´çÇÏ´Â GameObject¸¦ °¡Á®¿É´Ï´Ù.
+    /// Enum ê°’ì„ ì´ìš©í•´ Enum ê°’ì— í•´ë‹¹í•˜ëŠ” GameObjectë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
     /// </summary>
-    /// <param name="index">(int)enum °ªÀ» ÀÎÀÚ¿¡ ³Ö½À´Ï´Ù.</param>
+    /// <param name="index">(int)enum ê°’ì„ ì¸ìì— ë„£ìŠµë‹ˆë‹¤.</param>
     /// <returns></returns>
     public GameObject GetGameObject(int index) { return GetUI<GameObject>(index); }
+    /// <summary>
+    /// Enum ê°’ì„ ì´ìš©í•´ Enum ê°’ì— í•´ë‹¹í•˜ëŠ” TextMeshProUGUIë¥¼ ê°€ì ¸ì˜µë‹ˆë‹¤.
+    /// </summary>
+    /// <param name="index">(int)enum ê°’ì„ ì¸ìì— ë„£ìŠµë‹ˆë‹¤.</param>
+    /// <returns></returns>
+    public TextMeshProUGUI GetTextMeshPro(int index) { return GetUI<TextMeshProUGUI>(index); }
 
     /// <summary>
-    /// Get À¸·Î ¾òÀº GameObject¿¡ UI Event¸¦ ¿¬°áÇÕ´Ï´Ù.
+    /// Get ìœ¼ë¡œ ì–»ì€ GameObjectì— UI Eventë¥¼ ì—°ê²°í•©ë‹ˆë‹¤.
     /// </summary>
-    /// <param name="go">ÀÚ½Ä ¿ÀºêÁ§Æ®</param>
-    /// <param name="action">PointerEventData¸¦ ÀÎÀÚ·Î °¡Áö´Â Action</param>
-    /// <param name="type"> ÀÌº¥Æ® Å¸ÀÔ </param>
+    /// <param name="go">ìì‹ ì˜¤ë¸Œì íŠ¸</param>
+    /// <param name="action">PointerEventDataë¥¼ ì¸ìë¡œ ê°€ì§€ëŠ” Action</param>
+    /// <param name="type"> ì´ë²¤íŠ¸ íƒ€ì… </param>
     public static void BindUIEvent(GameObject go, Action<PointerEventData> action, UI_EventHandler.UIEvent type = UI_EventHandler.UIEvent.LClick)
     {
 

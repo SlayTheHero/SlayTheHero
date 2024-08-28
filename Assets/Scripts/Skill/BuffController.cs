@@ -17,6 +17,16 @@ public class BuffController
 
     private UnitBase Unit;
     private Queue<Skill> BuffQueue;
+
+    public BuffController(UnitBase unitSave, UnitBase unit, Queue<Skill> buffQueue)
+    {
+    }
+
+    public BuffController()
+    {
+        BuffQueue = new Queue<Skill>();
+    }
+
     /// <summary>
     /// Unit을 등록합니다
     /// </summary>

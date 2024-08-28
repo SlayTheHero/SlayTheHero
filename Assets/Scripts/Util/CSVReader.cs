@@ -11,10 +11,10 @@ public class CSVReader
     static string LINE_SPLIT_RE = @"\r\n|\n\r|\n|\r";
     static char[] TRIM_CHARS = { '\"' };
 
-    public static List<Dictionary<string, object>> Read(string path) // string -> TextAsset  À¸·Î º¯°æ. ÆÄÀÏ ¸µÅ©·Î ÀÐ±â
+    public static List<Dictionary<string, object>> Read(string path) // string -> TextAsset  ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½ ï¿½Ð±ï¿½
     {
         var list = new List<Dictionary<string, object>>();
-        var data = Resources.Load<TextAsset>(path); // ¸¦ »èÁ¦.file ÀÚÃ¼°¡ TextAssetÀÌ±â ¶§¹®
+        var data = Resources.Load<TextAsset>(path); // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.file ï¿½ï¿½Ã¼ï¿½ï¿½ TextAssetï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½
 
         var lines = Regex.Split(data.text, LINE_SPLIT_RE);
 
@@ -80,10 +80,10 @@ public class CSVReader
         }
         return list;
     }
-    public static Dictionary<int, List<StageData>> ReadStageData(string path) // string -> TextAsset  À¸·Î º¯°æ. ÆÄÀÏ ¸µÅ©·Î ÀÐ±â
+    public static Dictionary<int, List<StageData>> ReadStageData(string path) // string -> TextAsset  ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½. ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å©ï¿½ï¿½ ï¿½Ð±ï¿½
     {
         var dict = new Dictionary<int, List<StageData>>();
-        var data = Resources.Load<TextAsset>(path); // ¸¦ »èÁ¦.file ÀÚÃ¼°¡ TextAssetÀÌ±â ¶§¹®
+        var data = Resources.Load<TextAsset>(path); // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.file ï¿½ï¿½Ã¼ï¿½ï¿½ TextAssetï¿½Ì±ï¿½ ï¿½ï¿½ï¿½ï¿½
 
         var lines = Regex.Split(data.text, LINE_SPLIT_RE);
 
