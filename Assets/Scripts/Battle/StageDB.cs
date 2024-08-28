@@ -6,8 +6,8 @@ using UnityEngine;
 public static class StageDB
 {
     public const string StageDBPath = "CSVs/BattleSceneDB";
-    public static Dictionary<int,StageData> AllStages;
-    public static StageData GetStageData(int stage)
+    public static Dictionary<int,List<StageData>> AllStages;
+    public static StageData GetStageData(int stage,int sub)
     {
         if (AllStages == null)
         {
@@ -15,7 +15,7 @@ public static class StageDB
         }
         if (AllStages.ContainsKey(stage))
         {
-            StageData stageData = AllStages[stage];
+            StageData stageData = AllStages[stage][sub];
             return stageData;
         }
         return null;

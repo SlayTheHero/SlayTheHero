@@ -34,7 +34,7 @@ public class Status
     [SerializeField]
     int speed;
     [SerializeField]
-    double waiting;
+    int waiting;
     [SerializeField]
     public int HP { get { return hp; } set { hp = value; OnStatusChange?.Invoke("HP", value); } }
     public int MaxHP { get { return maxHP; } set { maxHP = value; OnStatusChange?.Invoke("MaxHP", value); } }
@@ -48,7 +48,7 @@ public class Status
     public int ConfusionChance { get { return confusion; } set { confusion = value; OnStatusChange?.Invoke("ConfusionChance", value); } }
     public int DodgeChance { get { return dodge; } set { dodge = value; OnStatusChange?.Invoke("DodgeChance", value); } }
     public int Speed { get { return speed; } set { speed = value; OnStatusChange?.Invoke("Speed",value); } }
-    public double Waiting { get { return waiting; } set { waiting = value; OnStatusChange?.Invoke("Waiting", value); } }
+    public int Waiting { get { return waiting; } set { waiting = value; OnStatusChange?.Invoke("Waiting", value); } }
 
     public static Status operator +(Status left, Status right)
     {

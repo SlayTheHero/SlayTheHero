@@ -80,9 +80,9 @@ public class CSVReader
         }
         return list;
     }
-    public static Dictionary<int, StageData> ReadStageData(string path) // string -> TextAsset  으로 변경. 파일 링크로 읽기
+    public static Dictionary<int, List<StageData>> ReadStageData(string path) // string -> TextAsset  으로 변경. 파일 링크로 읽기
     {
-        var dict = new Dictionary<int, StageData>();
+        var dict = new Dictionary<int, List<StageData>>();
         var data = Resources.Load<TextAsset>(path); // 를 삭제.file 자체가 TextAsset이기 때문
 
         var lines = Regex.Split(data.text, LINE_SPLIT_RE);
@@ -100,14 +100,19 @@ public class CSVReader
             {
                 values[j] = values[j].TrimStart(TRIM_CHARS).TrimEnd(TRIM_CHARS).Replace("\\", "");
             }
+
             var units = new List<HeroUnit>();
-            for(var j = 0; j < int.Parse(values[2]); j++)
+            for (var j = 0; j < int.Parse(values[2]); j++)
             {
-                units.Add(UnitDB.GetSkill(int.Parse(values[j + 3]))as HeroUnit);
+                units.Add(new HeroUnit(UnitDB.GetUnit(int.Parse(values[j + 3]))));
             }
-            StageData s_data = new(int.Parse(values[0]),int.Parse(values[1]),units);
-            dict[s_data.ID] = s_data;
-            
+            StageData s_data = new(int.Parse(values[0]), int.Parse(values[1]), units);
+            if (!dict.ContainsKey(s_data.ID))
+            {
+                dict[s_data.ID] = new List<StageData>();
+            }
+            dict[s_data.ID].Add(s_data);
+
         }
         return dict;
     }

@@ -70,10 +70,6 @@ public static class SkillExecuter
     {
         switch (skill.id)
         {
-            case -1:
-                Target.OnDamage(10, Attacker.Status, false);
-                BattleManager.Instance.OnSkillUsed.Invoke();
-                break;
             default: break;
         }
         //스킬ID로 파싱 후 특수로직 따로 작성
