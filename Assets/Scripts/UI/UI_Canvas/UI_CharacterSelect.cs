@@ -1,7 +1,10 @@
+using JetBrains.Annotations;
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEngine;
 using UnityEngine.EventSystems;
@@ -12,6 +15,7 @@ public class UI_CharacterSelect : UI_Base
 {
     enum GameObjects
     {
+        UI_CharacterListPanel,
         UI_CharaterListScrollBar,
         UI_CharacterListGridPanel,
         UI_CharacterDialoguePanel,
@@ -25,7 +29,8 @@ public class UI_CharacterSelect : UI_Base
     { 
         UI_RaceIcon, UI_ClassIcon, UI_TraitIcon, UI_Portrait,
         UI_Skill_1, UI_Skill_2, UI_Skill_3, UI_Skill_4, 
-        UI_CharacterSlot_1, UI_CharacterSlot_2, UI_CharacterSlot_3, 
+        UI_CharacterSlot_1, UI_CharacterSlot_2, UI_CharacterSlot_3,
+        UI_Synergy_1, UI_Synergy_2, UI_Synergy_3,
         UI_StartButton,UI_SettingButton
     }
     enum Texts
@@ -44,6 +49,7 @@ public class UI_CharacterSelect : UI_Base
         Bind<GameObject>(typeof(GameObjects));
         Bind<Image>(typeof(Images));
         Bind<Text>(typeof(Texts));
+        Bind<Button>(typeof(Buttons));
         Bind<TextMeshProUGUI>(typeof(Texts));
 
         string[] names = Enum.GetNames(typeof(Images));
@@ -78,19 +84,24 @@ public class UI_CharacterSelect : UI_Base
         SaveManager.SaveFileToClient();
 
         int unitCount = manager.PlayerData.unitDeque.GetUnitCount();
-        GameObject UI_CharacterListGridPanel = GetGameObject((int)GameObjects.UI_CharacterListGridPanel);
-        GameObject prefab = Resources.Load<GameObject>("Prefabs/UI/Element/UI_Button");
-        for (int i = 0; i < unitCount; i++)
-        {
-            GameObject temp = GameObject.Instantiate(prefab, UI_CharacterListGridPanel.transform);
-            temp.name = "UI_Character_" + i;
+        GameObject UI_CharacterListPanel = GetGameObject((int)GameObjects.UI_CharacterListPanel);
+        UI_CharacterListPanel characterList = UI_CharacterListPanel.GetComponent<UI_CharacterListPanel>();
+        characterList.LoadPlayerData();
+        characterList.SetUnitEvent(OnCharacterClicked, UI_EventHandler.UIEvent.LClick);
 
-            temp.gameObject.AddUIEvent(OnCharacterClicked, UI_EventHandler.UIEvent.LClick);
-        }
+        selectedArr = new int[3]; Array.Fill(selectedArr, -1);
+        nowSynergy = new (int, bool)[3]; Array.Fill(nowSynergy, (-1,false));
 
 
+        GetButton((int)Buttons.UI_StartButton).gameObject.AddUIEvent(OnStartButtonClicked, UI_EventHandler.UIEvent.LClick);
+        isStartReady = false;
+        setStartButton();
+        setSynergyImage();
     }
 
+    int[] selectedArr;
+    // true¸é 3°³
+    (int,bool)[] nowSynergy;
     private void OnCharacterClicked(PointerEventData data)
     {
         string[] nameArr = data.selectedObject.gameObject.name.Split("_");
@@ -101,7 +112,6 @@ public class UI_CharacterSelect : UI_Base
         GetTextMeshPro((int)Texts.UI_TraitText).text = unit.Feature.ToString();
         GetTextMeshPro((int)Texts.UI_ClassText).text = unit.Job.ToString();
         GetTextMeshPro((int)Texts.UI_RaceText).text = unit.Race.ToString();
-        unit.SkillList[0].Invoke(new UnitBase());
         for (int i = 0; i < 3; i++)
         {
             if(i < unit.SkillList.Count)
@@ -121,12 +131,179 @@ public class UI_CharacterSelect : UI_Base
         GetGameObject((int)GameObjects.UI_RaceIcon).GetComponent<UI_SynergyToolTipEventHandler>().setSynergyID((int)unit.Race);
         GetGameObject((int)GameObjects.UI_ClassIcon).GetComponent<UI_SynergyToolTipEventHandler>().setSynergyID((int)unit.Job + 4);
         GetGameObject((int)GameObjects.UI_TraitIcon).GetComponent<UI_SynergyToolTipEventHandler>().setSynergyID((int)unit.Feature + 7);
+
+        if (selectedArr[0] == index || selectedArr[1] == index || selectedArr[2] == index)
+        {
+            return;
+        }
+
+        if (selectedArr[0] == -1)
+        {
+            GetImage((int)Images.UI_CharacterSlot_1).sprite = data.selectedObject.gameObject.GetComponent<Image>().sprite;
+            GetImage((int)Images.UI_CharacterSlot_1).gameObject.AddUIEvent(OnSlotClicked, UI_EventHandler.UIEvent.LClick);
+            selectedArr[0] = index;
+        }
+        else if(selectedArr[1] == -1)
+        {
+            GetImage((int)Images.UI_CharacterSlot_2).sprite = data.selectedObject.gameObject.GetComponent<Image>().sprite;
+            GetImage((int)Images.UI_CharacterSlot_2).gameObject.AddUIEvent(OnSlotClicked, UI_EventHandler.UIEvent.LClick);
+            selectedArr[1] = index;
+        }
+        else if(selectedArr[2] == -1)
+        {
+            GetImage((int)Images.UI_CharacterSlot_3).sprite = data.selectedObject.gameObject.GetComponent<Image>().sprite;
+            GetImage((int)Images.UI_CharacterSlot_3).gameObject.AddUIEvent(OnSlotClicked, UI_EventHandler.UIEvent.LClick);
+            selectedArr[2] = index;
+        }
+
+
+        GetButton((int)Buttons.UI_StartButton).gameObject.AddUIEvent(OnStartButtonClicked, UI_EventHandler.UIEvent.LClick);
+        setStartButton();
+        setSynergyImage();
     }
 
+    private void OnSlotClicked(PointerEventData data)
+    {
+        int index = int.Parse(data.pointerClick.name.Split("_")[2]) - 1;
+        if (selectedArr[index] != -1)
+        {
+            switch(index)
+            {
+                case 0:
+                    GetImage((int)Images.UI_CharacterSlot_1).sprite = ImageDB.GetImage(ImageDB.ImageType.Default,0);
+                    break;
+                case 1:
+                    GetImage((int)Images.UI_CharacterSlot_2).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
+                    break;
+                case 2:
+                    GetImage((int)Images.UI_CharacterSlot_3).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
+                    break;
+            }
+            selectedArr[index] = -1;
+        }
+        setStartButton();
+        setSynergyImage();
+    }
+
+    
+    private void setSynergyImage()
+    {
+        List<(int,bool)> nowSynergy = new List<(int,bool)>();
+        List<UnitBase> unit = new List<UnitBase>();
+        for (int i = 0; i < 3; i++)
+        {
+            bool select = selectedArr[i] == -1;
+            if(!select)
+            {
+                unit.Add(manager.PlayerData.unitDeque.GetUnit(selectedArr[i]));
+            }
+        }
+        for (int i = 0; i < 3; i++)
+        {
+            GetImage((int)Images.UI_Synergy_1).sprite = ImageDB.GetImage(ImageDB.ImageType.Unit, 1);
+            GetImage((int)Images.UI_Synergy_2).sprite = ImageDB.GetImage(ImageDB.ImageType.Unit, 1);
+            GetImage((int)Images.UI_Synergy_3).sprite = ImageDB.GetImage(ImageDB.ImageType.Unit, 1);
+        }
+        
+        short[] raceCount = new short[4];
+        short[] FeatCount = new short[4];
+        short[] JobCount = new short[3];
+
+        if (unit.Count > 1)
+        {
+            for (int i = 0; i < unit.Count; i++)
+            {
+                UnitBase nowUnit = unit[i];
+                raceCount[(int)nowUnit.Race]++;
+                FeatCount[(int)nowUnit.Feature]++;
+                JobCount[(int)nowUnit.Job]++;
+            }
+            short[] nowCount = raceCount;
+            int max = 0; int maxIndex = 0;
+            for (int i = 0; i < nowCount.Length; i++)
+            {
+                if (nowCount[i] > max)
+                {
+                    max = nowCount[i];
+                    maxIndex = i;
+                }
+            }
+            if(max == 2)
+            {
+                nowSynergy.Add((maxIndex, false));
+            }
+            else if (max == 3)
+            {
+                nowSynergy.Add((maxIndex, true));
+            }
+            nowCount = JobCount;
+            max = 0; maxIndex = 0;
+            for (int i = 0; i < nowCount.Length; i++)
+            {
+                if (nowCount[i] > max)
+                {
+                    max = nowCount[i];
+                    maxIndex = i;
+                }
+            }
+            if (max == 2)
+            {
+                nowSynergy.Add((maxIndex+ 4, false));
+            }
+            else if (max == 3)
+            {
+                nowSynergy.Add((maxIndex + 4, true));
+            }
+            nowCount = FeatCount;
+            max = 0; maxIndex = 0;
+            for (int i = 0; i < nowCount.Length; i++)
+            {
+                if (nowCount[i] > max)
+                {
+                    max = nowCount[i];
+                    maxIndex = i;
+                }
+            }
+            if (max == 2)
+            {
+                nowSynergy.Add((maxIndex + 7, false));
+            }
+            else if (max == 3)
+            {
+                nowSynergy.Add((maxIndex + 7, true));
+            }
+        }
+
+        for (int i = 0; i < nowSynergy.Count; i++)
+        {
+            GetImage((int)Images.UI_Synergy_1 + i).sprite = ImageDB.GetImage(ImageDB.ImageType.Synergy, nowSynergy[i].Item1);
+        }
+    }
+    private void setStartButton()
+    {
+        if (selectedArr[0] != -1 && selectedArr[1] != -1 && selectedArr[2] != -1)
+        {
+            isStartReady = true;
+            GetButton((int)Buttons.UI_StartButton).interactable = true;
+        }
+        else
+        {
+            isStartReady = false;
+            GetButton((int)Buttons.UI_StartButton).interactable = false;
+        }
+    }
+    bool isStartReady = false; 
     public void tempEvent(PointerEventData data)
     {
         data.pointerClick.GetComponent<Image>().color = Color.red;
-        SceneController.ChangeScene(SceneController.SceneType.SaveSelect);
+    }
+
+    public void OnStartButtonClicked(PointerEventData data)
+    {
+        if (isStartReady)
+        {
+            SceneController.ChangeScene(SceneController.SceneType.Maintenance);
+        }
     }
 
     // Start is called before the first frame update
