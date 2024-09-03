@@ -124,6 +124,7 @@ public class Skill
     public void Invoke(UnitBase Attacker, UnitBase Target)
     {
         SkillExecuter.Execute(Attacker,Target,this);
+        BattleManager.Instance.OnSkillUsed.Invoke();
     }
     UnitBase blankUnit = new UnitBase();
     public void Invoke(UnitBase Target)

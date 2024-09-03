@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Security.Cryptography;
 using System.Text;
@@ -6,9 +7,11 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Windows;
 
+[Serializable]
 public class UnitBase : ISerializableToCSV
 {
     public bool IsPlayerUnit;
+    public int Position;
     public int ID;
     public string Name;
     [SerializeField]
@@ -72,7 +75,7 @@ public class UnitBase : ISerializableToCSV
     /// <param name="isCritical">크리티컬 여부</param>
     public void OnDamage(int endDamage,Status Attacker,bool isCritical)
     {
-        int random = Random.Range(0,100) / 100;
+        int random = UnityEngine.Random.Range(0,100) / 100;
         if(random < Status.DodgeChance)
         {
             // 회피 로직
