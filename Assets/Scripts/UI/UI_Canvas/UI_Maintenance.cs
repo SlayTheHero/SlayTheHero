@@ -40,6 +40,8 @@ public class UI_Maintenance : UI_Base
             image.gameObject.AddUIEvent(tempEvent, UI_EventHandler.UIEvent.LClick);
         }
         GetButton((int)Buttons.UI_Select_1).gameObject.AddUIEvent((p) => manager.UI.ShowPopupUI<UI_SynergyUpgrade>(),UI_EventHandler.UIEvent.LClick);
+        GetButton((int)Buttons.UI_Select_2).gameObject.AddUIEvent((p) => manager.UI.ShowPopupUI<UI_UnitRecruit>(), UI_EventHandler.UIEvent.LClick);
+
     }
     public void tempEvent(PointerEventData data)
     {
