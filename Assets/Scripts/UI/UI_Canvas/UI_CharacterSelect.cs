@@ -200,9 +200,9 @@ public class UI_CharacterSelect : UI_Base
         }
         for (int i = 0; i < 3; i++)
         {
-            GetImage((int)Images.UI_Synergy_1).sprite = ImageDB.GetImage(ImageDB.ImageType.Unit, 1);
-            GetImage((int)Images.UI_Synergy_2).sprite = ImageDB.GetImage(ImageDB.ImageType.Unit, 1);
-            GetImage((int)Images.UI_Synergy_3).sprite = ImageDB.GetImage(ImageDB.ImageType.Unit, 1);
+            GetImage((int)Images.UI_Synergy_1).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
+            GetImage((int)Images.UI_Synergy_2).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
+            GetImage((int)Images.UI_Synergy_3).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
         }
         
         short[] raceCount = new short[4];

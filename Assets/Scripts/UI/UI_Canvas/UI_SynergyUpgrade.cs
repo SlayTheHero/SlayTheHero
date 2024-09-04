@@ -49,7 +49,10 @@ public class UI_SynergyUpgrade : UI_Base
         GetButton((int)Buttons.UI_Output).gameObject.AddUIEvent(OnOutputClicked, UI_EventHandler.UIEvent.LClick);
         GetButton((int)Buttons.UI_Input_1).interactable = false;
         GetButton((int)Buttons.UI_Input_2).interactable = false;
+
+        GetButton((int)Buttons.UI_StartButton).gameObject.AddUIEvent(OnStartButtonClicked, UI_EventHandler.UIEvent.LClick);
         selectUnitIndex = (-1, -1);
+
     }
     (int, int) selectUnitIndex = (-1, -1);
 
@@ -66,6 +69,7 @@ public class UI_SynergyUpgrade : UI_Base
     {
         if (selectUnitIndex.Item1 != -1 && selectUnitIndex.Item2 != -1) return;
         int index = int.Parse(data.pointerClick.name.Split("_")[2]);
+        if (selectUnitIndex.Item1 == index) return;
         if (selectUnitIndex.Item1 == -1)
         {
             selectUnitIndex = (index,selectUnitIndex.Item2);
@@ -74,8 +78,8 @@ public class UI_SynergyUpgrade : UI_Base
             setOutput();
             return;
         }
-
-        if(selectUnitIndex.Item2 == -1)
+        if (selectUnitIndex.Item2 == index) return;
+        if (selectUnitIndex.Item2 == -1 )
         {
             selectUnitIndex = (selectUnitIndex.Item1, index);
             GetImage((int)Images.UI_Input_2).sprite = ImageDB.GetImage(ImageDB.ImageType.Unit, manager.PlayerData.unitDeque.GetUnit(index).ID);
@@ -109,10 +113,8 @@ public class UI_SynergyUpgrade : UI_Base
     private void setOutput()
     {
         if (selectUnitIndex.Item1 == -1 || selectUnitIndex.Item2 == -1)
-        {
-            Texture2D text2 = new Texture2D(1, 1);
-            text2.SetPixel(0, 0, Color.white); text2.Apply();
-            GetImage((int)Images.UI_Output).sprite = Sprite.Create(text2, new Rect(0, 0, 1, 1), new Vector2(0.5f, 0.5f));
+        { 
+            GetImage((int)Images.UI_Output).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
             GetButton((int)Buttons.UI_Output).interactable = false;
             return;
         }
@@ -144,6 +146,7 @@ public class UI_SynergyUpgrade : UI_Base
 
     private void OnOutputClicked(PointerEventData data)
     {
+        if (GetButton((int)Buttons.UI_Output).interactable == false) return;
         int firstIndex;
         int secondIndex;
         if(selectUnitIndex.Item1 < selectUnitIndex.Item2) 
@@ -166,6 +169,11 @@ public class UI_SynergyUpgrade : UI_Base
         GetImage((int)Images.UI_Input_2).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
         GetButton((int)Buttons.UI_Input_2).interactable = false;
         setOutput();
+    }
+
+    private void OnStartButtonClicked(PointerEventData data)
+    {
+        manager.UI.ClosePopupUI();
     }
     public void tempEvent(PointerEventData data)
     {
