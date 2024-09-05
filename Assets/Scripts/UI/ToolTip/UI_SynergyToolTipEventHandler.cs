@@ -27,6 +27,8 @@ public class UI_SynergyToolTipEventHandler : UI_BaseToolTipEventHandler
         UI_SynergyTwoExplanation = ToolTipInstance.transform.Find("UI_SynergyTwoExplanation").GetComponent<TextMeshProUGUI>();
         UI_SynergyThreeExplanation = ToolTipInstance.transform.Find("UI_SynergyThreeExplanation").GetComponent<TextMeshProUGUI>();
         UI_SynergyImage = ToolTipInstance.transform.Find("UI_SynergyImage").GetComponent<Image>();
+        UI_CloseButton = ToolTipInstance.transform.Find("UI_CloseButton").GetComponent<Button>();
+        UI_CloseButton.gameObject.AddUIEvent(setInActiveToolTip, UIEvent.LClick);
     }
 
     protected override void setData()

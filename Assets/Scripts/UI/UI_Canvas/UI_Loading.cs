@@ -10,11 +10,15 @@ public class UI_Loading : MonoBehaviour
 {
     [SerializeField] CanvasGroup canvasGroup;
     [SerializeField] Image progressBar;
+    [SerializeField] GameObject backGround;
+    [SerializeField] GameObject cover;
     int SceneId;
     private SceneDataLoader sceneDataLoader = new SceneDataLoader();
     public void StartLoading(SceneType sceneId)
     {
         gameObject.SetActive(true);
+        backGround.SetActive(false);
+        cover.SetActive(true);
         SceneId = (int)sceneId;
         SceneManager.sceneLoaded += OnSceneLoaded;
         StartCoroutine(LoadSceneProcess());
@@ -25,6 +29,8 @@ public class UI_Loading : MonoBehaviour
         progressBar.fillAmount = 0f;
         yield return StartCoroutine(Fade(true));
 
+        backGround.SetActive(true);
+        cover.SetActive(false);
         AsyncOperation op = SceneManager.LoadSceneAsync(SceneId);
         op.allowSceneActivation = false;
         StartCoroutine(StartProgressBar());
@@ -71,7 +77,9 @@ public class UI_Loading : MonoBehaviour
                 timer += Time.fixedDeltaTime;
                 progressBar.fillAmount = Mathf.Lerp(0.9f, 1f, timer);
                 if (progressBar.fillAmount >= 1f)
-                {
+                { 
+                    backGround.SetActive(false);
+                    cover.SetActive(true);
                     StartCoroutine(Fade(false));
                     SceneManager.sceneLoaded -= OnSceneLoaded;
                     yield break;

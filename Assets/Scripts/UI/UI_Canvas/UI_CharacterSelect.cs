@@ -51,13 +51,7 @@ public class UI_CharacterSelect : UI_Base
         Bind<Text>(typeof(Texts));
         Bind<Button>(typeof(Buttons));
         Bind<TextMeshProUGUI>(typeof(Texts));
-
-        string[] names = Enum.GetNames(typeof(Images));
-        for (int i = 0; i < names.Length; i++)
-        {
-            Image image = GetImage(i);
-            image.gameObject.AddUIEvent(tempEvent, UI_EventHandler.UIEvent.LClick);
-        }
+         
         manager = GameManager.getInstance();
 
         for (int i = 3; i < 6; i++)
