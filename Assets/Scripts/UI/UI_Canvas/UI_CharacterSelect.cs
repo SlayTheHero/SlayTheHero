@@ -39,10 +39,12 @@ public class UI_CharacterSelect : UI_Base
     }
     enum Buttons
     {
-        UI_StartButton, UI_SettingButton
+        UI_StartButton, UI_SettingButton, 
+        UI_CharacterSlot_1, UI_CharacterSlot_2, UI_CharacterSlot_3
     }
 
     GameManager manager;
+    UI_CharacterListPanel characterList;
     protected override void Init()
     {
         // GameManager.UI.SetCanvas(this.gameObject, true);
@@ -79,7 +81,7 @@ public class UI_CharacterSelect : UI_Base
 
         int unitCount = manager.PlayerData.unitDeque.GetUnitCount();
         GameObject UI_CharacterListPanel = GetGameObject((int)GameObjects.UI_CharacterListPanel);
-        UI_CharacterListPanel characterList = UI_CharacterListPanel.GetComponent<UI_CharacterListPanel>();
+        characterList = UI_CharacterListPanel.GetComponent<UI_CharacterListPanel>();
         characterList.LoadPlayerData();
         characterList.SetUnitEvent(OnCharacterClicked, UI_EventHandler.UIEvent.LClick);
 
@@ -87,7 +89,12 @@ public class UI_CharacterSelect : UI_Base
         nowSynergy = new (int, bool)[3]; Array.Fill(nowSynergy, (-1,false));
 
 
-        GetButton((int)Buttons.UI_StartButton).gameObject.AddUIEvent(OnStartButtonClicked, UI_EventHandler.UIEvent.LClick);
+        GetButton((int)Buttons.UI_StartButton).gameObject.AddUIEvent(OnStartButtonClicked, UI_EventHandler.UIEvent.LClick);            GetImage((int)Images.UI_CharacterSlot_1).gameObject.AddUIEvent(OnSlotClicked, UI_EventHandler.UIEvent.LClick);
+ 
+        GetImage((int)Images.UI_CharacterSlot_1).gameObject.AddUIEvent(OnSlotClicked, UI_EventHandler.UIEvent.LClick);
+        GetImage((int)Images.UI_CharacterSlot_2).gameObject.AddUIEvent(OnSlotClicked, UI_EventHandler.UIEvent.LClick);
+        GetImage((int)Images.UI_CharacterSlot_3).gameObject.AddUIEvent(OnSlotClicked, UI_EventHandler.UIEvent.LClick);
+
         isStartReady = false;
         setStartButton();
         setSynergyImage();
@@ -126,39 +133,57 @@ public class UI_CharacterSelect : UI_Base
         GetGameObject((int)GameObjects.UI_ClassIcon).GetComponent<UI_SynergyToolTipEventHandler>().setSynergyID((int)unit.Job + 4);
         GetGameObject((int)GameObjects.UI_TraitIcon).GetComponent<UI_SynergyToolTipEventHandler>().setSynergyID((int)unit.Feature + 7);
 
-        if (selectedArr[0] == index || selectedArr[1] == index || selectedArr[2] == index)
+        GameObject target = null; 
+        // 다시 클릭시 빠지는 로직.
+        if (index == selectedArr[0])
         {
-            return;
+            target = GetImage((int)Images.UI_CharacterSlot_1).gameObject;
+        }
+        else if (index == selectedArr[1])
+        {
+            target = GetImage((int)Images.UI_CharacterSlot_2).gameObject;
+         }
+        else if (index == selectedArr[2])
+        {
+            target = GetImage((int)Images.UI_CharacterSlot_3).gameObject;
+         }
+        if(target != null)
+        {
+            PointerEventData pData = new PointerEventData(EventSystem.current);
+            pData.selectedObject = target;
+            ExecuteEvents.Execute(target, pData, ExecuteEvents.pointerClickHandler);
+            characterList.SetUnitSelected(index, false);
+        }
+        else
+        { 
+            // 비어있는 슬롯에 넣는 로직.
+            if (selectedArr[0] == -1)
+            {
+                GetImage((int)Images.UI_CharacterSlot_1).sprite = data.selectedObject.gameObject.GetComponent<Image>().sprite;
+                 selectedArr[0] = index; 
+                 characterList.SetUnitSelected(index, true);
+            }
+            else if (selectedArr[1] == -1)
+            {
+                GetImage((int)Images.UI_CharacterSlot_2).sprite = data.selectedObject.gameObject.GetComponent<Image>().sprite;
+                 selectedArr[1] = index;
+                characterList.SetUnitSelected(index, true);
+            }
+            else if (selectedArr[2] == -1)
+            {
+                GetImage((int)Images.UI_CharacterSlot_3).sprite = data.selectedObject.gameObject.GetComponent<Image>().sprite;
+                 selectedArr[2] = index;
+                characterList.SetUnitSelected(index, true); 
+            } 
         }
 
-        if (selectedArr[0] == -1)
-        {
-            GetImage((int)Images.UI_CharacterSlot_1).sprite = data.selectedObject.gameObject.GetComponent<Image>().sprite;
-            GetImage((int)Images.UI_CharacterSlot_1).gameObject.AddUIEvent(OnSlotClicked, UI_EventHandler.UIEvent.LClick);
-            selectedArr[0] = index;
-        }
-        else if(selectedArr[1] == -1)
-        {
-            GetImage((int)Images.UI_CharacterSlot_2).sprite = data.selectedObject.gameObject.GetComponent<Image>().sprite;
-            GetImage((int)Images.UI_CharacterSlot_2).gameObject.AddUIEvent(OnSlotClicked, UI_EventHandler.UIEvent.LClick);
-            selectedArr[1] = index;
-        }
-        else if(selectedArr[2] == -1)
-        {
-            GetImage((int)Images.UI_CharacterSlot_3).sprite = data.selectedObject.gameObject.GetComponent<Image>().sprite;
-            GetImage((int)Images.UI_CharacterSlot_3).gameObject.AddUIEvent(OnSlotClicked, UI_EventHandler.UIEvent.LClick);
-            selectedArr[2] = index;
-        }
-
-
-        GetButton((int)Buttons.UI_StartButton).gameObject.AddUIEvent(OnStartButtonClicked, UI_EventHandler.UIEvent.LClick);
         setStartButton();
         setSynergyImage();
     }
 
     private void OnSlotClicked(PointerEventData data)
     {
-        int index = int.Parse(data.pointerClick.name.Split("_")[2]) - 1;
+        int index = int.Parse(data.selectedObject.name.Split("_")[2]) - 1;
         if (selectedArr[index] != -1)
         {
             switch(index)
@@ -174,7 +199,7 @@ public class UI_CharacterSelect : UI_Base
                     break;
             }
             selectedArr[index] = -1;
-        }
+        } 
         setStartButton();
         setSynergyImage();
     }

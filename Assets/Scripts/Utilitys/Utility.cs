@@ -8,6 +8,8 @@ using UnityEngine.UI;
 
 public class Utility
 {
+    public static Color DarkGrey = new Color32(120, 120, 120, 255); 
+
     public static T GetOrAddComponent<T>(GameObject go) where T : Component
     {
         T compo = go.GetComponent<T>();

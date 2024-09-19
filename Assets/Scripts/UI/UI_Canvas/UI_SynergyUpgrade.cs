@@ -26,6 +26,7 @@ public class UI_SynergyUpgrade : UI_Base
     }
     GameManager manager;
     List<GameObject> UnitList;
+   
     protected override void Init()
     {
         manager = GameManager.getInstance();
@@ -47,34 +48,51 @@ public class UI_SynergyUpgrade : UI_Base
         GetImage((int)Images.UI_Input_1).gameObject.AddUIEvent(OnInputClicked, UI_EventHandler.UIEvent.LClick);
         GetImage((int)Images.UI_Input_2).gameObject.AddUIEvent(OnInputClicked, UI_EventHandler.UIEvent.LClick);
         GetButton((int)Buttons.UI_Output).gameObject.AddUIEvent(OnOutputClicked, UI_EventHandler.UIEvent.LClick);
-        GetButton((int)Buttons.UI_Input_1).interactable = false;
-        GetButton((int)Buttons.UI_Input_2).interactable = false;
+        GetImage((int)Images.UI_Input_1).color = Utility.DarkGrey;
+        GetImage((int)Images.UI_Input_2).color = Utility.DarkGrey;
 
         GetButton((int)Buttons.UI_StartButton).gameObject.AddUIEvent(OnStartButtonClicked, UI_EventHandler.UIEvent.LClick);
         selectUnitIndex = (-1, -1);
 
     }
     (int, int) selectUnitIndex = (-1, -1);
-
+    UI_CharacterListPanel characterList;
     private void loadUnitDeque()
     {
         int unitCount = manager.PlayerData.unitDeque.GetUnitCount();
         GameObject UI_CharacterListPanel = GetGameObject((int)GameObjects.UI_CharacterListPanel);
-        UI_CharacterListPanel ui = UI_CharacterListPanel.GetComponent<UI_CharacterListPanel>();
+        characterList = UI_CharacterListPanel.GetComponent<UI_CharacterListPanel>();
 
-        ui.LoadPlayerData();
-        ui.SetUnitEvent(OnCharacterClicked, UI_EventHandler.UIEvent.LClick);
+        characterList.LoadPlayerData();
+        characterList.SetUnitEvent(OnCharacterClicked, UI_EventHandler.UIEvent.LClick);
     }
     private void OnCharacterClicked(PointerEventData data)
-    {
+    { 
+        int index = int.Parse(data.selectedObject.name.Split("_")[2]);
+        GameObject target = null; ;
+        if(index == selectUnitIndex.Item1)
+        {
+            target = GetButton((int)Buttons.UI_Input_1).gameObject;
+        }
+        else if (index == selectUnitIndex.Item2)
+        {
+            target = GetButton((int)Buttons.UI_Input_2).gameObject;
+        }
+        if (target != null)
+        { 
+            PointerEventData pData = new PointerEventData(EventSystem.current);
+            pData.selectedObject = target;
+            ExecuteEvents.Execute(target, pData, ExecuteEvents.pointerClickHandler);
+            characterList.SetUnitSelected(index, false);
+            return;
+        }
         if (selectUnitIndex.Item1 != -1 && selectUnitIndex.Item2 != -1) return;
-        int index = int.Parse(data.pointerClick.name.Split("_")[2]);
         if (selectUnitIndex.Item1 == index) return;
         if (selectUnitIndex.Item1 == -1)
         {
             selectUnitIndex = (index,selectUnitIndex.Item2);
             GetImage((int)Images.UI_Input_1).sprite = ImageDB.GetImage(ImageDB.ImageType.Unit,manager.PlayerData.unitDeque.GetUnit(index).ID);
-            GetButton((int)Buttons.UI_Input_1).interactable = true;
+            GetImage((int)Images.UI_Input_1).color = Color.white;
             setOutput();
             return;
         }
@@ -83,7 +101,7 @@ public class UI_SynergyUpgrade : UI_Base
         {
             selectUnitIndex = (selectUnitIndex.Item1, index);
             GetImage((int)Images.UI_Input_2).sprite = ImageDB.GetImage(ImageDB.ImageType.Unit, manager.PlayerData.unitDeque.GetUnit(index).ID);
-            GetButton((int)Buttons.UI_Input_2).interactable = true;
+            GetImage((int)Images.UI_Input_2).color = Color.white;
             setOutput();
             return;
         }
@@ -91,13 +109,13 @@ public class UI_SynergyUpgrade : UI_Base
 
     private void OnInputClicked(PointerEventData data)
     {
-        int index = int.Parse(data.pointerClick.name.Split("_")[2]);
+        int index = int.Parse(data.selectedObject.name.Split("_")[2]);
         if(index == 1)
         {
             if (selectUnitIndex.Item1 == -1) return;
              
             GetImage((int)Images.UI_Input_1).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
-            GetButton((int)Buttons.UI_Input_1).interactable = false;
+            GetImage((int)Images.UI_Input_1).color = Utility.DarkGrey;
             selectUnitIndex = (-1, selectUnitIndex.Item2);
         }
         else
@@ -105,7 +123,7 @@ public class UI_SynergyUpgrade : UI_Base
             if (selectUnitIndex.Item2 == -1) return;
              
             GetImage((int)Images.UI_Input_2).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
-            GetButton((int)Buttons.UI_Input_2).interactable = false;
+            GetImage((int)Images.UI_Input_2).color = Utility.DarkGrey;
             selectUnitIndex = (selectUnitIndex.Item1, -1);
         }
         setOutput();
@@ -115,7 +133,7 @@ public class UI_SynergyUpgrade : UI_Base
         if (selectUnitIndex.Item1 == -1 || selectUnitIndex.Item2 == -1)
         { 
             GetImage((int)Images.UI_Output).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
-            GetButton((int)Buttons.UI_Output).interactable = false;
+            GetImage((int)Images.UI_Output).color = Utility.DarkGrey;
             return;
         }
         UnitDeque deque = manager.PlayerData.unitDeque;
@@ -125,28 +143,28 @@ public class UI_SynergyUpgrade : UI_Base
         if (unit1.Job == unit2.Job)
         {
             GetImage((int)Images.UI_Output).sprite = ImageDB.GetImage(ImageDB.ImageType.Synergy,(int)unit1.Job + 4);
-            GetButton((int)Buttons.UI_Output).interactable = true;
+            GetImage((int)Images.UI_Output).color = Color.white;
             return;
         }
         if (unit1.Feature == unit2.Feature)
         {
             GetImage((int)Images.UI_Output).sprite = ImageDB.GetImage(ImageDB.ImageType.Synergy, (int)unit1.Feature + 7);
-            GetButton((int)Buttons.UI_Output).interactable = true;
+            GetImage((int)Images.UI_Output).color = Color.white;
             return;
         }
         if (unit1.Race == unit2.Race)
         {
             GetImage((int)Images.UI_Output).sprite = ImageDB.GetImage(ImageDB.ImageType.Synergy, (int)unit1.Race);
-            GetButton((int)Buttons.UI_Output).interactable = true;
+            GetImage((int)Images.UI_Output).color = Color.white;
             return;
         }
         GetImage((int)Images.UI_Output).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
-        GetButton((int)Buttons.UI_Output).interactable = false;
+        GetImage((int)Images.UI_Output).color = Utility.DarkGrey;
     }
 
     private void OnOutputClicked(PointerEventData data)
     {
-        if (GetButton((int)Buttons.UI_Output).interactable == false) return;
+        if (GetImage((int)Images.UI_Output).color == Utility.DarkGrey) return;
         int firstIndex;
         int secondIndex;
         if(selectUnitIndex.Item1 < selectUnitIndex.Item2) 
@@ -165,9 +183,9 @@ public class UI_SynergyUpgrade : UI_Base
         selectUnitIndex = (-1, -1);
          
         GetImage((int)Images.UI_Input_1).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
-        GetButton((int)Buttons.UI_Input_1).interactable = false;
+        GetImage((int)Images.UI_Input_1).color = Utility.DarkGrey;
         GetImage((int)Images.UI_Input_2).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
-        GetButton((int)Buttons.UI_Input_2).interactable = false;
+        GetImage((int)Images.UI_Input_2).color = Utility.DarkGrey;
         setOutput();
     }
 

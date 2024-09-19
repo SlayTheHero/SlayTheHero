@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
+using UnityEngine.UI; 
 
 public class UI_CharacterListPanel : UI_EventHandler
 {
@@ -41,6 +41,19 @@ public class UI_CharacterListPanel : UI_EventHandler
         for (int i = 0; i < UnitList.Count; i++)
         {
             UnitList[i].AddUIEvent(ev, type);
+        }
+    }
+
+    public void SetUnitSelected(int index, bool isGrey)
+    {
+        if (UnitList.Count <= index) return;
+        if(isGrey)
+        { 
+            UnitList[index].GetComponent<Image>().color = new Color32(255, 255, 255, 100);
+        }
+        else
+        { 
+            UnitList[index].GetComponent<Image>().color = new Color32(255, 255, 255, 255);
         }
     }
 
