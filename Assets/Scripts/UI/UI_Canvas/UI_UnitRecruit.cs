@@ -38,5 +38,5 @@ public class UI_UnitRecruit : UI_Base
     {
         Init();
     }
-     
 }
+     

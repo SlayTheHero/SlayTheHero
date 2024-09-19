@@ -39,22 +39,23 @@ public class UI_CharacterSelect : UI_Base
     }
     enum Buttons
     {
-        UI_StartButton, UI_SettingButton, 
+        UI_StartButton, UI_SettingButton, UI_CloseButton,
         UI_CharacterSlot_1, UI_CharacterSlot_2, UI_CharacterSlot_3
     }
 
     GameManager manager;
     UI_CharacterListPanel characterList;
     protected override void Init()
-    {
-        // GameManager.UI.SetCanvas(this.gameObject, true);
+    { 
+        manager = GameManager.getInstance();
+        manager.UI.SetCanvas(this.gameObject, true);
         Bind<GameObject>(typeof(GameObjects));
         Bind<Image>(typeof(Images));
         Bind<Text>(typeof(Texts));
         Bind<Button>(typeof(Buttons));
         Bind<TextMeshProUGUI>(typeof(Texts));
-         
-        manager = GameManager.getInstance();
+
+        setDeck(IsDeck);
 
         for (int i = 3; i < 6; i++)
         {
@@ -94,6 +95,8 @@ public class UI_CharacterSelect : UI_Base
         GetImage((int)Images.UI_CharacterSlot_1).gameObject.AddUIEvent(OnSlotClicked, UI_EventHandler.UIEvent.LClick);
         GetImage((int)Images.UI_CharacterSlot_2).gameObject.AddUIEvent(OnSlotClicked, UI_EventHandler.UIEvent.LClick);
         GetImage((int)Images.UI_CharacterSlot_3).gameObject.AddUIEvent(OnSlotClicked, UI_EventHandler.UIEvent.LClick);
+
+        GetButton((int)Buttons.UI_CloseButton).gameObject.AddUIEvent(OnCloseButtonClicked, UI_EventHandler.UIEvent.LClick);
 
         isStartReady = false;
         setStartButton();
@@ -322,6 +325,32 @@ public class UI_CharacterSelect : UI_Base
         if (isStartReady)
         {
             SceneController.ChangeScene(SceneController.SceneType.Maintenance);
+        }
+    }
+
+    public void OnCloseButtonClicked(PointerEventData data)
+    {
+        if(IsDeck)
+        {
+            manager.UI.ClosePopupUI();
+        }
+
+    }
+    bool IsDeck = false;
+    public void setDeck(bool isDeck)
+    {
+        IsDeck = isDeck;
+        if (isDeck)
+        {
+            GetButton((int)Buttons.UI_CloseButton).gameObject.SetActive(true);
+            GetButton((int)Buttons.UI_SettingButton).gameObject.SetActive(false);
+            GetButton((int)Buttons.UI_StartButton).gameObject.SetActive(false);
+        }
+        else
+        {
+            GetButton((int)Buttons.UI_CloseButton).gameObject.SetActive(false);
+            GetButton((int)Buttons.UI_SettingButton).gameObject.SetActive(true);
+            GetButton((int)Buttons.UI_StartButton).gameObject.SetActive(true);
         }
     }
 

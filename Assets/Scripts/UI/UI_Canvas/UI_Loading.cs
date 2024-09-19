@@ -24,6 +24,7 @@ public class UI_Loading : MonoBehaviour
         StartCoroutine(LoadSceneProcess());
     }
     float destProgress;
+    Coroutine progressBarCor;
     private IEnumerator LoadSceneProcess()
     {
         progressBar.fillAmount = 0f;
@@ -33,7 +34,7 @@ public class UI_Loading : MonoBehaviour
         cover.SetActive(false);
         AsyncOperation op = SceneManager.LoadSceneAsync(SceneId);
         op.allowSceneActivation = false;
-        StartCoroutine(StartProgressBar());
+        progressBarCor = StartCoroutine(StartProgressBar());
         float timer = 0f;
         while(!op.isDone)
         {
@@ -41,14 +42,19 @@ public class UI_Loading : MonoBehaviour
             if(op.progress < 0.9f)
             {
                 destProgress = op.progress / 2;
+                Debug.Log(destProgress);
             }
             else
             {
+                if(progressBarCor != null)
+                {
+                    progressBarCor = null;
+                    StopCoroutine(StartProgressBar());
+                }
                 timer += Time.unscaledDeltaTime;
                 progressBar.fillAmount = Mathf.Lerp(0.45f, 0.5f, timer);
                 if(progressBar.fillAmount >= 0.5f)
                 {
-                    StopCoroutine(StartProgressBar());
                     destProgress = 0.5f;
                     op.allowSceneActivation = true;
                     yield break;
@@ -62,7 +68,7 @@ public class UI_Loading : MonoBehaviour
         sceneDataLoader.StartDataLoad((SceneController.SceneType)SceneId);
 
 
-        StartCoroutine(StartProgressBar());
+        progressBarCor = StartCoroutine(StartProgressBar());
         float timer = 0f;
 
         while (true)
@@ -74,6 +80,11 @@ public class UI_Loading : MonoBehaviour
             }
             else if (sceneDataLoader.isDone || sceneDataLoader.progress == 1)
             {
+                if (progressBarCor != null)
+                {
+                    progressBarCor = null;
+                    StopCoroutine(StartProgressBar());
+                }
                 timer += Time.fixedDeltaTime;
                 progressBar.fillAmount = Mathf.Lerp(0.9f, 1f, timer);
                 if (progressBar.fillAmount >= 1f)
@@ -108,6 +119,7 @@ public class UI_Loading : MonoBehaviour
         {
             yield return null;
             timer += Time.fixedDeltaTime * 2f;
+            Debug.Log(timer);
             canvasGroup.alpha = isFadeIn ? Mathf.Lerp(0f, 1f, timer) : Mathf.Lerp(1f,0f,timer);
         }
         if(!isFadeIn)

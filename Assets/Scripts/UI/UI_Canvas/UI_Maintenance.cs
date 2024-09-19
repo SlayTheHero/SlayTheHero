@@ -33,19 +33,9 @@ public class UI_Maintenance : UI_Base
         Bind<Text>(typeof(Texts));
         Bind<Button>(typeof(Buttons));
 
-        string[] names = Enum.GetNames(typeof(Images));
-        for (int i = 0; i < names.Length; i++)
-        {
-            Image image = GetImage(i);
-            image.gameObject.AddUIEvent(tempEvent, UI_EventHandler.UIEvent.LClick);
-        }
         GetButton((int)Buttons.UI_Select_1).gameObject.AddUIEvent((p) => manager.UI.ShowPopupUI<UI_SynergyUpgrade>(),UI_EventHandler.UIEvent.LClick);
         GetButton((int)Buttons.UI_Select_2).gameObject.AddUIEvent((p) => manager.UI.ShowPopupUI<UI_UnitRecruit>(), UI_EventHandler.UIEvent.LClick);
 
-    }
-    public void tempEvent(PointerEventData data)
-    {
-        data.pointerClick.GetComponent<Image>().color = Color.red;
     }
 
     // Start is called before the first frame update
