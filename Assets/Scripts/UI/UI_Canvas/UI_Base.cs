@@ -100,10 +100,7 @@ public abstract class UI_Base : MonoBehaviour
         switch (type)
         {
             case UI_EventHandler.UIEvent.LClick:
-                handler.OnClickHandler = action;
-                break;
-            case UI_EventHandler.UIEvent.LDrag:
-                handler.OnDragHandler = action;
+                handler.OnClickHandler = action; 
                 break;
             case UI_EventHandler.UIEvent.Enter:
                 handler.OnPointerEnterHandler = action;

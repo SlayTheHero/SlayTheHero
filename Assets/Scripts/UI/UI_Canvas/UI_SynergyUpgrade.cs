@@ -64,6 +64,7 @@ public class UI_SynergyUpgrade : UI_Base
         characterList = UI_CharacterListPanel.GetComponent<UI_CharacterListPanel>();
 
         characterList.LoadPlayerData();
+        characterList.SetSynergy(true);
         characterList.SetUnitEvent(OnCharacterClicked, UI_EventHandler.UIEvent.LClick);
     }
     private void OnCharacterClicked(PointerEventData data)
@@ -191,6 +192,7 @@ public class UI_SynergyUpgrade : UI_Base
 
     private void OnStartButtonClicked(PointerEventData data)
     {
+        SaveManager.SaveData(manager.PlayerData,0);
         manager.UI.ClosePopupUI();
     }
     public void tempEvent(PointerEventData data)

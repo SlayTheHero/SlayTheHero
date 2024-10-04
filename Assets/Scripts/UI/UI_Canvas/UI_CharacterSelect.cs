@@ -56,29 +56,34 @@ public class UI_CharacterSelect : UI_Base
         Bind<TextMeshProUGUI>(typeof(Texts));
 
         setDeck(IsDeck);
-
-        for (int i = 3; i < 6; i++)
+        if(manager.PlayerData.unitDeque.GetUnitCount() == 0)
+        { 
+            for (int i = 3; i < 6; i++)
+            {
+                manager.PlayerData.unitDeque.AddUnit(UnitDB.GetUnit(i));
+            }
+            for (int i = 3; i < 6; i++)
+            {
+                manager.PlayerData.unitDeque.AddUnit(UnitDB.GetUnit(i));
+            }
+            List<UnitBase> li = PlayerUnitContainer.GetUnitList();
+            Console.WriteLine(li.Count);
+            for (int i = 0; i < 3; i++)
+            {
+                manager.PlayerData.unitDeque.AddUnit(li[i]);
+            }
+            manager.PlayerData.playerName = "Wdas";
+            manager.PlayerData.playCount = 3;
+            SaveManager.SaveData(manager.PlayerData, 0);
+            manager.PlayerData = SaveManager.LoadData(0);
+            SaveManager.SaveData(manager.PlayerData, 1);
+            manager.PlayerData.playerName = "asf";
+            SaveManager.SaveData(manager.PlayerData, 2);
+            SaveManager.SaveFileToClient();
+        }else
         {
-            manager.PlayerData.unitDeque.AddUnit(UnitDB.GetUnit(i));
+            SaveManager.LoadData(0);
         }
-        for (int i = 3; i < 6; i++)
-        {
-            manager.PlayerData.unitDeque.AddUnit(UnitDB.GetUnit(i));
-        }
-        List<UnitBase> li = PlayerUnitContainer.GetUnitList();
-        Console.WriteLine(li.Count);
-        for (int i = 0; i < 3; i++)
-        {
-            manager.PlayerData.unitDeque.AddUnit(li[i]);
-        }
-        manager.PlayerData.playerName = "Wdas";
-        manager.PlayerData.playCount = 3;
-        SaveManager.SaveData(manager.PlayerData,0);
-        manager.PlayerData = SaveManager.LoadData(0);
-        SaveManager.SaveData(manager.PlayerData, 1);
-        manager.PlayerData.playerName = "asf";
-        SaveManager.SaveData(manager.PlayerData, 2);
-        SaveManager.SaveFileToClient();
 
         int unitCount = manager.PlayerData.unitDeque.GetUnitCount();
         GameObject UI_CharacterListPanel = GetGameObject((int)GameObjects.UI_CharacterListPanel);
@@ -201,6 +206,7 @@ public class UI_CharacterSelect : UI_Base
                     GetImage((int)Images.UI_CharacterSlot_3).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
                     break;
             }
+            characterList.SetUnitSelected(selectedArr[index], false);
             selectedArr[index] = -1;
         } 
         setStartButton();
