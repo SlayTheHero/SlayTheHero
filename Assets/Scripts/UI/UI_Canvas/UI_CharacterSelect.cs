@@ -22,7 +22,8 @@ public class UI_CharacterSelect : UI_Base
         UI_SkillGridPanel,
         UI_CharacterSelectGirdPanel,
         UI_Skill_1, UI_Skill_2, UI_Skill_3, UI_Skill_4,
-        UI_RaceIcon, UI_ClassIcon, UI_TraitIcon
+        UI_RaceIcon, UI_ClassIcon, UI_TraitIcon,
+        UI_SynergyDisplay
     }
 
     enum Images
@@ -232,80 +233,20 @@ public class UI_CharacterSelect : UI_Base
             GetImage((int)Images.UI_Synergy_2).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
             GetImage((int)Images.UI_Synergy_3).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
         }
-        
-        short[] raceCount = new short[4];
-        short[] FeatCount = new short[4];
-        short[] JobCount = new short[3];
 
-        if (unit.Count > 1)
+        nowSynergy = SynergyDB.getSynergyFromUnitList(unit); 
+        GetGameObject((int)GameObjects.UI_SynergyDisplay).GetComponent<UI_SynergyDisplay>().InitializeDisplay(unit);
+
+        if (nowSynergy == null)
         {
-            for (int i = 0; i < unit.Count; i++)
-            {
-                UnitBase nowUnit = unit[i];
-                raceCount[(int)nowUnit.Race]++;
-                FeatCount[(int)nowUnit.Feature]++;
-                JobCount[(int)nowUnit.Job]++;
-            }
-            short[] nowCount = raceCount;
-            int max = 0; int maxIndex = 0;
-            for (int i = 0; i < nowCount.Length; i++)
-            {
-                if (nowCount[i] > max)
-                {
-                    max = nowCount[i];
-                    maxIndex = i;
-                }
-            }
-            if(max == 2)
-            {
-                nowSynergy.Add((maxIndex, false));
-            }
-            else if (max == 3)
-            {
-                nowSynergy.Add((maxIndex, true));
-            }
-            nowCount = JobCount;
-            max = 0; maxIndex = 0;
-            for (int i = 0; i < nowCount.Length; i++)
-            {
-                if (nowCount[i] > max)
-                {
-                    max = nowCount[i];
-                    maxIndex = i;
-                }
-            }
-            if (max == 2)
-            {
-                nowSynergy.Add((maxIndex+ 4, false));
-            }
-            else if (max == 3)
-            {
-                nowSynergy.Add((maxIndex + 4, true));
-            }
-            nowCount = FeatCount;
-            max = 0; maxIndex = 0;
-            for (int i = 0; i < nowCount.Length; i++)
-            {
-                if (nowCount[i] > max)
-                {
-                    max = nowCount[i];
-                    maxIndex = i;
-                }
-            }
-            if (max == 2)
-            {
-                nowSynergy.Add((maxIndex + 7, false));
-            }
-            else if (max == 3)
-            {
-                nowSynergy.Add((maxIndex + 7, true));
-            }
+            return;
         }
-
         for (int i = 0; i < nowSynergy.Count; i++)
         {
             GetImage((int)Images.UI_Synergy_1 + i).sprite = ImageDB.GetImage(ImageDB.ImageType.Synergy, nowSynergy[i].Item1);
         }
+         
+
     }
     private void setStartButton()
     {

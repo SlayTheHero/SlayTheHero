@@ -18,6 +18,7 @@ public class UI_SynergyToolTipEventHandler : UI_BaseToolTipEventHandler
     public void setSynergyID(int id)
     {
         nowSynergyId = id;
+        setData();
     }
 
     void Awake()
