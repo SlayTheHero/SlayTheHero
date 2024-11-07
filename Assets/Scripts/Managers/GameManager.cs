@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
             instance = mg.GetComponent<GameManager>();
             //서브매니저 초기화
             instance.ui = new UIManager();
+            SceneController.Initialize();
         }
     }
     /// <summary>

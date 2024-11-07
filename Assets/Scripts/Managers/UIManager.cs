@@ -150,7 +150,6 @@ public class UIManager
         {
             SceneUIList.Add(scene);
         }
-
         go.transform.SetParent(UI_Root.transform);
         return scene;
     }

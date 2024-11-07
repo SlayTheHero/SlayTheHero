@@ -2,8 +2,10 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class Synergy : Skill
 {
@@ -12,6 +14,7 @@ public class Synergy : Skill
         Vampire,DemonBeast,NightMare,Ghost, 
         SwordMan,Archer,Magician,
         Swiftness,SuspiciousGhost,Sloth,Envy,
+
     }
     public int twoImpact;
     public int threeImpact;
@@ -106,5 +109,88 @@ public static class SynergyDB
             }
         }
     }
+
+    /// <summary>
+    /// getSynergyList from unitList. int is SynergyIndex, bool is 2nd or 3rd Synergy. if true. it is 3rd synergy.
+    /// </summary>
+    /// <param name="unit"></param>
+    /// <returns></returns>
+    public static List<(int,bool)> getSynergyFromUnitList(List<UnitBase> unit)
+    {
+        if (unit.Count == 0)
+        {
+            Debug.Log("Error : UnitList is Empty");
+            return null; 
+        }
+
+        List<(int,bool)> synergyList = new List<(int, bool)>();
+
+        if (unit.Count > 1)
+        {
+            short[] raceCount = new short[4];
+            short[] featCount = new short[4];
+            short[] jobCount = new short[3];
+
+            // 유닛 정보에서 카운트를 셈
+            for (int i = 0; i < unit.Count; i++)
+            {
+                UnitBase nowUnit = unit[i];
+                raceCount[(int)nowUnit.Race]++;
+                featCount[(int)nowUnit.Feature]++;
+                jobCount[(int)nowUnit.Job]++;
+            }
+
+            // 카운트를 기준으로 시너지 계산
+            (int, bool) raceSynergy = ExtractMax(raceCount,0);
+            (int, bool) jobSynergy = ExtractMax(jobCount,4);
+            (int, bool) featSynergy = ExtractMax(featCount,7);
+
+            if(raceSynergy.Item1 != -1)
+            {
+                synergyList.Add(raceSynergy);
+            }
+            if (jobSynergy.Item1 != -1)
+            {
+                synergyList.Add(jobSynergy);
+            }
+            if (featSynergy.Item1 != -1)
+            {
+                synergyList.Add(featSynergy);
+            }
+        }
+
+        return synergyList;
+    }
+
+    // 공통 로직을 처리하는 함수
+    private static (int, bool) ExtractMax(short[] countArray, int baseIndex)
+    { 
+        int max = 0;
+        int maxIndex = 0;
+
+        // 최대값 찾기
+        for (int i = 0; i < countArray.Length; i++)
+        {
+            if (countArray[i] > max)
+            {
+                max = countArray[i];
+                maxIndex = i;
+            }
+        }
+
+        switch (max)
+        {
+            case 1:
+                return (-1, false);
+            case 2:
+                return (maxIndex + baseIndex, false);
+            case 3:
+                return (maxIndex + baseIndex, true);
+            default:
+                return (-1, true);
+        }
+
+    }
+
 }
 

@@ -5,26 +5,18 @@ using System.Drawing;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UI_EventHandler : MonoBehaviour, IDragHandler, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler
+public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler
 {
     public enum UIEvent
     {
         LClick,
-        LDrag,
         Enter,
         Exit
-    }
-    public Action<PointerEventData> OnDragHandler = null;
+    } 
     public Action<PointerEventData> OnClickHandler = null;
     public Action<PointerEventData> OnPointerEnterHandler = null;
     public Action<PointerEventData> OnPointerMoveHandler = null;
     public Action<PointerEventData> OnPointerExitHandler = null;
-
-    public void OnDrag(PointerEventData eventData)
-    {
-        if (OnDragHandler != null)
-            OnDragHandler.Invoke(eventData);
-    }
 
     public void OnPointerClick(PointerEventData eventData)
     {

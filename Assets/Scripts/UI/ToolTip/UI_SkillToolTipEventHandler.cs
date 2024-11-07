@@ -11,6 +11,7 @@ public class UI_SkillToolTipEventHandler : UI_BaseToolTipEventHandler
     TextMeshProUGUI SkillExplanation;
     TextMeshProUGUI SkillType;
     Image SkillImage;
+    Button CloseButton;
     int nowSkillID;
 
     public void setSkillID(int id)
@@ -25,6 +26,8 @@ public class UI_SkillToolTipEventHandler : UI_BaseToolTipEventHandler
         SkillExplanation = ToolTipInstance.transform.Find("UI_SkillExplanation").GetComponent<TextMeshProUGUI>();
         SkillType = ToolTipInstance.transform.Find("UI_SkillType").GetComponent<TextMeshProUGUI>();
         SkillImage = ToolTipInstance.transform.Find("UI_SkillImage").GetComponent<Image>();
+        CloseButton = ToolTipInstance.transform.Find("UI_CloseButton").GetComponent<Button>();
+        CloseButton.gameObject.AddUIEvent(setInActiveToolTip, UIEvent.LClick);
     }
 
     protected override void setData()
@@ -47,4 +50,5 @@ public class UI_SkillToolTipEventHandler : UI_BaseToolTipEventHandler
         float textHeight = SkillExplanation.preferredHeight + SkillType.preferredHeight + SkillName.preferredHeight;
         ToolTipRect.sizeDelta = new Vector2(textWidth, textHeight);
     }
+
 }

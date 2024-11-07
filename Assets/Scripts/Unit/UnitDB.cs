@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.Jobs;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public static class UnitDB 
@@ -29,11 +30,12 @@ public static class UnitDB
         UnitBase unit = UnitList[id];
         // °ª ·£´ý¼³Á¤ ÈÄ À¯´Ö ¹ÝÈ¯ 
         ((RandomStatus)unit.Status).setRandomValue();
-        if (unit.Feature == Feature.Random)
+        UnitBase outunit = new UnitBase(unit);
+        if (outunit.Feature == Feature.Random)
         {
-            unit.Feature = getRandomFeature();
+            outunit.Feature = getRandomFeature();
         }
-        return new UnitBase(unit);
+        return outunit;
     }
     public static void initializeUnitList()
     {

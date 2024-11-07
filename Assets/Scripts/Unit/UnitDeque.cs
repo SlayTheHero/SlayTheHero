@@ -22,6 +22,14 @@ public class UnitDeque : ISerializableToCSV
         if(index  < 0 || index >= list.Count) return null;
         return list[index];
     }
+    /// <summary>
+    /// 빠진 index만큼 당겨옵니다.
+    /// </summary>
+    /// <param name="index"></param>
+    public void DeleteUnit(int index)
+    {
+        list.RemoveAt(index);
+    }
     public int GetUnitCount()
      { return list.Count; }
     public string ToCSV()

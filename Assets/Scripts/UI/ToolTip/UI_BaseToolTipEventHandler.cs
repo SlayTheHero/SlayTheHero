@@ -2,7 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Drawing;
-using Unity.VisualScripting.Antlr3.Runtime.Tree;
+using Unity.VisualScripting; 
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -12,7 +12,7 @@ using UnityEngine.EventSystems;
 /// setData() 함수를 오버라이딩 하여 데이터를 넣어주어야합니다.
 /// ToolTipInstance를 접근할 수 있습니다.
 /// </summary>
-public class UI_BaseToolTipEventHandler : UI_EventHandler 
+public class UI_BaseToolTipEventHandler : UI_EventHandler ,  IDeselectHandler
 { 
     protected static Dictionary<string,GameObject> ToolTipInstanceDict = new Dictionary<string,GameObject>();
     /// <summary>
@@ -75,9 +75,8 @@ public class UI_BaseToolTipEventHandler : UI_EventHandler
             }
             ToolTipInstance.transform.SetParent(ToolTipGroupObject.transform);
             ToolTipRect = ToolTipInstance.GetComponent<RectTransform>();
-            OnPointerEnterHandler += setActiveToolTip;
-            OnPointerMoveHandler += moveToolTip;
-            OnPointerExitHandler += setInActiveToolTip;
+            
+            OnClickHandler += setActiveToolTip;  
 
              
             ToolTipInstance.SetActive(false);
@@ -102,7 +101,7 @@ public class UI_BaseToolTipEventHandler : UI_EventHandler
 
 
 
-    Vector2 offSet = new Vector2(5, 5);
+    Vector2 offSet = new Vector2(0, 0);
     /// <summary>
     /// 마우스 진입 이벤트입니다. 
     /// </summary>
@@ -111,6 +110,7 @@ public class UI_BaseToolTipEventHandler : UI_EventHandler
     {
         if (ToolTipInstance != null)
         {
+            EventSystem.current.SetSelectedGameObject(this.gameObject);
             ToolTipInstance.transform.SetParent(canvas.transform);
             ToolTipInstance.transform.position = adjustToolTipPosition(data);
 
@@ -136,7 +136,7 @@ public class UI_BaseToolTipEventHandler : UI_EventHandler
     /// 마우스 이탈 이벤트입니다. 툴팁을 비활성화 합니다.
     /// </summary>
     /// <param name="data"></param>
-    private void setInActiveToolTip(PointerEventData data)
+    public void setInActiveToolTip(PointerEventData data)
     {
         if (ToolTipInstance != null)
         {
@@ -159,7 +159,7 @@ public class UI_BaseToolTipEventHandler : UI_EventHandler
         }
         if(newPosition.y + ToolTipRect.rect.height / 2 > Screen.height)
         {
-            newPosition.y = data.position.y - offSet.y - ToolTipRect.rect.height;
+            newPosition.y = data.position.y - offSet.y - ToolTipRect.rect.height / 2;
         }
         return newPosition;
     }
@@ -170,5 +170,10 @@ public class UI_BaseToolTipEventHandler : UI_EventHandler
         {
             ToolTipInstanceDict.Remove(ToolTipName);
         }
+    } 
+    public void OnDeselect(BaseEventData eventData)
+    {
+        setInActiveToolTip((PointerEventData)eventData);
+        Debug.Log("deselected");
     }
 }

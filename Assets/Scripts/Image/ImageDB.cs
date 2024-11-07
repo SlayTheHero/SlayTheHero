@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 
 public static class ImageDB 
@@ -8,7 +9,8 @@ public static class ImageDB
     {
         Unit,
         Skill,
-        Synergy
+        Synergy,
+        Default,
     }
 
     /// <summary>
@@ -33,10 +35,16 @@ public static class ImageDB
         return dict[type][id];
     }
 
-    private static Dictionary<ImageType, Dictionary<int,Sprite>> dict = new Dictionary<ImageType, Dictionary<int, Sprite>>();
-
+    private static Dictionary<ImageType, Dictionary<int, Sprite>> dict = new Dictionary<ImageType, Dictionary<int, Sprite>>();
     private static void initialize(ImageType type)
     {
+        if (type == ImageType.Default)
+        {
+            dict[type] = new Dictionary<int, Sprite>();
+            Sprite spr = Resources.Load<Sprite>("Images/Default.png");
+            dict[type].Add(0, spr);
+            return;
+        }
         Sprite[] sprites = Resources.LoadAll<Sprite>($"Images/{type.ToString()}");
         dict[type] = new Dictionary<int, Sprite>();
         for (int i = 0; i < sprites.Length; i++)
