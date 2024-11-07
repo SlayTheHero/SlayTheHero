@@ -158,4 +158,5 @@ public class UnitBase : ISerializableToCSV
         Status = new Status();
         Status.FromCSV(statusData);
     }
+    
 }

@@ -16,6 +16,8 @@ public class HeroUnit : UnitBase
     }
     public void Behave()
     {
+        BattleManager.Instance.skill_target = BattleManager.Instance.PlayerTeamPosition[0];
         SkillList[0].Invoke(this, BattleManager.Instance.PlayerTeam[0]);
+
     }
 }

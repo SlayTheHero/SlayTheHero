@@ -1,6 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic; 
+using System.Collections.Generic;
 using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
@@ -29,7 +29,7 @@ public class Skill
     /// </summary>
     public enum SK_Attribute
     {
-        Speed, MaxHealth ,Health, Attack, Defence, Resist,  // 속도, MaxHP ,HP, 공격력, 방어력, 저항
+        Speed, MaxHealth, Health, Attack, Defence, Resist,  // 속도, MaxHP ,HP, 공격력, 방어력, 저항
         CritChance, CritDamage, Penetration, StunChance, ConfusionChance, Dodge, // 크리확률, 크리뎀, 방어관통, 스턴확률, 혼란확률, 회피확률
         BaseAttack, Skill_1, Skill_2, Skill_3, // 행동
         Stun, Confusion
@@ -123,8 +123,17 @@ public class Skill
     }
     public void Invoke(UnitBase Attacker, UnitBase Target)
     {
-        SkillExecuter.Execute(Attacker,Target,this);
-        BattleManager.Instance.OnSkillUsed.Invoke();
+        var bm = BattleManager.Instance;
+        if (Attacker.IsPlayerUnit)
+        {
+            bm.PlayerTeamPosition[Attacker.Position - 1].GetComponent<UnitAnimationController>().Attack.Invoke();
+        }
+        else
+        {
+            bm.HeroTeamPosition[Attacker.Position - 1].GetComponentInChildren<UnitAnimationController>().Attack.Invoke();
+        }
+        SkillExecuter.Execute(Attacker, Target, this);
+
     }
     UnitBase blankUnit = new UnitBase();
     public void Invoke(UnitBase Target)
@@ -168,13 +177,13 @@ public static class SkillDB
         {
             string type = (string)item["Type"];
             int id = (int)item["Skill_ID"];
-            if(SkillTypeData.ContainsKey(type))
+            if (SkillTypeData.ContainsKey(type))
             {
                 SkillTypeData[type].Add(id);
             }
             else
             {
-                SkillTypeData.Add(type,new List<int>() { id });
+                SkillTypeData.Add(type, new List<int>() { id });
             }
 
             string name = (string)item["Name"];
@@ -197,7 +206,7 @@ public static class SkillDB
             int duration = getIntValueOrZero("Duration");
             int coolDown = getIntValueOrZero("CoolTime");
 
-            Skill tempSkill = new Skill(id, name, description, Behavtype, durType, attr, cType, range, impact,duration,coolDown);
+            Skill tempSkill = new Skill(id, name, description, Behavtype, durType, attr, cType, range, impact, duration, coolDown);
             SkillList.Add(tempSkill);
 
             int getIntValueOrZero(string type)
@@ -205,7 +214,8 @@ public static class SkillDB
                 if (item[type] == "")
                 {
                     return 0;
-                }else
+                }
+                else
                 {
                     return (int)item[type];
                 }

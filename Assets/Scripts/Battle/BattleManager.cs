@@ -5,6 +5,10 @@ using System.Linq;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
 using UnityEngine.Events;
+using DG.Tweening;
+using static UnityEditor.PlayerSettings;
+using static UnityEditor.Progress;
+using UnityEngine.UI;
 
 public partial class BattleManager : MonoBehaviour
 {
@@ -18,10 +22,14 @@ public partial class BattleManager : MonoBehaviour
             return instance;
         }
     }
+    public Image Bgd;
     [SerializeField]
-    GameObject[] PlayerTeamPosition = new GameObject[4];
+    public GameObject[] PlayerTeamPosition = new GameObject[4];
     [SerializeField]
-    GameObject[] HeroTeamPosition = new GameObject[4];
+    public GameObject[] HeroTeamPosition = new GameObject[4];
+
+    public bool[] player_range = new bool[4];
+    public bool[] hero_range = new bool[4];
 
     public int CurStage = 1;
     public int CurSubStage = 1;
@@ -40,9 +48,16 @@ public partial class BattleManager : MonoBehaviour
 
     public UnityEvent OnUnitDead;
 
-    public Phase CurPhase;
+    public UnityEvent OnUnitInit;
 
-    public int? selected_skill;
+    int unit_init = 0;
+
+    public Phase CurPhase;
+    
+    public int selected_skill = -1;
+
+    public GameObject skill_target;
+    
 
     private void Awake()
     {
@@ -57,21 +72,28 @@ public partial class BattleManager : MonoBehaviour
             return;
         }
     }
+    private void Start()
+    {
+        for (int i = 0; i < HeroTeam.Count; i++)
+        {
+            Instantiate(Resources.Load<GameObject>("Prefabs/Units/" + HeroTeam[i].Name), HeroTeamPosition[i].transform);
+        }
+    }
     private void Update()
     {
 
-        if (selected_skill != null && Input.GetMouseButtonDown(0))
+        if (selected_skill > -1 && Input.GetMouseButtonDown(0))
         {
             Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);
-            if (hit.collider)
+            var target = hit ? hit.collider.gameObject : null;
+            if (target == null)
             {
-                SelectTarget(int.Parse(hit.collider.gameObject.name), hit.collider.gameObject.GetComponentInParent<Transform>().gameObject.name == "PlayerPos");
+                AlphaReset();
+                selected_skill = -1;
+                return;
             }
-            else
-            {
-                selected_skill = null;
-            }
+            Debug.Log(target);
         }
     }
     void Init()
@@ -80,6 +102,7 @@ public partial class BattleManager : MonoBehaviour
         CurSubStage = 1;
         TurnList = new List<UnitBase>();
         OnSkillUsed.AddListener(() => ChangePhase(Phases.PostBattlePhase));
+        OnUnitInit.AddListener(() => { unit_init++; if (unit_init == TurnList.Count) CurPhase.OnEnterPhase(); });
         LoadHeroTeam();
         LoadPlayerTeam();
         InitWaiting();
@@ -88,7 +111,7 @@ public partial class BattleManager : MonoBehaviour
         PostBattlePhase post = new(Phases.PostBattlePhase);
 
         CurPhase = p;
-        CurPhase.OnEnterPhase();
+        
 
     }
 
@@ -109,10 +132,10 @@ public partial class BattleManager : MonoBehaviour
         {
             HeroTeam.Add(item);
             TurnList.Add(item);
-            HeroTeamPosition[i-1].SetActive(true);
+            HeroTeamPosition[i - 1].SetActive(true);
             HeroTeam.Last().Position = i++;
         }
-        
+
     }
     void LoadPlayerTeam()
     {
@@ -130,24 +153,75 @@ public partial class BattleManager : MonoBehaviour
 
     public void UseSkill(int id)
     {
+        if (!(StagedUnit.IsPlayerUnit))
+            return;
         selected_skill = id;
+        Bgd.color = new Color(0, 0, 0, 0.8f);
+        var range = StagedUnit.SkillList[id].range;
+        var pos = StagedUnit.Position;
+        var back = pos + range > 4 ? 4 : pos + range;
+        var front = pos - range;
+        foreach (var item in PlayerTeam)
+        {
+            var ipos = item.Position;
+            if (ipos <= back && ipos >= front)
+            {
+                ChageAlpha(PlayerTeamPosition[ipos - 1].transform.GetChild(1).gameObject, true);
+                PlayerTeamPosition[ipos - 1].GetComponent<BoxCollider2D>().enabled = true;
+                player_range[ipos - 1] = true;
+            }
+            else
+            {
+                ChageAlpha(
+                PlayerTeamPosition[ipos - 1].transform.GetChild(1).gameObject, false);
+                PlayerTeamPosition[ipos - 1].GetComponent<BoxCollider2D>().enabled = false;
+                player_range[ipos - 1] = false;
+            }
+        }
+        foreach (var item in HeroTeam)
+        {
+            var ipos = item.Position;
+            var h_back = (-1 * front) + 1;
+
+            if (ipos > h_back)
+            {
+
+                ChageAlpha(HeroTeamPosition[ipos - 1], false);
+
+                HeroTeamPosition[ipos - 1].GetComponent<BoxCollider2D>().enabled = false;
+                hero_range[ipos - 1] = false;
+                continue;
+            }
+            ChageAlpha(HeroTeamPosition[ipos - 1], true);
+            HeroTeamPosition[ipos - 1].GetComponent<BoxCollider2D>().enabled = true;
+            hero_range[ipos - 1] = true;
+
+        }
+
     }
     public void SelectTarget(int target, bool isPlayerUnit)
     {
-        if (selected_skill == null)
+        if (selected_skill == -1)
             return;
         if (isPlayerUnit)
         {
             if (PlayerTeam.Count > target)
-                StagedUnit.SkillList[selected_skill.Value].Invoke(StagedUnit, PlayerTeam[target - 1]);
+            {
+                skill_target = PlayerTeamPosition[target - 1];
+                StagedUnit.SkillList[selected_skill].Invoke(StagedUnit, PlayerTeam[target - 1]);
+            }
         }
         else
         {
             if (HeroTeam.Count > target)
-                StagedUnit.SkillList[selected_skill.Value].Invoke(StagedUnit, HeroTeam[target - 1]);
+            {
+                skill_target = HeroTeamPosition[target - 1];
+                StagedUnit.SkillList[selected_skill].Invoke(StagedUnit, HeroTeam[target - 1]);
+            }
         }
-
-
+        AlphaReset();
+        selected_skill = -1;
+        Bgd.color = new Color(0, 0, 0, 0);
     }
 
     private void InitWaiting()
@@ -186,6 +260,39 @@ public partial class BattleManager : MonoBehaviour
 
             HeroTeamPosition.Last().SetActive(false);
         }
+    }
+    public void ChageAlpha(GameObject target, bool can_select)
+    {
+        var sr = target.GetComponentsInChildren<SpriteRenderer>();
+        foreach (var c in sr)
+        {
+            c.color = new Color(c.color.r, c.color.g, c.color.b, can_select ? 1f : 0.5f);
+        }
+    }
+    public void AlphaReset()
+    {
+        foreach (var u in PlayerTeamPosition)
+        {
+            ChageAlpha(u, true);
+            u.GetComponent<BoxCollider2D>().enabled = true;
+        }
+        foreach (var u in HeroTeamPosition)
+        {
+            ChageAlpha(u, true);
+            u.GetComponent<BoxCollider2D>().enabled = true;
+        }
+        for (int i = 0; i < 4; i++)
+        {
+            player_range[i] = true;
+            hero_range[i] = true;
+        }
+        Bgd.color = new Color(0, 0, 0, 0);
+    }
+    public GameObject GetGameObject(UnitBase unit)
+    {
+        if (unit.IsPlayerUnit)
+            return PlayerTeamPosition[unit.Position-1];
+        return HeroTeamPosition[unit.Position-1];
     }
 }
 

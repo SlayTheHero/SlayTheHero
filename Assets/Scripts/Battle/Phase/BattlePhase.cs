@@ -16,7 +16,7 @@ public class BattlePhase : Phase
 
         Debug.Log("Enter BattlePhase");
         var bm = BattleManager.Instance;
-        bm.selected_skill = null;
+        bm.selected_skill = -1;
         if (!bm.StagedUnit.IsPlayerUnit)
         {
             HeroUnit h = bm.StagedUnit as HeroUnit;

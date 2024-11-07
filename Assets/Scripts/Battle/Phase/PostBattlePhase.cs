@@ -14,7 +14,11 @@ public class PostBattlePhase : Phase
 
         Debug.Log("Enter PostBattlePhase");
         var bm = BattleManager.Instance;
-        if(bm.HeroTeam.Count == 0 || bm.PlayerTeam.Count == 0)
+        if (bm.StagedUnit.IsPlayerUnit)
+            bm.GetGameObject(bm.StagedUnit).transform.GetChild(2).gameObject.SetActive(false);
+        else
+            bm.GetGameObject(bm.StagedUnit).transform.GetChild(0).gameObject.SetActive(false);
+        if (bm.HeroTeam.Count == 0 || bm.PlayerTeam.Count == 0)
         {
             //스테이지 클리어 or 실패
         }

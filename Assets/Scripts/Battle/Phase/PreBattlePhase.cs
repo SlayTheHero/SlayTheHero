@@ -17,6 +17,11 @@ public class PreBattlePhase : Phase
         var bm = BattleManager.Instance;
         SortUnit(bm.TurnList);
         bm.StagedUnit = bm.TurnList[0];
+        if(bm.StagedUnit.IsPlayerUnit)
+            bm.GetGameObject(bm.StagedUnit).transform.GetChild(2).gameObject.SetActive(true);
+        else
+            bm.GetGameObject(bm.StagedUnit).transform.GetChild(0).gameObject.SetActive(true);
+
         bm.OnPreBattlePhase.Invoke();
         Debug.Log("Enter PreBattlePhase");
         bm.ChangePhase(Phases.BattlePhase);

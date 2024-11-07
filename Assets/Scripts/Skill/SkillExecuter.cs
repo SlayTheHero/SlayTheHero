@@ -31,6 +31,7 @@ public static class SkillExecuter
         await RunBehaviorLogic(Attacker, Target, skill);
 
         Debug.Log("Skill Use finished");
+        BattleManager.Instance.OnSkillUsed.Invoke();
         //OnSkillUsed »ðÀÔ
 
     }

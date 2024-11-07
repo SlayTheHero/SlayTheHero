@@ -4,6 +4,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using System.IO;
+using Unity.VisualScripting;
 
 public class CSVReader
 {
@@ -117,4 +118,32 @@ public class CSVReader
         return dict;
     }
 
+    public static Dictionary<int, AvatarData> ReadAvatarData(string path)
+    {
+        var dict = new Dictionary<int, AvatarData>();
+        var data = Resources.Load<TextAsset>(path); // �� ����.file ��ü�� TextAsset�̱� ����
+
+        var lines = Regex.Split(data.text, LINE_SPLIT_RE);
+
+        if (lines.Length <= 1) return dict;
+
+        var header = Regex.Split(lines[0], SPLIT_RE);
+        for (var i = 1; i < lines.Length; i++)
+        {
+
+            var values = Regex.Split(lines[i], SPLIT_RE);
+            if (values.Length == 0 || values[0] == "") continue;
+
+            for (var j = 0; j < header.Length && j < values.Length; j++)
+            {
+                values[j] = values[j].TrimStart(TRIM_CHARS).TrimEnd(TRIM_CHARS).Replace("\\", "");
+            }
+
+            var avatarData = new AvatarData(int.Parse(values[0]), values[1], values[2], values[3], values[4],
+                values[5], values[6], values[7], values[8], values[9], values[10], values[11], values[12]);
+
+            dict.Add(avatarData.ID, avatarData);
+        }
+        return dict;
+    }
 }
