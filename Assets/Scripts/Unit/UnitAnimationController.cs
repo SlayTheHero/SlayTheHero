@@ -2,26 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 public class UnitAnimationController : MonoBehaviour
 {
-    
-    public UnityEvent Attack;
-    public UnityEvent Hit;
-    public UnityEvent Idle;
 
     public Animator Animator;
+    public readonly int AttackAnimDuration = 667;
+    public readonly int hit_anim_length= 667;
     // Start is called before the first frame update
     void Start()
     {
-        Attack = new UnityEvent();
-        Hit = new UnityEvent();
-        Idle = new UnityEvent();
+        
         Animator = GetComponent<Animator>();
-        Attack.AddListener(OnAttack);
-        Hit.AddListener(OnHit);
-        Idle.AddListener(OnIdle);
-        BattleManager.Instance.OnUnitInit.Invoke();
+        
+        
     }
 
     // Update is called once per frame
@@ -30,27 +25,21 @@ public class UnitAnimationController : MonoBehaviour
         
     }
 
-    void OnAttack()
+    public void Attack()
     {
         Animator.SetTrigger("Attack");
     }
-    void OnHit()
+    public void Hit()
+    {
+        GetComponent<UnitObject>().HpBarRefresh();
+        Animator.SetTrigger("Hit");
+    }
+    public void Idle()
     {
         Animator.SetTrigger("Idle");
     }
-    void OnIdle()
+    private void OnDestroy()
     {
-        Animator.SetTrigger("Idle");
-    }
-    void OnAttackAnimDone()
-    {
-        var bm = BattleManager.Instance;
-        if (bm.skill_target.GetComponent<UnitAnimationController>() == null)
-        {
-            bm.skill_target.GetComponentInChildren<UnitAnimationController>().Hit.Invoke();
-            return;
-        }
-
-        bm.skill_target.GetComponent<UnitAnimationController>().Hit.Invoke();
+        Animator.StopPlayback();
     }
 }

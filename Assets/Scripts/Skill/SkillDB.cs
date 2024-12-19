@@ -123,15 +123,6 @@ public class Skill
     }
     public void Invoke(UnitBase Attacker, UnitBase Target)
     {
-        var bm = BattleManager.Instance;
-        if (Attacker.IsPlayerUnit)
-        {
-            bm.PlayerTeamPosition[Attacker.Position - 1].GetComponent<UnitAnimationController>().Attack.Invoke();
-        }
-        else
-        {
-            bm.HeroTeamPosition[Attacker.Position - 1].GetComponentInChildren<UnitAnimationController>().Attack.Invoke();
-        }
         SkillExecuter.Execute(Attacker, Target, this);
 
     }

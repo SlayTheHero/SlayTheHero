@@ -7,9 +7,11 @@ using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.Windows;
 
-[Serializable]
+
 public class UnitBase : ISerializableToCSV
 {
+    public int Order;
+    public bool IsDead;
     public bool IsPlayerUnit;
     public int Position;
     public int ID;
@@ -53,6 +55,7 @@ public class UnitBase : ISerializableToCSV
     // 복사 생성자
     public UnitBase(UnitBase other)
     {
+        Position = other.Position;
         ID = other.ID;
         Name = other.Name;
         Status = new Status(other.Status);
@@ -73,31 +76,32 @@ public class UnitBase : ISerializableToCSV
     /// <param name="endDamage">최종 데미지</param>
     /// <param name="Attacker">공격자</param>
     /// <param name="isCritical">크리티컬 여부</param>
-    public void OnDamage(int endDamage,Status Attacker,bool isCritical)
+    public void OnDamage(int endDamage, Status Attacker, bool isCritical)
     {
-        int random = UnityEngine.Random.Range(0,100) / 100;
-        if(random < Status.DodgeChance)
+        int random = UnityEngine.Random.Range(0, 100) / 100;
+        if (random < Status.DodgeChance)
         {
             // 회피 로직
         }
-        else 
+        else
         {
             // 크리 로직
-            if(isCritical) 
+            if (isCritical)
             {
 
             }
-            else 
+            else
             {
 
             }
 
             Status.OnDamage(endDamage, Attacker);
-            
-            // 사망 로직 Status쪽에서 해도 될지도
-            if(Status.HP <= 0)
-            {
 
+            // 사망 로직 Status쪽에서 해도 될지도
+            if (Status.HP <= 0)
+            {
+                BattleManager.Instance.UnitDead.Invoke(this);
+                IsDead = true;
             }
         }
     }
@@ -114,7 +118,7 @@ public class UnitBase : ISerializableToCSV
         sb.Append((int)Race).Append(",");
         for (int i = 0; i < 4; i++)
         {
-            if(i < SkillList.Count - 1)
+            if (i < SkillList.Count - 1)
             {
                 sb.Append(SkillList[i].id).Append(",");
             }
@@ -158,5 +162,9 @@ public class UnitBase : ISerializableToCSV
         Status = new Status();
         Status.FromCSV(statusData);
     }
-    
+
+    public static int SpeedCompare(UnitBase a, UnitBase b)
+    {
+        return (int)(a.Status.Waiting - b.Status.Waiting);
+    }
 }

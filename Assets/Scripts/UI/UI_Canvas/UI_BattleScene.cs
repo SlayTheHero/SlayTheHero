@@ -40,46 +40,11 @@ public class UI_BattleScene : UI_Base
     void Start()
     {
         Init();
-        GetUI<Image>((int)Images.UI_BaseAttack).gameObject.AddUIEvent((p) => { Debug.Log("Basic Attack"); BattleManager.Instance.UseSkill(0); });
-        GetUI<Image>((int)Images.UI_Skill_1).gameObject.AddUIEvent((p) => { BattleManager.Instance.UseSkill(1); });
-        GetUI<Image>((int)Images.UI_Skill_2).gameObject.AddUIEvent((p) => { BattleManager.Instance.UseSkill(2); });
-        GetUI<Image>((int)Images.UI_Skill_3).gameObject.AddUIEvent((p) => { BattleManager.Instance.UseSkill(3); });
-        BattleManager.Instance.OnPreBattlePhase.AddListener(SkillBtnRefresh);
     }
 
     // Update is called once per frame
     void Update()
     {
-
-    }
-
-    void SkillBtnRefresh()
-    {
-        var bm = BattleManager.Instance;
-        var unit = bm.StagedUnit;
-        GetUI<Image>((int)Images.UI_Skill_3).raycastTarget = false;
-
-        GetUI<Image>((int)Images.UI_Skill_2).raycastTarget = false;
-
-        GetUI<Image>((int)Images.UI_Skill_1).raycastTarget = false;
-        GetUI<Image>((int)Images.UI_Skill_1).color = Color.clear;
-        GetUI<Image>((int)Images.UI_Skill_2).color = Color.clear;
-        GetUI<Image>((int)Images.UI_Skill_3).color = Color.clear;
-        if (unit.SkillList.Count > 1)
-        {
-            GetUI<Image>((int)Images.UI_Skill_1).raycastTarget = true;
-            GetUI<Image>((int)Images.UI_Skill_1).color = Color.white;
-        }
-        if (unit.SkillList.Count > 2)
-        {
-            GetUI<Image>((int)Images.UI_Skill_2).raycastTarget = true;
-            GetUI<Image>((int)Images.UI_Skill_2).color = Color.white;
-        }
-        if (unit.SkillList.Count > 3)
-        {
-            GetUI<Image>((int)Images.UI_Skill_3).raycastTarget = true;
-            GetUI<Image>((int)Images.UI_Skill_3).color = Color.white;
-        }
 
     }
 }

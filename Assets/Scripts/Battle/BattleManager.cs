@@ -1,16 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
-using Unity.Burst.CompilerServices;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
-using DG.Tweening;
-using static UnityEditor.PlayerSettings;
-using static UnityEditor.Progress;
-using UnityEngine.UI;
+using static UnityEngine.GraphicsBuffer;
 
-public partial class BattleManager : MonoBehaviour
+[RequireComponent(typeof(StateComponent))]
+public class BattleManager : MonoBehaviour
 {
     private static BattleManager instance;
     public static BattleManager Instance
@@ -22,277 +19,204 @@ public partial class BattleManager : MonoBehaviour
             return instance;
         }
     }
-    public Image Bgd;
-    [SerializeField]
-    public GameObject[] PlayerTeamPosition = new GameObject[4];
-    [SerializeField]
-    public GameObject[] HeroTeamPosition = new GameObject[4];
-
-    public bool[] player_range = new bool[4];
-    public bool[] hero_range = new bool[4];
-
-    public int CurStage = 1;
-    public int CurSubStage = 1;
+    public BattleUI BattleUI;
+    public UnitSpawner PlayerUnitSpawner;
+    public UnitSpawner HeroUnitSpawner;
+    public StateComponent StateComponent;
+    public Dictionary<int, GameObject> Units;
     public List<PlayerUnit> PlayerTeam;
     public List<HeroUnit> HeroTeam;
-    public List<UnitBase> TurnList;
-    public UnitBase StagedUnit;
+    public List<UnitBase> WaitingUnitsList;
 
-    public UnityEvent OnPreBattlePhase;
-    public UnityEvent OnBattlePhase;
-    public UnityEvent OnPostBattlePhase;
+    public UnitBase CurUnit;
 
-    public UnityEvent OnSkillUsed;
+    public StageData CurStage;
 
-    public UnityEvent OnTurnEnd;
+    public float ready_duration;
+    public float battle_duration;
+    public float end_duration;
 
-    public UnityEvent OnUnitDead;
-
-    public UnityEvent OnUnitInit;
-
-    int unit_init = 0;
-
-    public Phase CurPhase;
-    
-    public int selected_skill = -1;
-
-    public GameObject skill_target;
-    
+    public UnityEvent<int, UnitBase> SkillUsed;
+    public UnityEvent<UnitBase> UnitDead;
+    public UnityEvent<int> BattleStart;
+    public UnityEvent<int, int> SubStageClear;
 
     private void Awake()
     {
-        if (instance == null)
-        {
-            Init();
-            instance = this;
-        }
-        else
-        {
-            Destroy(gameObject);
-            return;
-        }
+        SkillUsed = new UnityEvent<int, UnitBase>();
+        Units = new Dictionary<int, GameObject>();
+        BattleStart = new();
+        BattleStart.AddListener(Init);
+        UnitDead = new();
+        SubStageClear = new();
+        WaitingUnitsList = new List<UnitBase>();
     }
-    private void Start()
-    {
-        for (int i = 0; i < HeroTeam.Count; i++)
-        {
-            Instantiate(Resources.Load<GameObject>("Prefabs/Units/" + HeroTeam[i].Name), HeroTeamPosition[i].transform);
-        }
-    }
-    private void Update()
+    // Start is called before the first frame update
+    void Start()
     {
 
-        if (selected_skill > -1 && Input.GetMouseButtonDown(0))
+    }
+    public void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Space))
         {
-            Vector2 pos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-            RaycastHit2D hit = Physics2D.Raycast(pos, Vector2.zero, 0f);
-            var target = hit ? hit.collider.gameObject : null;
-            if (target == null)
-            {
-                AlphaReset();
-                selected_skill = -1;
-                return;
-            }
-            Debug.Log(target);
+            BattleStart?.Invoke(1);
         }
     }
-    void Init()
-    {
-        CurStage = 1;
-        CurSubStage = 1;
-        TurnList = new List<UnitBase>();
-        OnSkillUsed.AddListener(() => ChangePhase(Phases.PostBattlePhase));
-        OnUnitInit.AddListener(() => { unit_init++; if (unit_init == TurnList.Count) CurPhase.OnEnterPhase(); });
-        LoadHeroTeam();
-        LoadPlayerTeam();
-        InitWaiting();
-        PreBattlePhase p = new(Phases.PreBattlePhase);
-        BattlePhase b = new(Phases.BattlePhase);
-        PostBattlePhase post = new(Phases.PostBattlePhase);
-
-        CurPhase = p;
-        
-
-    }
-
-    public void ChangePhase(Phases next)
-    {
-        CurPhase.OnExitPhase();
-        CurPhase = Phase.PhaseTable[next];
-        CurPhase.OnEnterPhase();
-    }
-
     void LoadHeroTeam()
     {
-        HeroTeam = new List<HeroUnit>();
-
-        var data = StageDB.GetStageData(CurStage, CurSubStage);
-        int i = 1;
-        foreach (var item in data.HeroUnits)
+        int pos = 5;
+        HeroTeam = CurStage.HeroUnits;
+        foreach (var item in HeroTeam)
         {
-            HeroTeam.Add(item);
-            TurnList.Add(item);
-            HeroTeamPosition[i - 1].SetActive(true);
-            HeroTeam.Last().Position = i++;
+            WaitingUnitsList.Add(item);
+            item.Position = pos++;
+            item.Status.HP = 1;
         }
-
     }
     void LoadPlayerTeam()
     {
         PlayerTeam = new();
-        var list = PlayerUnitContainer.GetUnitList();
-        for (int i = 0; i < list.Count; i++)
+        int pos = 1;
+        //유닛 선택창에서 선택한 유닛 리스트 가져오기
+        foreach (UnitBase unit in PlayerUnitContainer.GetUnitList())
         {
-            PlayerTeam.Add(new PlayerUnit(list[i]));
-            TurnList.Add(PlayerTeam[i]);
-            PlayerTeam[i].Position = i + 1;
-            PlayerTeamPosition[i].SetActive(true);
-        }
-
-    }
-
-    public void UseSkill(int id)
-    {
-        if (!(StagedUnit.IsPlayerUnit))
-            return;
-        selected_skill = id;
-        Bgd.color = new Color(0, 0, 0, 0.8f);
-        var range = StagedUnit.SkillList[id].range;
-        var pos = StagedUnit.Position;
-        var back = pos + range > 4 ? 4 : pos + range;
-        var front = pos - range;
-        foreach (var item in PlayerTeam)
-        {
-            var ipos = item.Position;
-            if (ipos <= back && ipos >= front)
-            {
-                ChageAlpha(PlayerTeamPosition[ipos - 1].transform.GetChild(1).gameObject, true);
-                PlayerTeamPosition[ipos - 1].GetComponent<BoxCollider2D>().enabled = true;
-                player_range[ipos - 1] = true;
-            }
-            else
-            {
-                ChageAlpha(
-                PlayerTeamPosition[ipos - 1].transform.GetChild(1).gameObject, false);
-                PlayerTeamPosition[ipos - 1].GetComponent<BoxCollider2D>().enabled = false;
-                player_range[ipos - 1] = false;
-            }
-        }
-        foreach (var item in HeroTeam)
-        {
-            var ipos = item.Position;
-            var h_back = (-1 * front) + 1;
-
-            if (ipos > h_back)
-            {
-
-                ChageAlpha(HeroTeamPosition[ipos - 1], false);
-
-                HeroTeamPosition[ipos - 1].GetComponent<BoxCollider2D>().enabled = false;
-                hero_range[ipos - 1] = false;
-                continue;
-            }
-            ChageAlpha(HeroTeamPosition[ipos - 1], true);
-            HeroTeamPosition[ipos - 1].GetComponent<BoxCollider2D>().enabled = true;
-            hero_range[ipos - 1] = true;
-
-        }
-
-    }
-    public void SelectTarget(int target, bool isPlayerUnit)
-    {
-        if (selected_skill == -1)
-            return;
-        if (isPlayerUnit)
-        {
-            if (PlayerTeam.Count > target)
-            {
-                skill_target = PlayerTeamPosition[target - 1];
-                StagedUnit.SkillList[selected_skill].Invoke(StagedUnit, PlayerTeam[target - 1]);
-            }
-        }
-        else
-        {
-            if (HeroTeam.Count > target)
-            {
-                skill_target = HeroTeamPosition[target - 1];
-                StagedUnit.SkillList[selected_skill].Invoke(StagedUnit, HeroTeam[target - 1]);
-            }
-        }
-        AlphaReset();
-        selected_skill = -1;
-        Bgd.color = new Color(0, 0, 0, 0);
-    }
-
-    private void InitWaiting()
-    {
-        foreach (UnitBase a in TurnList)
-        {
-            a.Status.Waiting = (int)((1f / a.Status.Speed) * 10000);
+            var p_unit = new PlayerUnit(unit);
+            p_unit.IsPlayerUnit = true;
+            WaitingUnitsList.Add(p_unit);
+            p_unit.Position = pos++;
+            PlayerTeam.Add(p_unit);
         }
     }
 
-    void OnUnitDeadHandler(UnitBase unit)
+    public void Init(int stage)
     {
-        var pos = unit.Position;
-        var is_player = unit.IsPlayerUnit;
-        TurnList.Remove(unit);
-        if (is_player)
+        if (CurStage == null)
+            CurStage = StageDB.GetStageData(stage, 1);
+        LoadHeroTeam();
+        LoadPlayerTeam();
+        PlayerUnitSpawner.SpawnAll();
+        HeroUnitSpawner.SpawnAll();
+        BattleUI.InitWaitingUnitInfo(WaitingUnitsList);
+        foreach (var item in WaitingUnitsList)
         {
-            var p_unit = unit as PlayerUnit;
-            for (int i = pos - 1; i < PlayerTeam.Count; i++)
-            {
-                PlayerTeam[i].Position--;
-            }
-            PlayerTeam.Remove(p_unit);
-            PlayerTeamPosition.Last().SetActive(false);
+            item.Status.Waiting = (int)((1f / item.Status.Speed) * 10000);
         }
-        else
-        {
-            var h_unit = unit as HeroUnit;
+        StateComponent.AddState(new ReadyBattlePhase(BattlePhaseEnum.ReadyBattlePhase).SetDuration(ready_duration));
+        StateComponent.AddState(new BattlePhase(BattlePhaseEnum.BattlePhase).SetDuration(battle_duration));
+        StateComponent.AddState(new EndBattlePhase(BattlePhaseEnum.EndBattlePhase).SetDuration(end_duration));
+        StateComponent.FSMStart((int)BattlePhaseEnum.ReadyBattlePhase);
 
-            for (int i = pos - 1; i < HeroTeam.Count; i++)
-            {
-                HeroTeam[i].Position--;
-            }
+    }
 
-            HeroTeam.Remove(h_unit);
 
-            HeroTeamPosition.Last().SetActive(false);
-        }
-    }
-    public void ChageAlpha(GameObject target, bool can_select)
+
+    public void UnitSort()
     {
-        var sr = target.GetComponentsInChildren<SpriteRenderer>();
-        foreach (var c in sr)
+        WaitingUnitsList.Sort(UnitBase.SpeedCompare);
+        for (int i = 0; i < WaitingUnitsList.Count; i++)
         {
-            c.color = new Color(c.color.r, c.color.g, c.color.b, can_select ? 1f : 0.5f);
+            WaitingUnitsList[i].Order = i;
         }
+        CurUnit = WaitingUnitsList[0];
     }
-    public void AlphaReset()
+    public void UnitWaitingDecrease()
     {
-        foreach (var u in PlayerTeamPosition)
+        for (int i = 1; i < WaitingUnitsList.Count; i++)
         {
-            ChageAlpha(u, true);
-            u.GetComponent<BoxCollider2D>().enabled = true;
+            WaitingUnitsList[i].Status.Waiting -= CurUnit.Status.Waiting;
         }
-        foreach (var u in HeroTeamPosition)
-        {
-            ChageAlpha(u, true);
-            u.GetComponent<BoxCollider2D>().enabled = true;
-        }
-        for (int i = 0; i < 4; i++)
-        {
-            player_range[i] = true;
-            hero_range[i] = true;
-        }
-        Bgd.color = new Color(0, 0, 0, 0);
+        CurUnit.Status.Waiting = (int)((1f / CurUnit.Status.Speed) * 10000);
     }
-    public GameObject GetGameObject(UnitBase unit)
+
+    public void UnitDestroy(UnitBase unit)
     {
+        if (CurUnit.Equals(unit))
+            CurUnit = null;
+        WaitingUnitsList.Remove(unit);
+        if (!Units[unit.Position].IsDestroyed())
+            Destroy(Units[unit.Position]);
+        Units.Remove(unit.Position);
         if (unit.IsPlayerUnit)
-            return PlayerTeamPosition[unit.Position-1];
-        return HeroTeamPosition[unit.Position-1];
-    }
-}
+        {
+            PlayerTeam.RemoveAt(unit.Position - 1);
+        }
+        else
+        {
+            HeroTeam.RemoveAt(unit.Position % 4 - 1);
+        }
 
+    }
+    public void ReorderUnit(bool is_player_team)
+    {
+        if (is_player_team)
+            for (int i = 0; i < PlayerTeam.Count; i++)
+            {
+                var unit = PlayerTeam[i];
+                int pos = unit.Position;
+                var uo = Units[pos];
+                if (unit.Position > i + 1)
+                {
+                    int diff = unit.Position - (i + 1);
+                    for (int j = 0; j < diff; j++)
+                    {
+                        uo.GetComponent<UnitObject>().MoveFront();
+                        unit.Position--;
+                    }
+                    Units.Remove(pos);
+                    Units.Add(unit.Position, uo);
+                }
+            }
+        else
+            for (int i = 0; i < HeroTeam.Count; i++)
+            {
+                var unit = HeroTeam[i];
+                int pos = unit.Position;
+                var uo = Units[pos];
+                if (unit.Position > i + 5)
+                {
+                    int diff = unit.Position - (i + 5);
+                    for (int j = 0; j < diff; j++)
+                    {
+                        uo.GetComponent<UnitObject>().MoveFront();
+                        unit.Position--;
+                    }
+                    Units.Remove(pos);
+                    Units.Add(unit.Position, uo);
+                }
+            }
+
+    }
+
+    public void StageClear()
+    {
+        Debug.Log("CLEAR");
+        StateComponent.FSMStop();
+    }
+
+    public void StageFail()
+    {
+        Debug.Log("CLEAR");
+        StateComponent.FSMStop();
+    }
+    public StageData MoveNextStage()
+    {
+        if ((CurStage = StageDB.GetStageData(CurStage.ID, CurStage.SubStageID + 1)) != null)
+        {
+            SubStageClear.Invoke(CurStage.ID, CurStage.SubStageID);
+            LoadHeroTeam();
+            HeroUnitSpawner.SpawnAll();
+            foreach (var item in WaitingUnitsList)
+            {
+                item.Status.Waiting = (int)((1f / item.Status.Speed) * 10000);
+            }
+            BattleUI.InitWaitingUnitInfo(WaitingUnitsList);
+        }
+        return CurStage;
+    }
+    public bool IsStageClear()
+    {
+        return PlayerTeam.Count == 0 || HeroTeam.Count == 0;
+    }
+    
+}

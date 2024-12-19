@@ -15,11 +15,11 @@ public static class PlayerUnitContainer
     }
     public static List<UnitBase> GetUnitList()
     {
-        if(selectUnitList.Count == 0)
+        if (selectUnitList.Count == 0)
         {
             selectUnitList.Add(UnitDB.GetUnit(0));
-            selectUnitList.Add(UnitDB.GetUnit(1));
-            selectUnitList.Add(UnitDB.GetUnit(2));
+            selectUnitList.Add(UnitDB.GetUnit(0));
+            selectUnitList.Add(UnitDB.GetUnit(0));
         }
         return selectUnitList;
     }

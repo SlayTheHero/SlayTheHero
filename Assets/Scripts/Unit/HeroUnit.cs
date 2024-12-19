@@ -3,7 +3,6 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
 public class HeroUnit : UnitBase
 {
     public HeroUnit() : base()
@@ -12,12 +11,12 @@ public class HeroUnit : UnitBase
     }
     public HeroUnit(UnitBase unitBase) : base(unitBase)
     {
+
         IsPlayerUnit = false;
     }
-    public void Behave()
+    public int Behave()
     {
-        BattleManager.Instance.skill_target = BattleManager.Instance.PlayerTeamPosition[0];
-        SkillList[0].Invoke(this, BattleManager.Instance.PlayerTeam[0]);
-
+        SkillList[0].Invoke(this,BattleManager.Instance.HeroTeam[0]);
+        return 5;
     }
 }
