@@ -13,9 +13,9 @@ public static class StageDB
         {
             AllStages = CSVReader.ReadStageData(StageDBPath);
         }
-        if (AllStages.ContainsKey(stage))
+        if (AllStages.ContainsKey(stage) && AllStages[stage].Count>sub-1)
         {
-            StageData stageData = AllStages[stage][sub];
+            StageData stageData = AllStages[stage][sub-1];
             return stageData;
         }
         return null;
