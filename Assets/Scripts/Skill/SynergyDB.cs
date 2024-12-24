@@ -19,6 +19,10 @@ public class Synergy : Skill
     public int twoImpact;
     public int threeImpact;
 
+    public Synergy()
+    {
+
+    }
     // 파라미터 생성자
     public Synergy(
         int id,
@@ -71,7 +75,7 @@ public static class SynergyDB
         if (id >= SynergyList.Count)
         {
             Debug.Log($"{id} is not Valid Synergy ID");
-            return null;
+            return new Synergy();
         }
 
         return new Synergy(SynergyList[id]);
@@ -127,9 +131,9 @@ public static class SynergyDB
 
         if (unit.Count > 1)
         {
-            short[] raceCount = new short[4];
-            short[] featCount = new short[4];
-            short[] jobCount = new short[3];
+            short[] raceCount = new short[Enum.GetValues(typeof(Race)).Length];
+            short[] featCount = new short[Enum.GetValues(typeof(Feature)).Length];
+            short[] jobCount = new short[Enum.GetValues(typeof(Job)).Length];
 
             // 유닛 정보에서 카운트를 셈
             for (int i = 0; i < unit.Count; i++)

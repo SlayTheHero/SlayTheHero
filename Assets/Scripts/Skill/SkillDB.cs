@@ -64,6 +64,9 @@ public class Skill
     public int nowDuration = 0; // 현재 지속시간
 
 
+    public Skill()
+    {
+    }
     public Skill(int _id)
     {
         id = _id;
