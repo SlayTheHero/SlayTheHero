@@ -6,8 +6,10 @@ using UnityEngine.UI;
 public class UI_UnitButton : MonoBehaviour
 {
     public List<GameObject> Synergys = new List<GameObject>();
-    void Start()
-    { 
+    private Image UI_UnitImage;
+    void Awake()
+    {
+        UI_UnitImage = transform.GetChild(0).GetComponent<Image>();
     }
     public void SetSynergyData((int,int,int) SynergyCode)
     {
@@ -23,5 +25,22 @@ public class UI_UnitButton : MonoBehaviour
             go.SetActive(isShow);
         }
 
+    }
+
+    public void SetImage(Sprite sp)
+    {
+        UI_UnitImage.sprite = sp;
+    }
+
+    public void SetSelected(bool isSelected) 
+    {
+        if(isSelected)
+        {
+            UI_UnitImage.color = new Color32(255, 255, 255, 100);
+        }
+        else
+        {
+            UI_UnitImage.color = new Color32(255, 255, 255, 255);
+        }
     }
 }

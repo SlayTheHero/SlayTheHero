@@ -37,10 +37,11 @@ public class UI_CharacterListPanel : UI_EventHandler
         {
             GameObject temp = GameObject.Instantiate(prefab, CharacterGridPanel.transform);
             temp.name = "UI_Character_" + i;
-            UnitBase unit = manager.PlayerData.unitDeque.GetUnit(i);
-            temp.GetComponent<Image>().sprite = ImageDB.GetImage(ImageDB.ImageType.Unit, unit.ID);
+            UnitBase unit = manager.PlayerData.unitDeque.GetUnit(i); 
+
             UnitButtons.Add(temp.GetComponent<UI_UnitButton>());
             UnitButtons[i].SetSynergyData(((int)unit.Race, (int)unit.Job + 4, (int)unit.Feature + 7));
+            UnitButtons[i].SetImage(ImageDB.GetImage(ImageDB.ImageType.Unit, unit.ID));
             UnitList.Add(temp);
         }
         if(unitCount <= 4)
@@ -80,14 +81,7 @@ public class UI_CharacterListPanel : UI_EventHandler
     public void SetUnitSelected(int index, bool isGrey)
     {
         if (UnitList.Count <= index) return;
-        if(isGrey)
-        { 
-            UnitList[index].GetComponent<Image>().color = new Color32(255, 255, 255, 100);
-        }
-        else
-        { 
-            UnitList[index].GetComponent<Image>().color = new Color32(255, 255, 255, 255);
-        }
+        UnitButtons[index].SetSelected(isGrey);
     }
 
     Coroutine PushScrollCoroutine;

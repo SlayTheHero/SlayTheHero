@@ -55,9 +55,22 @@ public class UI_CharacterSelect : UI_Base
         Bind<Text>(typeof(Texts));
         Bind<Button>(typeof(Buttons));
         Bind<TextMeshProUGUI>(typeof(Texts));
+          
 
-        setDeck(IsDeck);
-        if(manager.PlayerData.unitDeque.GetUnitCount() == 0)
+        if (IsDeck)
+        {
+            GetButton((int)Buttons.UI_CloseButton).gameObject.SetActive(true);
+            GetButton((int)Buttons.UI_SettingButton).gameObject.SetActive(false);
+            GetButton((int)Buttons.UI_StartButton).gameObject.SetActive(false);
+        }
+        else
+        {
+            GetButton((int)Buttons.UI_CloseButton).gameObject.SetActive(false);
+            GetButton((int)Buttons.UI_SettingButton).gameObject.SetActive(true);
+            GetButton((int)Buttons.UI_StartButton).gameObject.SetActive(true);
+        }
+
+        if (manager.PlayerData.unitDeque.GetUnitCount() == 0)
         { 
             for (int i = 3; i < 6; i++)
             {
@@ -103,6 +116,7 @@ public class UI_CharacterSelect : UI_Base
         GetImage((int)Images.UI_CharacterSlot_3).gameObject.AddUIEvent(OnSlotClicked, UI_EventHandler.UIEvent.LClick);
 
         GetButton((int)Buttons.UI_CloseButton).gameObject.AddUIEvent(OnCloseButtonClicked, UI_EventHandler.UIEvent.LClick);
+        GetButton((int)Buttons.UI_SettingButton).gameObject.AddUIEvent((p) => manager.UI.ShowPopupUI<UI_Setting>(), UI_EventHandler.UIEvent.LClick);
 
         isStartReady = false;
         setStartButton();
@@ -122,7 +136,7 @@ public class UI_CharacterSelect : UI_Base
         GetTextMeshPro((int)Texts.UI_TraitText).text = unit.Feature.ToString();
         GetTextMeshPro((int)Texts.UI_ClassText).text = unit.Job.ToString();
         GetTextMeshPro((int)Texts.UI_RaceText).text = unit.Race.ToString();
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 4; i++)
         {
             if(i < unit.SkillList.Count)
             {
@@ -235,7 +249,7 @@ public class UI_CharacterSelect : UI_Base
         }
 
         nowSynergy = SynergyDB.getSynergyFromUnitList(unit); 
-        GetGameObject((int)GameObjects.UI_SynergyDisplay).GetComponent<UI_SynergyDisplay>().InitializeDisplay(unit);
+        //GetGameObject((int)GameObjects.UI_SynergyDisplay).GetComponent<UI_SynergyDisplay>().InitializeDisplay(unit);
 
         if (nowSynergy == null)
         {
@@ -287,18 +301,6 @@ public class UI_CharacterSelect : UI_Base
     public void setDeck(bool isDeck)
     {
         IsDeck = isDeck;
-        if (isDeck)
-        {
-            GetButton((int)Buttons.UI_CloseButton).gameObject.SetActive(true);
-            GetButton((int)Buttons.UI_SettingButton).gameObject.SetActive(false);
-            GetButton((int)Buttons.UI_StartButton).gameObject.SetActive(false);
-        }
-        else
-        {
-            GetButton((int)Buttons.UI_CloseButton).gameObject.SetActive(false);
-            GetButton((int)Buttons.UI_SettingButton).gameObject.SetActive(true);
-            GetButton((int)Buttons.UI_StartButton).gameObject.SetActive(true);
-        }
     }
 
     // Start is called before the first frame update
