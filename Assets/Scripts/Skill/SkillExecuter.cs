@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Threading;
 using System.Threading.Tasks;
 using Unity.Burst.CompilerServices;
 using UnityEngine;
@@ -29,10 +31,6 @@ public static class SkillExecuter
         }
         //Çàµ¿
         await RunBehaviorLogic(Attacker, Target, skill);
-
-        Debug.Log("Skill Use finished");
-        //OnSkillUsed »ðÀÔ
-
     }
 
     #region Behaviors
@@ -57,13 +55,18 @@ public static class SkillExecuter
     }
     private static async Task MeleeBehavior(UnitBase Attacker, UnitBase Target, Skill skill)
     {
-        int index = 0;
-        while(index < 5)
-        {
-            Debug.Log($"{index} Count");
-            index++;
-            await Task.Delay(1000);
-        }
+
+        Stopwatch sw = new();
+        var anim = BattleManager.Instance.Units[Attacker.Position].GetComponent<UnitAnimationController>();
+        anim.Attack();
+        sw.Start();
+        await Task.Delay(millisecondsDelay: anim.AttackAnimDuration);
+        sw.Stop();
+        UnityEngine.Debug.Log(sw.ElapsedMilliseconds);
+        anim = BattleManager.Instance.Units[Target.Position].GetComponent<UnitAnimationController>();
+        anim.Hit();
+        await Task.Delay(millisecondsDelay: anim.hit_anim_length);
+
     }
     private static async Task ProjectileBehavior(UnitBase Attacker, UnitBase Target, Skill skill)
     {
