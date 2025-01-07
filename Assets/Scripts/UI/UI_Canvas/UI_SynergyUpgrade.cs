@@ -10,50 +10,48 @@ public class UI_SynergyUpgrade : UI_Base
 {
     enum GameObjects
     {
-        UI_CharacterListPanel, UI_CharacterListGridPanel
+        UI_CharacterListPanel, UI_CharacterListGridPanel, UI_SynergyUpgradeOutputPanel
     }
 
     enum Images
     {
-        UI_BackGround, UI_Output, UI_Input_1, UI_Input_2
+        UI_BackGround, UI_Input_1, UI_Input_2, UI_Output_1, UI_Output_2, UI_Output_3
     }
     enum Texts
     {
     }
     enum Buttons
     {
-        UI_StartButton, UI_Output, UI_Input_1, UI_Input_2
+        UI_StartButton, UI_Output_1, UI_Output_2, UI_Output_3
     }
     GameManager manager;
     List<GameObject> UnitList;
-   
+    UI_SynergyOutputPanel outPutSelect;
+
     protected override void Init()
     {
         manager = GameManager.getInstance();
-        manager.UI.SetCanvas(this.gameObject, false);
+        manager.UI.SetCanvas(this.gameObject, true);
         Bind<GameObject>(typeof(GameObjects));
         Bind<Image>(typeof(Images));
         Bind<Text>(typeof(Texts));
         Bind<Button>(typeof(Buttons));
-
-        string[] names = Enum.GetNames(typeof(Images));
-        for (int i = 0; i < names.Length; i++)
-        {
-            Image image = GetImage(i);
-            image.gameObject.AddUIEvent(tempEvent, UI_EventHandler.UIEvent.LClick);
-        }
+         
 
         loadUnitDeque();
 
         GetImage((int)Images.UI_Input_1).gameObject.AddUIEvent(OnInputClicked, UI_EventHandler.UIEvent.LClick);
         GetImage((int)Images.UI_Input_2).gameObject.AddUIEvent(OnInputClicked, UI_EventHandler.UIEvent.LClick);
-        GetButton((int)Buttons.UI_Output).gameObject.AddUIEvent(OnOutputClicked, UI_EventHandler.UIEvent.LClick);
+        GetImage((int)Images.UI_Output_1).gameObject.AddUIEvent(OnOutputClicked, UI_EventHandler.UIEvent.LClick);
+        GetImage((int)Images.UI_Output_2).gameObject.AddUIEvent(OnOutputClicked, UI_EventHandler.UIEvent.LClick);
+        GetImage((int)Images.UI_Output_3).gameObject.AddUIEvent(OnOutputClicked, UI_EventHandler.UIEvent.LClick);
         GetImage((int)Images.UI_Input_1).color = Utility.DarkGrey;
         GetImage((int)Images.UI_Input_2).color = Utility.DarkGrey;
-
+        
         GetButton((int)Buttons.UI_StartButton).gameObject.AddUIEvent(OnStartButtonClicked, UI_EventHandler.UIEvent.LClick);
         selectUnitIndex = (-1, -1);
-
+        outPutSelect = GetGameObject((int)GameObjects.UI_SynergyUpgradeOutputPanel).GetComponent<UI_SynergyOutputPanel>();
+        setOutput();
     }
     (int, int) selectUnitIndex = (-1, -1);
     UI_CharacterListPanel characterList;
@@ -70,39 +68,47 @@ public class UI_SynergyUpgrade : UI_Base
     private void OnCharacterClicked(PointerEventData data)
     { 
         int index = int.Parse(data.selectedObject.name.Split("_")[2]);
+        //빠지는 로직
         GameObject target = null; ;
+        int unitIndex = 0;
         if(index == selectUnitIndex.Item1)
         {
-            target = GetButton((int)Buttons.UI_Input_1).gameObject;
+            target = GetImage((int)Images.UI_Input_1).gameObject;
+            unitIndex = selectUnitIndex.Item1;
         }
         else if (index == selectUnitIndex.Item2)
         {
-            target = GetButton((int)Buttons.UI_Input_2).gameObject;
+            target = GetImage((int)Images.UI_Input_2).gameObject;
+            unitIndex = selectUnitIndex.Item2;
+
         }
         if (target != null)
         { 
             PointerEventData pData = new PointerEventData(EventSystem.current);
             pData.selectedObject = target;
             ExecuteEvents.Execute(target, pData, ExecuteEvents.pointerClickHandler);
-            characterList.SetUnitSelected(index, false);
+            characterList.SetUnitSelected(unitIndex, false);
+            setOutput();
             return;
         }
         if (selectUnitIndex.Item1 != -1 && selectUnitIndex.Item2 != -1) return;
-        if (selectUnitIndex.Item1 == index) return;
         if (selectUnitIndex.Item1 == -1)
         {
             selectUnitIndex = (index,selectUnitIndex.Item2);
             GetImage((int)Images.UI_Input_1).sprite = ImageDB.GetImage(ImageDB.ImageType.Unit,manager.PlayerData.unitDeque.GetUnit(index).ID);
-            GetImage((int)Images.UI_Input_1).color = Color.white;
+            GetImage((int)Images.UI_Input_1).color = Color.white; 
+            characterList.SetUnitSelected(index, true);
+
             setOutput();
             return;
         }
-        if (selectUnitIndex.Item2 == index) return;
         if (selectUnitIndex.Item2 == -1 )
         {
             selectUnitIndex = (selectUnitIndex.Item1, index);
             GetImage((int)Images.UI_Input_2).sprite = ImageDB.GetImage(ImageDB.ImageType.Unit, manager.PlayerData.unitDeque.GetUnit(index).ID);
-            GetImage((int)Images.UI_Input_2).color = Color.white;
+            GetImage((int)Images.UI_Input_2).color = Color.white; 
+            characterList.SetUnitSelected(index, true);
+
             setOutput();
             return;
         }
@@ -117,6 +123,7 @@ public class UI_SynergyUpgrade : UI_Base
              
             GetImage((int)Images.UI_Input_1).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
             GetImage((int)Images.UI_Input_1).color = Utility.DarkGrey;
+            characterList.SetUnitSelected(selectUnitIndex.Item1, false);
             selectUnitIndex = (-1, selectUnitIndex.Item2);
         }
         else
@@ -125,6 +132,7 @@ public class UI_SynergyUpgrade : UI_Base
              
             GetImage((int)Images.UI_Input_2).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
             GetImage((int)Images.UI_Input_2).color = Utility.DarkGrey;
+            characterList.SetUnitSelected(selectUnitIndex.Item2, false);
             selectUnitIndex = (selectUnitIndex.Item1, -1);
         }
         setOutput();
@@ -132,40 +140,70 @@ public class UI_SynergyUpgrade : UI_Base
     private void setOutput()
     {
         if (selectUnitIndex.Item1 == -1 || selectUnitIndex.Item2 == -1)
-        { 
-            GetImage((int)Images.UI_Output).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
-            GetImage((int)Images.UI_Output).color = Utility.DarkGrey;
+        {
+            for (int i = 0; i < 3; i++)
+            {
+                GetImage((int)Images.UI_Output_1 + i).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
+                GetImage((int)Images.UI_Output_1 + i).color = Utility.DarkGrey;
+            }
+            outPutSelect.Clear();
+            isUpgradeReady = false;
             return;
         }
         UnitDeque deque = manager.PlayerData.unitDeque;
         UnitBase unit1 = deque.GetUnit(selectUnitIndex.Item1);
         UnitBase unit2 = deque.GetUnit(selectUnitIndex.Item2);
         
+        List<int> sameSynergy = new List<int>();
+        bool existSameSynergy = false;
         if (unit1.Job == unit2.Job)
         {
-            GetImage((int)Images.UI_Output).sprite = ImageDB.GetImage(ImageDB.ImageType.Synergy,(int)unit1.Job + 4);
-            GetImage((int)Images.UI_Output).color = Color.white;
-            return;
+            sameSynergy.Add((int)unit1.Job + 4);
         }
         if (unit1.Feature == unit2.Feature)
         {
-            GetImage((int)Images.UI_Output).sprite = ImageDB.GetImage(ImageDB.ImageType.Synergy, (int)unit1.Feature + 7);
-            GetImage((int)Images.UI_Output).color = Color.white;
-            return;
+            sameSynergy.Add((int)unit1.Feature + 7); 
         }
         if (unit1.Race == unit2.Race)
         {
-            GetImage((int)Images.UI_Output).sprite = ImageDB.GetImage(ImageDB.ImageType.Synergy, (int)unit1.Race);
-            GetImage((int)Images.UI_Output).color = Color.white;
-            return;
+            sameSynergy.Add((int)unit1.Race); 
         }
-        GetImage((int)Images.UI_Output).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
-        GetImage((int)Images.UI_Output).color = Utility.DarkGrey;
-    }
+        for (int i = 0; i < sameSynergy.Count; i++)
+        {
+            GetImage((int)Images.UI_Output_1 + i).sprite = ImageDB.GetImage(ImageDB.ImageType.Synergy, sameSynergy[i]);
+            GetImage((int)Images.UI_Output_1 + i).color = Color.white;
+            existSameSynergy = true;
+        }
+        if (existSameSynergy)
+        {
+            for (int i = sameSynergy.Count; i < 3; i++)
+            {
+                GetImage((int)Images.UI_Output_1 + i).sprite = ImageDB.GetImage(ImageDB.ImageType.Default, 0);
+                GetImage((int)Images.UI_Output_1 + i).color = Utility.DarkGrey;
+            }
+            isUpgradeReady = true;
+        }
+        else
+        {
+            isUpgradeReady = false;
+        }
 
+
+    }
+    bool isUpgradeReady = false;
     private void OnOutputClicked(PointerEventData data)
     {
-        if (GetImage((int)Images.UI_Output).color == Utility.DarkGrey) return;
+        Debug.Log($"selectUnitIndex : {selectUnitIndex.Item1} , 2 : {selectUnitIndex.Item2}");
+        if (selectUnitIndex.Item1 == -1 || selectUnitIndex.Item2 == -1)
+        {
+            return;
+        }
+        if (!isUpgradeReady) return;
+
+        int index = int.Parse(data.selectedObject.name.Split("_")[2]) - 1;
+        Debug.Log($"index : {index} , nowSelect : {outPutSelect.nowSelect}");
+        if (index != outPutSelect.nowSelect) return;
+
         int firstIndex;
         int secondIndex;
         if(selectUnitIndex.Item1 < selectUnitIndex.Item2) 

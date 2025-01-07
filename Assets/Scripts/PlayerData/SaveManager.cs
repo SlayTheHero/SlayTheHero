@@ -23,6 +23,7 @@ public static class SaveManager
     /// <param name="index"></param>
     public static void SaveData(PlayerData data, int index)
     {
+        Debug.Log(path);
         if (!isLoaded)
         {
             LoadFileFromClient();
@@ -67,8 +68,10 @@ public static class SaveManager
             isChanged[index] = false;
         }
 
+        PlayerData playerData2 = new PlayerData();
+        playerData2.FromCSV(saveData[index].ToCSV());
 
-        return saveData[index];
+        return playerData2;
     }
 
     /// <summary>

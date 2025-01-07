@@ -19,7 +19,11 @@ public class Synergy : Skill
     public int twoImpact;
     public int threeImpact;
 
-    // ÆÄ¶ó¹ÌÅÍ »ý¼ºÀÚ
+    public Synergy()
+    {
+
+    }
+    // ï¿½Ä¶ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public Synergy(
         int id,
         string name,
@@ -46,7 +50,7 @@ public class Synergy : Skill
         this.threeImpact = threeImpact;
 
     }
-    // º¹»ç »ý¼ºÀÚ
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
     public Synergy(Synergy other) : base(other)
     {
         this.twoImpact = other.twoImpact;
@@ -57,9 +61,9 @@ public static class SynergyDB
 { 
     private static List<Synergy> SynergyList = new List<Synergy>();
     /// <summary>
-    /// ½ºÅ³ ID¸¦ ÅëÇØ ½ºÅ³ Á¤º¸¸¦ °¡Á®¿À´Â ÇÔ¼ö
+    /// ï¿½ï¿½Å³ IDï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Å³ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ô¼ï¿½
     /// </summary>
-    /// <param name="id">½ºÅ³ ID</param>
+    /// <param name="id">ï¿½ï¿½Å³ ID</param>
     /// <returns></returns>
     public static Synergy GetSynergy(int id)
     {
@@ -71,7 +75,7 @@ public static class SynergyDB
         if (id >= SynergyList.Count)
         {
             Debug.Log($"{id} is not Valid Synergy ID");
-            return null;
+            return new Synergy();
         }
 
         return new Synergy(SynergyList[id]);
@@ -131,7 +135,7 @@ public static class SynergyDB
             short[] featCount = new short[6];
             short[] jobCount = new short[3];
 
-            // À¯´Ö Á¤º¸¿¡¼­ Ä«¿îÆ®¸¦ ¼À
+            // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ä«ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½
             for (int i = 0; i < unit.Count; i++)
             {
                 UnitBase nowUnit = unit[i];
@@ -140,7 +144,7 @@ public static class SynergyDB
                 jobCount[(int)nowUnit.Job]++;
             }
 
-            // Ä«¿îÆ®¸¦ ±âÁØÀ¸·Î ½Ã³ÊÁö °è»ê
+            // Ä«ï¿½ï¿½Æ®ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Ã³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½
             (int, bool) raceSynergy = ExtractMax(raceCount,0);
             (int, bool) jobSynergy = ExtractMax(jobCount,4);
             (int, bool) featSynergy = ExtractMax(featCount,7);
@@ -162,13 +166,13 @@ public static class SynergyDB
         return synergyList;
     }
 
-    // °øÅë ·ÎÁ÷À» Ã³¸®ÇÏ´Â ÇÔ¼ö
+    // ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ Ã³ï¿½ï¿½ï¿½Ï´ï¿½ ï¿½Ô¼ï¿½
     private static (int, bool) ExtractMax(short[] countArray, int baseIndex)
     { 
         int max = 0;
         int maxIndex = 0;
 
-        // ÃÖ´ë°ª Ã£±â
+        // ï¿½Ö´ë°ª Ã£ï¿½ï¿½
         for (int i = 0; i < countArray.Length; i++)
         {
             if (countArray[i] > max)

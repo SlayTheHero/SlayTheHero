@@ -12,6 +12,13 @@ public class UnitDeque : ISerializableToCSV
 {
     private List<UnitBase> list = new List<UnitBase>();
 
+    /// <summary>
+    /// À¯´Öµ¦ÀÇ ¸ðµç À¯´ÖÀ» Á¦°ÅÇÕ´Ï´Ù.
+    /// </summary>
+    public void Clear()
+    {
+        list.Clear();
+    }
     public void AddUnit(UnitBase unit)
     {
         list.Add(unit);

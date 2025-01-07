@@ -70,8 +70,17 @@ public class Skill
     public int nowDuration = 0; // 현재 지속시간
 
 
-
-
+    public Skill()
+    {
+    }
+    public Skill(int _id)
+    {
+        id = _id;
+    }
+    public Skill(string  _name)
+    {
+        name = _name;
+    }
     /// <summary>
     /// 스킬 생성자
     /// </summary>
@@ -143,6 +152,10 @@ public static class SkillDB
     /// 유닛의 타입별로 스킬 정보가 할당
     /// </summary>
     public static Dictionary<string, List<int>> SkillTypeData = new Dictionary<string, List<int>>();
+    /// <summary>
+    /// 유닛의 타입별로 스킬 정보가 할당. enum값으로 파싱
+    /// </summary>
+    public static Dictionary<object, List<int>> SkillTypeDataForenum = new Dictionary<object, List<int>>();
     private static List<Skill> SkillList = new List<Skill>();
     /// <summary>
     /// 스킬 ID를 통해 스킬 정보를 가져오는 함수
@@ -169,6 +182,7 @@ public static class SkillDB
         if (SkillList.Count != 0) return;
 
         List<Dictionary<string, object>> dict = CSVReader.Read("Csvs/SkillInfo");
+        SkillTypeDataForenum.Add(Feature.Enemy, new List<int>() { 0 });
         foreach (Dictionary<string, object> item in dict)
         {
             string type = (string)item["Type"];
@@ -176,10 +190,12 @@ public static class SkillDB
             if (SkillTypeData.ContainsKey(type))
             {
                 SkillTypeData[type].Add(id);
+                SkillTypeDataForenum[Utility.KoreanToEnum(type)].Add(id);
             }
             else
             {
-                SkillTypeData.Add(type, new List<int>() { id });
+                SkillTypeData.Add(type,new List<int>() { id });
+                SkillTypeDataForenum.Add(Utility.KoreanToEnum(type), new List<int>() { id });
             }
 
             string name = (string)item["Name"];
@@ -218,6 +234,7 @@ public static class SkillDB
             }
 
         }
+        
     }
 
 }

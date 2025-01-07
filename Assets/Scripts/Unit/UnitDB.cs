@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Jobs;
+using Unity.Mathematics;
 using Unity.VisualScripting;
 using UnityEngine;
 
@@ -10,6 +12,12 @@ public static class UnitDB
 
     private static List<UnitBase> UnitList = new List<UnitBase>();
     private static List<Dictionary<string, object>> UnitDict;
+
+    // '-' 가 입력 되었을때
+    private const int RANDOM_SKILL_VALUE = int.MaxValue;    
+    // 타입 이름이 입력되었을때
+    private const int TYPE_SKILL_VALUE = int.MinValue;
+
     /// <summary>
     /// 유닛 ID를 통해 유닛 정보를 가져오는 함수
     /// </summary>
@@ -31,12 +39,48 @@ public static class UnitDB
         // 값 랜덤설정 후 유닛 반환 
         ((RandomStatus)unit.Status).setRandomValue();
         UnitBase outunit = new UnitBase(unit);
+        if (outunit.Job == Job.Random)
+        {
+            outunit.Job = GetRandomEnumValue<Job>(Job.Magician);
+            outunit.SkillList[1] = GetRandomSkill<Job>(outunit.Job);
+        }
         if (outunit.Feature == Feature.Random)
         {
-            outunit.Feature = getRandomFeature();
+            outunit.Feature = GetRandomEnumValue<Feature>(Feature.Envy);
+            outunit.SkillList[3] = GetRandomSkill<Feature>(outunit.Feature);
+        }
+        for (int i = 0; i < outunit.SkillList.Count; i++)
+        {
+            Skill now = outunit.SkillList[i];
+            if(now.id == TYPE_SKILL_VALUE)
+            {
+                string typeName = now.name;
+                int random = UnityEngine.Random.Range(0, SkillDB.SkillTypeData[typeName].Count);
+                outunit.SkillList[i] = SkillDB.GetSkill(SkillDB.SkillTypeData[typeName][random]);
+            }
+            else if (now.id == RANDOM_SKILL_VALUE)
+            {
+                switch(i)
+                {
+                    case 0:
+                        break;
+                    case 1:
+                        outunit.SkillList[i] = GetRandomSkill<Job>(outunit.Job);
+                        break;
+                    case 2:
+                        outunit.SkillList[i] = GetRandomSkill<Race>(outunit.Race);
+                        break;
+                    case 3:
+                        outunit.SkillList[i] = GetRandomSkill<Feature>(outunit.Feature);
+                        break;
+                }
+
+            }
         }
         return outunit;
     }
+
+
     public static void initializeUnitList()
     {
         if (UnitList.Count != 0) return;
@@ -67,11 +111,16 @@ public static class UnitDB
             for (int i = 0; i < 4; i++)
             {
                 string tempSkill = item[$"Skill_Id_{i}"].ToString();
-                if (tempSkill == "-") continue;
+                if (tempSkill == "-")
+                {
+                    skills.Add(new Skill(RANDOM_SKILL_VALUE));
+                    continue;
+                }
                 if(SkillDB.SkillTypeData.ContainsKey(tempSkill))
                 {
-                    int random = UnityEngine.Random.Range(0, SkillDB.SkillTypeData[tempSkill].Count);
-                    skills.Add(SkillDB.GetSkill(SkillDB.SkillTypeData[tempSkill][random]));
+                    Skill temp = new Skill(tempSkill);
+                    temp.id = TYPE_SKILL_VALUE;
+                    skills.Add(temp);
                 }
                 else
                 {
@@ -112,9 +161,25 @@ public static class UnitDB
         int[] minMax = Array.ConvertAll(input.Split('~'), int.Parse);
         return (minMax[0], minMax[1]);
     }
-    private static Feature getRandomFeature()
+    private static T GetRandomEnumValue<T>(T targetMax) where T : Enum
     {
-        int rand = UnityEngine.Random.Range(0, (int)Feature.Envy + 1);
-        return (Feature)rand;
+        int maxValue = Convert.ToInt32(targetMax);  
+        int rand = UnityEngine.Random.Range(0, maxValue + 1);  
+        return (T)Enum.ToObject(typeof(T), rand);  
     }
+
+    private static Skill GetRandomSkill<T>(T enumValue) where T : Enum
+    {
+        if (!SkillDB.SkillTypeDataForenum.ContainsKey(enumValue))
+        {
+            return SkillDB.GetSkill(0);
+        }
+
+        int rand = UnityEngine.Random.Range(
+            SkillDB.SkillTypeDataForenum[enumValue].Min(),
+            SkillDB.SkillTypeDataForenum[enumValue].Max() + 1
+        ); 
+        return SkillDB.GetSkill(rand);
+    }
+       
 }

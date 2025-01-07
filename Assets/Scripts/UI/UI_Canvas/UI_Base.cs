@@ -100,13 +100,16 @@ public abstract class UI_Base : MonoBehaviour
         switch (type)
         {
             case UI_EventHandler.UIEvent.LClick:
-                handler.OnClickHandler = action; 
+                handler.OnClickHandler -= action;
+                handler.OnClickHandler += action; 
                 break;
             case UI_EventHandler.UIEvent.Enter:
-                handler.OnPointerEnterHandler = action;
+                handler.OnPointerEnterHandler -= action;
+                handler.OnPointerEnterHandler += action;
                 break;
             case UI_EventHandler.UIEvent.Exit:
-                handler.OnPointerExitHandler = action;
+                handler.OnPointerExitHandler -= action;
+                handler.OnPointerExitHandler += action;
                 break;
         }
     }

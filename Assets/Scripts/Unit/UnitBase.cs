@@ -46,7 +46,7 @@ public class UnitBase : ISerializableToCSV
         SkillList = new List<Skill>();
         for (int i = 0; i < skills.Count; i++)
         {
-            SkillList.Add(SkillDB.GetSkill(skills[i].id));
+            SkillList.Add(new Skill(skills[i]));
         }
         BuffController = new BuffController();
     }
@@ -118,7 +118,7 @@ public class UnitBase : ISerializableToCSV
         sb.Append((int)Race).Append(",");
         for (int i = 0; i < 4; i++)
         {
-            if (i < SkillList.Count - 1)
+            if(i < SkillList.Count)
             {
                 sb.Append(SkillList[i].id).Append(",");
             }

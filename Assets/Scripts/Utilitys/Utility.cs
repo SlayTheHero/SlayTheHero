@@ -1,7 +1,6 @@
 using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Runtime.InteropServices.WindowsRuntime;
+using System.Collections.Generic; 
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.UI;
@@ -83,4 +82,82 @@ public class Utility
             return default;
         }
     }
+
+    public static object KoreanToEnum(string korean)
+    {
+        string enumString = "";
+        switch (korean)
+        {
+            case "검사":
+                enumString = "Job_SwordMan";
+                break;
+            case "궁사":
+                enumString =  "Job_Archer";
+                break;
+            case "마법사":
+                enumString =  "Job_Magician";
+                break;
+            case "신속":
+                enumString =  "Feature_Swiftness";
+                break;
+            case "의심암귀":
+                enumString =  "Feature_SuspiciousGhost";
+                break;
+            case "나태":
+                enumString =  "Feature_Sloth";
+                break;
+            case "질투":
+                enumString =  "Feature_Envy";
+                break;
+            case "뱀파이어":
+                enumString =  "Race_Vampire";
+                break;
+            case "마수":
+                enumString =  "Race_DemonBeast";
+                break;
+            case "몽마":
+                enumString =  "Race_NightMare";
+                break;
+            case "유령":
+                enumString =  "Race_Ghost";
+                break;
+            default:
+                return "";
+        }
+        object enumValue = ConvertStringToEnum(enumString);
+        return enumValue;
+    }
+
+    private static object ConvertStringToEnum(string input)
+    {
+        // 문자열에서 Enum 이름과 값 분리
+        var parts = input.Split('_');
+        if (parts.Length != 2)
+        {
+            Debug.LogError("Invalid input format.");
+            return null;
+        }
+
+        string enumType = parts[0];
+        string enumValue = parts[1];
+
+        // Enum 타입 찾기
+        System.Type targetType = System.Type.GetType(enumType);
+        if (targetType == null || !targetType.IsEnum)
+        {
+            Debug.LogError($"Enum type {enumType} does not exist.");
+            return null;
+        }
+
+        // Enum 값 변환
+        if (System.Enum.TryParse(targetType, enumValue, out var result))
+        {
+            return result;
+        }
+
+        Debug.LogError($"Value {enumValue} is not valid for enum {enumType}.");
+        return null;
+    }
+
+
 }

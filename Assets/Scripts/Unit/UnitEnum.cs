@@ -2,9 +2,9 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum Job 
+public enum Job
 {
-    SwordMan,Archer,Magician
+    SwordMan,Archer,Magician,Random
 }
 public enum Feature
 {
