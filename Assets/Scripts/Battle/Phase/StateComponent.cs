@@ -27,7 +27,6 @@ public class StateComponent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        int next;
         if (m_is_stop)
             return;
         if (m_curState == null)
