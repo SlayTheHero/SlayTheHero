@@ -28,6 +28,8 @@ public class BattleUI : MonoBehaviour
     SortableGrid m_SortableGrid;
     [SerializeField]
     Image m_CurUnitImage;
+    [SerializeField]
+    UI_SynergyDisplay m_UI_SynergyDisplay;
 
     UnitObject m_SelectedUnit;
 
@@ -58,9 +60,9 @@ public class BattleUI : MonoBehaviour
                 if (hit.transform.tag == "Unit")
                 {
                     if (!m_SelectedUnit.IsDestroyed())
-                        m_SelectedUnit?.Scale(2.5f, 2.5f, 0.5f);
+                        m_SelectedUnit?.Scale(2f, 2f, 0.5f);
                     m_SelectedUnit = hit.transform.GetComponent<UnitObject>();
-                    m_SelectedUnit.Scale(3f, 3f, 0.5f);
+                    m_SelectedUnit.Scale(2.5f, 2.5f, 0.5f);
                     SetTargetCursorEnable(true, m_SelectedUnit.Unit.Position);
                 }
                 if (Input.GetMouseButtonDown(0))
@@ -70,7 +72,7 @@ public class BattleUI : MonoBehaviour
                         Debug.Log("HIT");
                         BattleManager.Instance.SkillUsed.Invoke(m_SelectedSkillNum.Value,
                             m_SelectedUnit.Unit);
-                        m_SelectedUnit?.Scale(2.5f, 2.5f, 0.5f);
+                        m_SelectedUnit?.Scale(2f, 2f, 0.5f);
                         SkillTargetingOff();
                         SkillBtnOn(BattleManager.Instance.CurUnit.SkillList.Count, false);
                     }
@@ -85,7 +87,7 @@ public class BattleUI : MonoBehaviour
             {
                 if (m_SelectedUnit != null)
                 {
-                    m_SelectedUnit.Scale(2.5f, 2.5f, 0.5f);
+                    m_SelectedUnit.Scale(2f, 2f, 0.5f);
                     SetTargetCursorEnable(false, 0);
                 }
             }
@@ -94,13 +96,13 @@ public class BattleUI : MonoBehaviour
     public void SetCursorEnable(bool value, int pos)
     {
         m_Cursors.SetActive(value);
-        var dist = pos < 5 ? ((pos - 1f) * -2f) - 1.5f : (pos - 5f) * 2f + 1.5f;
+        var dist = pos < 5 ? ((pos - 1f) * -1.5f) - 1.5f : (pos - 5f) * 1.5f + 1.5f;
         m_Cursors.transform.position = new Vector3(dist, m_Cursors.transform.position.y, 0);
     }
     public void SetTargetCursorEnable(bool value, int pos)
     {
         m_TargetCursors.SetActive(value);
-        var dist = pos < 5 ? ((pos - 1f) * -2f) - 1.5f : (pos - 5f) * 2f + 1.5f;
+        var dist = pos < 5 ? ((pos - 1f) * -1.5f) - 1.5f : (pos - 5f) * 1.5f + 1.5f;
         m_TargetCursors.transform.position = new Vector3(dist, m_TargetCursors.transform.position.y, 0);
     }
     public void SkillBtnOn(int count, bool is_interatable)
@@ -227,5 +229,10 @@ public class BattleUI : MonoBehaviour
         {
             m_SkillBtns[i].GetComponent<Image>().sprite = ImageDB.GetImage(ImageDB.ImageType.Skill, cur_unit.SkillList[i].id);
         }
+    }
+
+    public void SetSynergyUI()
+    {
+        m_UI_SynergyDisplay.InitializeDisplay();
     }
 }

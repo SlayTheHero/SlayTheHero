@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class HeroUnit : UnitBase
@@ -16,7 +17,7 @@ public class HeroUnit : UnitBase
     }
     public int Behave()
     {
-        SkillList[0].Invoke(this,BattleManager.Instance.HeroTeam[0]);
+        SkillList[0].Invoke(this,BattleManager.Instance.HeroTeam.Last());
         return 5;
     }
 }

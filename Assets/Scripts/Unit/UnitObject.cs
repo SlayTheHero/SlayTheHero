@@ -12,13 +12,6 @@ public class UnitObject : MonoBehaviour
     void Start()
     {
 
-        if (Unit.IsPlayerUnit)
-        {
-            HPBar.GetComponent<RectTransform>().Rotate(new Vector3(0, 180f, 0));
-            transform.Rotate(new Vector3(0, 180f, 0));
-            transform.Translate(new Vector3(-3.18f, 0, 0));
-        }
-
     }
 
     // Update is called once per frame
@@ -31,12 +24,12 @@ public class UnitObject : MonoBehaviour
     {
         if (Unit.IsPlayerUnit)
         {
-            transform.DOLocalMoveX(transform.localPosition.x + 2f, 0.5f);
+            transform.DOLocalMoveX(transform.localPosition.x + 1.5f, 0.5f);
 
         }
         else
         {
-            transform.DOLocalMoveX(transform.localPosition.x - 2f, 0.5f);
+            transform.DOLocalMoveX(transform.localPosition.x - 1.5f, 0.5f);
         }
     }
     public void HpBarRefresh()

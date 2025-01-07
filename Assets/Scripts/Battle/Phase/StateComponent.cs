@@ -31,6 +31,7 @@ public class StateComponent : MonoBehaviour
             return;
         if (m_curState == null)
             return;
+        int next = 0;
         if (m_curState.CheckTransition(out next))
             ChangeState(next);
         else

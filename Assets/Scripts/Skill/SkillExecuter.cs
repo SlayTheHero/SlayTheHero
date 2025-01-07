@@ -55,7 +55,6 @@ public static class SkillExecuter
     }
     private static async Task MeleeBehavior(UnitBase Attacker, UnitBase Target, Skill skill)
     {
-
         Stopwatch sw = new();
         var anim = BattleManager.Instance.Units[Attacker.Position].GetComponent<UnitAnimationController>();
         anim.Attack();
@@ -70,7 +69,16 @@ public static class SkillExecuter
     }
     private static async Task ProjectileBehavior(UnitBase Attacker, UnitBase Target, Skill skill)
     {
+        var obj = Projectile.Pool.Get();
 
+        var pos = Attacker.Position > 4 ? (Attacker.Position%4) * 1.5f : Attacker.Position * -1.5f;
+        obj.transform.position = new Vector3(pos,0.4f,0f);
+        var proj = obj.GetComponent<Projectile>();
+        proj.Init(Target.Position, 0.6f);
+        proj.Shoot();
+        await Task.Delay(666);
+        Projectile.Pool.Release(obj);
+        
     }
     private static async Task BuffBehavior(UnitBase Attacker, UnitBase Target, Skill skill)
     {

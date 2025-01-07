@@ -54,6 +54,12 @@ public class Skill
     public SK_ChangeType sK_ChangeType;
 
     // 애니메이션?
+    public AnimationClip UnitMotion;
+    public AnimationClip StartEffect;
+    public AnimationClip ProjectileFly;
+    public AnimationClip ProjectileHit;
+    public AnimationClip TargetedEffect;
+ 
 
     // 세부정보
     public int range; // 캐릭터부터 사용할 수 있는 최대 거리
@@ -124,7 +130,6 @@ public class Skill
     public void Invoke(UnitBase Attacker, UnitBase Target)
     {
         SkillExecuter.Execute(Attacker, Target, this);
-
     }
     UnitBase blankUnit = new UnitBase();
     public void Invoke(UnitBase Target)

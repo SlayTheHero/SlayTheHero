@@ -87,6 +87,7 @@ public class BattleManager : MonoBehaviour
             p_unit.Position = pos++;
             PlayerTeam.Add(p_unit);
         }
+        //BattleUI.SetSynergyUI();
     }
 
     public void Init(int stage)
@@ -98,6 +99,7 @@ public class BattleManager : MonoBehaviour
         PlayerUnitSpawner.SpawnAll();
         HeroUnitSpawner.SpawnAll();
         BattleUI.InitWaitingUnitInfo(WaitingUnitsList);
+        
         foreach (var item in WaitingUnitsList)
         {
             item.Status.Waiting = (int)((1f / item.Status.Speed) * 10000);
@@ -143,7 +145,7 @@ public class BattleManager : MonoBehaviour
         }
         else
         {
-            HeroTeam.RemoveAt(unit.Position % 4 - 1);
+            HeroTeam.RemoveAt((unit.Position - 1) % 4);
         }
 
     }

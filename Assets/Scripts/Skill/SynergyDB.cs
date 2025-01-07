@@ -127,8 +127,8 @@ public static class SynergyDB
 
         if (unit.Count > 1)
         {
-            short[] raceCount = new short[4];
-            short[] featCount = new short[4];
+            short[] raceCount = new short[5];
+            short[] featCount = new short[6];
             short[] jobCount = new short[3];
 
             // 유닛 정보에서 카운트를 셈
