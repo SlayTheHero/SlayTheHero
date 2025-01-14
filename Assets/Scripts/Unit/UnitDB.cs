@@ -39,16 +39,19 @@ public static class UnitDB
         // 값 랜덤설정 후 유닛 반환 
         ((RandomStatus)unit.Status).setRandomValue();
         UnitBase outunit = new UnitBase(unit);
+        // 종족 랜덤 부여
         if (outunit.Job == Job.Random)
         {
             outunit.Job = GetRandomEnumValue<Job>(Job.Magician);
             outunit.SkillList[1] = GetRandomSkill<Job>(outunit.Job);
         }
+        //특성 랜덤 부여
         if (outunit.Feature == Feature.Random)
         {
             outunit.Feature = GetRandomEnumValue<Feature>(Feature.Envy);
             outunit.SkillList[3] = GetRandomSkill<Feature>(outunit.Feature);
         }
+        //스킬 랜덤 부여
         for (int i = 0; i < outunit.SkillList.Count; i++)
         {
             Skill now = outunit.SkillList[i];
@@ -77,9 +80,17 @@ public static class UnitDB
 
             }
         }
+        //외형 부여
+        outunit.outFit = OutfitChooser.GetOutFitFromUnit(outunit);
+
         return outunit;
     }
-
+    
+    public static UnitBase GetUnitForSynergy(Synergy synergy)
+    {
+        return new UnitBase();
+    }
+     
 
     public static void initializeUnitList()
     {

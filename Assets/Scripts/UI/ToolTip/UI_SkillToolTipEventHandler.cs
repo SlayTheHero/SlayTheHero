@@ -16,7 +16,7 @@ public class UI_SkillToolTipEventHandler : UI_BaseToolTipEventHandler
 
     public void setSkillID(int id)
     {
-        nowSkillID = id;
+        nowSkillID = id; setData();
     }
 
     void Awake()
@@ -45,10 +45,8 @@ public class UI_SkillToolTipEventHandler : UI_BaseToolTipEventHandler
         SkillImage.sprite = ImageDB.GetImage(ImageDB.ImageType.Skill, nowSkillID);
 
         // 크기조정
-        RectTransform ToolTipRect = ToolTipInstance.GetComponent<RectTransform>();
-        float textWidth = SkillExplanation.preferredWidth;
-        float textHeight = SkillExplanation.preferredHeight + SkillType.preferredHeight + SkillName.preferredHeight;
-        ToolTipRect.sizeDelta = new Vector2(textWidth, textHeight);
+        RectTransform ToolTipRect = ToolTipInstance.GetComponent<RectTransform>(); 
+        ToolTipRect.sizeDelta = new Vector2(600, 300);
     }
 
 }

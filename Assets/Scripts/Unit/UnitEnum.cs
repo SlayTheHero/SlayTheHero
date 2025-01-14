@@ -4,15 +4,21 @@ using UnityEngine;
 
 public enum Job
 {
-    SwordMan,Archer,Magician,Random
+    SwordMan,Archer,Magician, 
+    Farmer, Mercenary, Knight, Paladin, Priest, Random //
 }
 public enum Feature
 {
     Swiftness,SuspiciousGhost,Sloth,Envy,
-    Enemy, Random
+    Justice, Hunter, Dreamless, Fortify, Noble, Faithful, Random
 }
 public enum Race
 {
     Vampire,DemonBeast,NightMare,Ghost,
-    Human
+    Human, Random
+}
+
+public enum OutFit
+{
+    Vampire, DemonBeast, NightMare, Ghost, Farmer, Mercenary, Knight, Paladin, Priest, Magician
 }

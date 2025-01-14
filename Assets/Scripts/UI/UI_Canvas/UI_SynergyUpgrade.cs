@@ -5,6 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static UnityEngine.UI.CanvasScaler;
 
 public class UI_SynergyUpgrade : UI_Base
 {
@@ -158,15 +159,15 @@ public class UI_SynergyUpgrade : UI_Base
         bool existSameSynergy = false;
         if (unit1.Job == unit2.Job)
         {
-            sameSynergy.Add((int)unit1.Job + 4);
+            sameSynergy.Add((int)Synergy.FromUnitEnumToSynergy(unit1.Job));
         }
         if (unit1.Feature == unit2.Feature)
         {
-            sameSynergy.Add((int)unit1.Feature + 7); 
+            sameSynergy.Add((int)Synergy.FromUnitEnumToSynergy(unit1.Feature)); 
         }
         if (unit1.Race == unit2.Race)
         {
-            sameSynergy.Add((int)unit1.Race); 
+            sameSynergy.Add((int)Synergy.FromUnitEnumToSynergy(unit1.Race)); 
         }
         for (int i = 0; i < sameSynergy.Count; i++)
         {

@@ -31,6 +31,10 @@ public class UI_UnitButton : MonoBehaviour
     {
         UI_UnitImage.sprite = sp;
     }
+    public Image GetImage()
+    {
+        return UI_UnitImage;
+    }
 
     public void SetSelected(bool isSelected) 
     {

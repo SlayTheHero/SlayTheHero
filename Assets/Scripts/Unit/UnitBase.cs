@@ -21,6 +21,7 @@ public class UnitBase : ISerializableToCSV
     public Job Job;
     public Feature Feature;
     public Race Race;
+    public OutFit outFit;
     public List<Skill> SkillList;
     public int Turn;
     public BuffController BuffController;

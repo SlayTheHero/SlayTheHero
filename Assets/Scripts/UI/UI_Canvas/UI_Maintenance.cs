@@ -21,7 +21,7 @@ public class UI_Maintenance : UI_Base
     }
     enum Buttons
     {
-        UI_Select_1, UI_Select_2, UI_Select_3, UI_Deque
+        UI_Select_1, UI_Select_2, UI_Select_3, UI_Deque, UI_ReadyButton
     }
     GameManager manager;
     protected override void Init()
@@ -35,7 +35,7 @@ public class UI_Maintenance : UI_Base
 
         GetButton((int)Buttons.UI_Select_1).gameObject.AddUIEvent((p) => manager.UI.ShowPopupUI<UI_SynergyUpgrade>(),UI_EventHandler.UIEvent.LClick);
         GetButton((int)Buttons.UI_Select_2).gameObject.AddUIEvent((p) => manager.UI.ShowPopupUI<UI_UnitRecruit>(), UI_EventHandler.UIEvent.LClick);
-
+        GetButton((int)Buttons.UI_ReadyButton).gameObject.AddUIEvent((p) => SceneController.ChangeScene(SceneController.SceneType.CharacterSelect));
     }
 
     // Start is called before the first frame update

@@ -13,9 +13,12 @@ public static class SaveManager
     private static bool[] isChanged = new bool[MAX_SAVE_SLOT];
     private static PlayerData[] saveData = new PlayerData[MAX_SAVE_SLOT];
     private static string[] saveStr = new string[MAX_SAVE_SLOT];
-    private static string path = Application.persistentDataPath + "/saveFile";
-
-
+    private static string path = Path.Combine(
+    Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments),
+    "MyGames",
+    "SlayTheHero",
+    "SaveFile"
+    );
     /// <summary>
     /// index번째 세이브 슬롯에 저장합니다.
     /// </summary>
@@ -100,6 +103,7 @@ public static class SaveManager
     /// </summary>
     public static void SaveFileToClient()
     {
+        EnsureSaveDirectoryExists();
         if (!isLoaded)
         {
             LoadFileFromClient();
@@ -128,6 +132,8 @@ public static class SaveManager
     /// </summary>
     private static void LoadFileFromClient()
     {
+        EnsureSaveDirectoryExists();
+
         Array.Fill(isChanged, false);
         for (int i = 0; i < MAX_SAVE_SLOT; i++)
         {
@@ -142,9 +148,17 @@ public static class SaveManager
             continue;
         }
     }
+    //세이브 저장 경로 보장
+    private static void EnsureSaveDirectoryExists()
+    {
+        string directory = Path.GetDirectoryName(path);
+        if (!Directory.Exists(directory))
+        {
+            Directory.CreateDirectory(directory);
+        }
+    }
 
 
-    
 
 }
 

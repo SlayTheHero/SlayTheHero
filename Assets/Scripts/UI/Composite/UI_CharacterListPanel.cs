@@ -40,7 +40,9 @@ public class UI_CharacterListPanel : UI_EventHandler
             UnitBase unit = manager.PlayerData.unitDeque.GetUnit(i); 
 
             UnitButtons.Add(temp.GetComponent<UI_UnitButton>());
-            UnitButtons[i].SetSynergyData(((int)unit.Race, (int)unit.Job + 4, (int)unit.Feature + 7));
+            UnitButtons[i].SetSynergyData(((int)Synergy.FromUnitEnumToSynergy(unit.Race),
+                                           (int)Synergy.FromUnitEnumToSynergy(unit.Job),
+                                           (int)Synergy.FromUnitEnumToSynergy(unit.Feature)));
             UnitButtons[i].SetImage(ImageDB.GetImage(ImageDB.ImageType.Unit, unit.ID));
             UnitList.Add(temp);
         }

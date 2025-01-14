@@ -112,10 +112,11 @@ public class UI_BaseToolTipEventHandler : UI_EventHandler ,  IDeselectHandler
         {
             EventSystem.current.SetSelectedGameObject(this.gameObject);
             ToolTipInstance.transform.SetParent(canvas.transform);
-            ToolTipInstance.transform.position = adjustToolTipPosition(data);
 
             // virtual ÇÔ¼ö
             setData();
+
+            ToolTipInstance.transform.position = adjustToolTipPosition(data);
 
             ToolTipInstance.SetActive(true);
 
@@ -152,7 +153,7 @@ public class UI_BaseToolTipEventHandler : UI_EventHandler ,  IDeselectHandler
     /// <returns></returns>
     private Vector2 adjustToolTipPosition(PointerEventData data)
     {
-        Vector2 newPosition = data.position + offSet + new Vector2(ToolTipRect.rect.width / 2, ToolTipRect.rect.height); 
+        Vector2 newPosition = data.position + offSet + new Vector2(ToolTipRect.rect.width / 2, ToolTipRect.rect.height / 2); 
         if (newPosition.x + ToolTipRect.rect.width / 2 > Screen.width)
         {
             newPosition.x = Screen.width - ToolTipRect.rect.width/2;

@@ -49,9 +49,9 @@ public class UI_SynergyToolTipEventHandler : UI_BaseToolTipEventHandler
         UI_SynergyThreeExplanation.text = $"{sy.sK_Attribute.ToString()} : {sy.threeImpact}";
         UI_SynergyImage.sprite = ImageDB.GetImage(ImageDB.ImageType.Synergy, nowSynergyId);
         // 크기조정
-        RectTransform ToolTipRect = ToolTipInstance.GetComponent<RectTransform>();
-        float textWidth = UI_SynergyImage.preferredWidth + UI_SynergyTwoExplanation.preferredWidth;
-        float textHeight = UI_SynergyImage.preferredHeight + UI_SynergyTwoExplanation.preferredHeight + UI_SynergyThreeExplanation.preferredHeight;
-        ToolTipRect.sizeDelta = new Vector2(textWidth, textHeight);
+        RectTransform ToolTipRect = ToolTipInstance.GetComponent<RectTransform>(); 
+        ToolTipRect.sizeDelta = new Vector2(600, 300);
+
+        
     }
 }

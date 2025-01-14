@@ -132,30 +132,8 @@ public class UI_CharacterSelect : UI_Base
         int index = int.Parse(nameArr[2]);
         UnitBase unit = manager.PlayerData.unitDeque.GetUnit(index);
 
-        GetTextMeshPro((int)Texts.UI_Name).text = unit.Name;
-        GetTextMeshPro((int)Texts.UI_TraitText).text = unit.Feature.ToString();
-        GetTextMeshPro((int)Texts.UI_ClassText).text = unit.Job.ToString();
-        GetTextMeshPro((int)Texts.UI_RaceText).text = unit.Race.ToString();
-        for (int i = 0; i < 4; i++)
-        {
-            if(i < unit.SkillList.Count)
-            {
-                GetGameObject((int)GameObjects.UI_Skill_1 + i).GetComponent<UI_SkillToolTipEventHandler>().setSkillID(unit.SkillList[i].id);
-                GetGameObject((int)GameObjects.UI_Skill_1 + i).GetComponent<Image>().sprite = ImageDB.GetImage(ImageDB.ImageType.Skill, unit.SkillList[i].id);
-            }
-            else
-            {
-                GetGameObject((int)GameObjects.UI_Skill_1 + i).GetComponent<UI_SkillToolTipEventHandler>().setSkillID(-1);
-                GetGameObject((int)GameObjects.UI_Skill_1 + i).GetComponent<Image>().sprite = null;
-            }
-        }
-        GetImage((int)Images.UI_RaceIcon).sprite = ImageDB.GetImage(ImageDB.ImageType.Synergy, (int)unit.Race);
-        GetImage((int)Images.UI_ClassIcon).sprite = ImageDB.GetImage(ImageDB.ImageType.Synergy, (int)unit.Job + 4);
-        GetImage((int)Images.UI_TraitIcon).sprite = ImageDB.GetImage(ImageDB.ImageType.Synergy, (int)unit.Feature + 7);
-        GetGameObject((int)GameObjects.UI_RaceIcon).GetComponent<UI_SynergyToolTipEventHandler>().setSynergyID((int)unit.Race);
-        GetGameObject((int)GameObjects.UI_ClassIcon).GetComponent<UI_SynergyToolTipEventHandler>().setSynergyID((int)unit.Job + 4);
-        GetGameObject((int)GameObjects.UI_TraitIcon).GetComponent<UI_SynergyToolTipEventHandler>().setSynergyID((int)unit.Feature + 7);
-
+        GetGameObject((int)GameObjects.UI_CharacterDialoguePanel).GetComponent<UI_CharacterDialoguePanel>().SetCharacterData(unit);
+ 
         GameObject target = null; 
         // 다시 클릭시 빠지는 로직.
         if (index == selectedArr[0])
@@ -182,19 +160,19 @@ public class UI_CharacterSelect : UI_Base
             // 비어있는 슬롯에 넣는 로직.
             if (selectedArr[0] == -1)
             {
-                GetImage((int)Images.UI_CharacterSlot_1).sprite = data.selectedObject.gameObject.GetComponent<Image>().sprite;
+                GetImage((int)Images.UI_CharacterSlot_1).sprite = data.selectedObject.gameObject.GetComponent<UI_UnitButton>().GetImage().sprite;
                  selectedArr[0] = index; 
                  characterList.SetUnitSelected(index, true);
             }
             else if (selectedArr[1] == -1)
             {
-                GetImage((int)Images.UI_CharacterSlot_2).sprite = data.selectedObject.gameObject.GetComponent<Image>().sprite;
-                 selectedArr[1] = index;
+                GetImage((int)Images.UI_CharacterSlot_2).sprite = data.selectedObject.gameObject.GetComponent<UI_UnitButton>().GetImage().sprite;
+                selectedArr[1] = index;
                 characterList.SetUnitSelected(index, true);
             }
             else if (selectedArr[2] == -1)
             {
-                GetImage((int)Images.UI_CharacterSlot_3).sprite = data.selectedObject.gameObject.GetComponent<Image>().sprite;
+                GetImage((int)Images.UI_CharacterSlot_3).sprite = data.selectedObject.gameObject.GetComponent<UI_UnitButton>().GetImage().sprite;
                  selectedArr[2] = index;
                 characterList.SetUnitSelected(index, true); 
             } 
@@ -276,16 +254,13 @@ public class UI_CharacterSelect : UI_Base
         }
     }
     bool isStartReady = false; 
-    public void tempEvent(PointerEventData data)
-    {
-        data.pointerClick.GetComponent<Image>().color = Color.red;
-    }
+
 
     public void OnStartButtonClicked(PointerEventData data)
     {
         if (isStartReady)
         {
-            SceneController.ChangeScene(SceneController.SceneType.Maintenance);
+            SceneController.ChangeScene(SceneController.SceneType.Battle);
         }
     }
 
@@ -294,6 +269,13 @@ public class UI_CharacterSelect : UI_Base
         if(IsDeck)
         {
             manager.UI.ClosePopupUI();
+        }
+        else
+        {
+            PlayerUnitContainer.ClearUnitList();
+            PlayerUnitContainer.AddUnitList(manager.PlayerData.unitDeque.GetUnit(selectedArr[0]));
+            PlayerUnitContainer.AddUnitList(manager.PlayerData.unitDeque.GetUnit(selectedArr[1]));
+            PlayerUnitContainer.AddUnitList(manager.PlayerData.unitDeque.GetUnit(selectedArr[2]));
         }
 
     }

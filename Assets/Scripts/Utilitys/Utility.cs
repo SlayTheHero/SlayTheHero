@@ -97,6 +97,21 @@ public class Utility
             case "마법사":
                 enumString =  "Job_Magician";
                 break;
+            case "농부":
+                enumString = "Job_Farmer";
+                break;
+            case "용병":
+                enumString = "Job_Mercenary";
+                break;
+            case "기사":
+                enumString = "Job_Knight";
+                break;
+            case "성기사":
+                enumString = "Job_Paladin";
+                break;
+            case "성직자":
+                enumString = "Job_Priest";
+                break;
             case "신속":
                 enumString =  "Feature_Swiftness";
                 break;
@@ -120,6 +135,9 @@ public class Utility
                 break;
             case "유령":
                 enumString =  "Race_Ghost";
+                break;
+            case "인간":
+                enumString = "Race_Human";
                 break;
             default:
                 return "";

@@ -176,8 +176,7 @@ public static class SkillDB
     {
         if (SkillList.Count != 0) return;
 
-        List<Dictionary<string, object>> dict = CSVReader.Read("Csvs/SkillInfo");
-        SkillTypeDataForenum.Add(Feature.Enemy, new List<int>() { 0 });
+        List<Dictionary<string, object>> dict = CSVReader.Read("Csvs/SkillInfo"); 
         foreach (Dictionary<string, object> item in dict)
         {
             string type = (string)item["Type"];
