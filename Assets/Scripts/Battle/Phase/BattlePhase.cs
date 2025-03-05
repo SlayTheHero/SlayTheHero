@@ -5,20 +5,20 @@ using UnityEngine;
 
 public class BattlePhase : BattlePhaseBase
 {
+    bool is_playing = false;
     public BattlePhase(BattlePhaseEnum phase_enum) : base(phase_enum)
     {
     }
     public override void OnStateEnter()
     {
+        is_playing = false;
         m_duration = 0;
         var bm = BattleManager.Instance;
-        var ui = bm.BattleUI;
         var unit = bm.CurUnit;
-        ui.SkillBtnOn(unit.SkillList.Count, unit.IsPlayerUnit);
         if (!unit.IsPlayerUnit)
         {
             m_duration = Duration;
-            ui.SetTargetCursorEnable(true, (unit as HeroUnit).Behave());
+            (unit as HeroUnit).Behave();
         }
     }
 
@@ -32,16 +32,19 @@ public class BattlePhase : BattlePhaseBase
 
     public override void OnStateExit()
     {
-        var ui = BattleManager.Instance.BattleUI;
-        ui.SetCursorEnable(false,BattleManager.Instance.CurUnit.Position);
-        ui.SetTargetCursorEnable(false, BattleManager.Instance.CurUnit.Position);
+
     }
     public override void OnStateInit()
     {
-
-        BattleManager.Instance.SkillUsed.AddListener((skill_num, target) =>
+        BattleManager.Instance.TurnSkip.AddListener(() =>
         {
-            BattleManager.Instance.CurUnit.SkillList[skill_num].Invoke(BattleManager.Instance.CurUnit,target
+            if (!is_playing)
+                m_duration = -1;
+        });
+        BattleManager.Instance.SkillUsed.AddListener((target) =>
+        {
+            is_playing = true;
+            BattleManager.Instance.CurUnit.SkillList[BattleManager.Instance.SelectedSkillNum].Invoke(BattleManager.Instance.CurUnit, target
                 );
             m_duration = Duration;
         });

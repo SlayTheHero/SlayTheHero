@@ -57,6 +57,7 @@ public class StateComponent : MonoBehaviour
         m_is_stop = false;
         m_curState = m_states[start_state];
         m_curState.OnStateEnter();
+        StateChanged.Invoke(0, start_state);
     }
     public void FSMStop()
     {

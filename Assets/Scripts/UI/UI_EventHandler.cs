@@ -5,18 +5,20 @@ using System.Drawing;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler
+public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler, IPointerMoveHandler,IDeselectHandler
 {
     public enum UIEvent
     {
         LClick,
         Enter,
-        Exit
+        Exit,
+        Deselect
     } 
     public Action<PointerEventData> OnClickHandler = null;
     public Action<PointerEventData> OnPointerEnterHandler = null;
     public Action<PointerEventData> OnPointerMoveHandler = null;
     public Action<PointerEventData> OnPointerExitHandler = null;
+    public Action<PointerEventData> OnDeselectHandler = null;
 
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -40,6 +42,11 @@ public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IPointerEnte
     {
         if (OnPointerMoveHandler != null)
             OnPointerMoveHandler.Invoke(eventData);
+    }
+    public void OnDeselect(BaseEventData eventData)
+    {
+        if (OnDeselectHandler != null)
+            OnDeselectHandler.Invoke(eventData as PointerEventData);
     }
 
     // Start is called before the first frame update

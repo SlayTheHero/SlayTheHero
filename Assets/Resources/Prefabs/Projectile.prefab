@@ -46,9 +46,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b4003fa240efb8e4b9eb87340697bfd0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  ProjType: 0
+  EaseType: 1
   Animator: {fileID: 4083852170143676294}
-  TargetPos: 0
-  Duration: 0
+  TargetPos: {x: 1, y: 0, z: 0}
+  Duration: 1
+  Height: 3
+  StartVelocity: {x: -3, y: 3}
+  MissileAcceleration: 3
 --- !u!95 &4083852170143676294
 Animator:
   serializedVersion: 5

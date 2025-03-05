@@ -23,7 +23,7 @@ public class Synergy : Skill
     {
 
     }
-    // �Ķ���� ������
+    // ?????? ??????
     public Synergy(
         int id,
         string name,
@@ -50,7 +50,7 @@ public class Synergy : Skill
         this.threeImpact = threeImpact;
 
     }
-    // ���� ������
+    // ???? ??????
     public Synergy(Synergy other) : base(other)
     {
         this.twoImpact = other.twoImpact;
@@ -61,9 +61,9 @@ public static class SynergyDB
 { 
     private static List<Synergy> SynergyList = new List<Synergy>();
     /// <summary>
-    /// ��ų ID�� ���� ��ų ������ �������� �Լ�
+    /// ??? ID?? ???? ??? ?????? ???????? ???
     /// </summary>
-    /// <param name="id">��ų ID</param>
+    /// <param name="id">??? ID</param>
     /// <returns></returns>
     public static Synergy GetSynergy(int id)
     {
@@ -135,7 +135,7 @@ public static class SynergyDB
             short[] featCount = new short[6];
             short[] jobCount = new short[3];
 
-            // ���� �������� ī��Ʈ�� ��
+            // ???? ???????? ?????? ??
             for (int i = 0; i < unit.Count; i++)
             {
                 UnitBase nowUnit = unit[i];
@@ -144,7 +144,7 @@ public static class SynergyDB
                 jobCount[(int)nowUnit.Job]++;
             }
 
-            // ī��Ʈ�� �������� �ó��� ���
+            // ?????? ???????? ????? ???
             (int, bool) raceSynergy = ExtractMax(raceCount,0);
             (int, bool) jobSynergy = ExtractMax(jobCount,4);
             (int, bool) featSynergy = ExtractMax(featCount,7);
@@ -166,13 +166,13 @@ public static class SynergyDB
         return synergyList;
     }
 
-    // ���� ������ ó���ϴ� �Լ�
+    // ???? ?????? ?????? ???
     private static (int, bool) ExtractMax(short[] countArray, int baseIndex)
     { 
         int max = 0;
         int maxIndex = 0;
 
-        // �ִ밪 ã��
+        // ??�S ???
         for (int i = 0; i < countArray.Length; i++)
         {
             if (countArray[i] > max)

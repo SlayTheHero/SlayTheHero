@@ -23,5 +23,6 @@ public static class Extension
     {
         UI_Base.BindUIEvent(go, action, type);
     }
+    
 }
 

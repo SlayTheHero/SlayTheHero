@@ -42,8 +42,8 @@ public class UnitSpawner : MonoBehaviour
         foreach (var item in list)
         {
             var prefab = Resources.Load<GameObject>("Prefabs/Units/" + item.Name);
-            var unit = Instantiate(prefab, SpawnPos[(item.Position - 1) % 4].transform.position,Quaternion.identity,transform);
-            unit.GetComponent<UnitObject>().Unit = item;
+            var unit = Instantiate(prefab, SpawnPos[(item.Position - 1) % 4].transform.position, is_player_team ? Quaternion.Euler(0, 180f, 0f) : Quaternion.identity, transform);
+            unit.GetComponent<UnitController>().Unit = item;
             BattleManager.Instance.Units.Add(item.Position, unit);
 
         }

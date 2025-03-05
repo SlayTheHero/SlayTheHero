@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.SceneManagement;
 using static UnityEngine.GraphicsBuffer;
 
 [RequireComponent(typeof(StateComponent))]
@@ -32,36 +33,44 @@ public class BattleManager : MonoBehaviour
 
     public StageData CurStage;
 
+    public bool IsClear;
+
     public float ready_duration;
     public float battle_duration;
     public float end_duration;
 
-    public UnityEvent<int, UnitBase> SkillUsed;
+    public int SelectedSkillNum;
+
+    public UnityEvent InitDone;
+    public UnityEvent<UnitBase> SkillUsed;
     public UnityEvent<UnitBase> UnitDead;
-    public UnityEvent<int> BattleStart;
+    public UnityEvent<int> BattleStarted;
     public UnityEvent<int, int> SubStageClear;
+    public UnityEvent StageClear;
+    public UnityEvent TurnSkip;
+
+    public UnityEvent UnitSorted;
+    public UnityEvent<int, int> UnitPositionChanged;
 
     private void Awake()
     {
-        SkillUsed = new UnityEvent<int, UnitBase>();
+        SkillUsed = new UnityEvent<UnitBase>();
+        InitDone = new();
         Units = new Dictionary<int, GameObject>();
-        BattleStart = new();
-        BattleStart.AddListener(Init);
+        BattleStarted = new();
+        BattleStarted.AddListener(Init);
         UnitDead = new();
         SubStageClear = new();
         WaitingUnitsList = new List<UnitBase>();
+        TurnSkip = new();
     }
     // Start is called before the first frame update
-    void Start()
+    IEnumerator Start()
     {
-
-    }
-    public void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            BattleStart?.Invoke(1);
-        }
+        yield return null;
+        Init(1);
+        yield return null;
+        StartBattle();
     }
     void LoadHeroTeam()
     {
@@ -86,41 +95,43 @@ public class BattleManager : MonoBehaviour
             WaitingUnitsList.Add(p_unit);
             p_unit.Position = pos++;
             PlayerTeam.Add(p_unit);
-        }
-        //BattleUI.SetSynergyUI();
+        }/*
+        BattleUI.SetSynergyUI(PlayerUnitContainer.GetUnitList());*/
     }
 
     public void Init(int stage)
     {
         if (CurStage == null)
             CurStage = StageDB.GetStageData(stage, 1);
+        IsClear = false;
         LoadHeroTeam();
         LoadPlayerTeam();
         PlayerUnitSpawner.SpawnAll();
         HeroUnitSpawner.SpawnAll();
-        BattleUI.InitWaitingUnitInfo(WaitingUnitsList);
-        
+        //BattleUI.InitWaitingUnitInfo(WaitingUnitsList);
+
         foreach (var item in WaitingUnitsList)
         {
             item.Status.Waiting = (int)((1f / item.Status.Speed) * 10000);
         }
+        InitDone.Invoke();
         StateComponent.AddState(new ReadyBattlePhase(BattlePhaseEnum.ReadyBattlePhase).SetDuration(ready_duration));
         StateComponent.AddState(new BattlePhase(BattlePhaseEnum.BattlePhase).SetDuration(battle_duration));
         StateComponent.AddState(new EndBattlePhase(BattlePhaseEnum.EndBattlePhase).SetDuration(end_duration));
-        StateComponent.FSMStart((int)BattlePhaseEnum.ReadyBattlePhase);
-
+        
     }
 
 
 
     public void UnitSort()
     {
-        WaitingUnitsList.Sort(UnitBase.SpeedCompare);
+        WaitingUnitsList.Sort();
         for (int i = 0; i < WaitingUnitsList.Count; i++)
         {
             WaitingUnitsList[i].Order = i;
         }
         CurUnit = WaitingUnitsList[0];
+        UnitSorted.Invoke();
     }
     public void UnitWaitingDecrease()
     {
@@ -162,7 +173,7 @@ public class BattleManager : MonoBehaviour
                     int diff = unit.Position - (i + 1);
                     for (int j = 0; j < diff; j++)
                     {
-                        uo.GetComponent<UnitObject>().MoveFront();
+                        uo.GetComponent<UnitController>().MoveFront();
                         unit.Position--;
                     }
                     Units.Remove(pos);
@@ -180,7 +191,7 @@ public class BattleManager : MonoBehaviour
                     int diff = unit.Position - (i + 5);
                     for (int j = 0; j < diff; j++)
                     {
-                        uo.GetComponent<UnitObject>().MoveFront();
+                        uo.GetComponent<UnitController>().MoveFront();
                         unit.Position--;
                     }
                     Units.Remove(pos);
@@ -190,35 +201,31 @@ public class BattleManager : MonoBehaviour
 
     }
 
-    public void StageClear()
-    {
-        Debug.Log("CLEAR");
-        StateComponent.FSMStop();
-    }
-
-    public void StageFail()
-    {
-        Debug.Log("CLEAR");
-        StateComponent.FSMStop();
-    }
+    
     public StageData MoveNextStage()
     {
         if ((CurStage = StageDB.GetStageData(CurStage.ID, CurStage.SubStageID + 1)) != null)
         {
-            SubStageClear.Invoke(CurStage.ID, CurStage.SubStageID);
             LoadHeroTeam();
             HeroUnitSpawner.SpawnAll();
             foreach (var item in WaitingUnitsList)
             {
                 item.Status.Waiting = (int)((1f / item.Status.Speed) * 10000);
             }
-            BattleUI.InitWaitingUnitInfo(WaitingUnitsList);
+            SubStageClear.Invoke(CurStage.ID, CurStage.SubStageID);
         }
         return CurStage;
     }
-    public bool IsStageClear()
+    public void BattleLoad()
     {
-        return PlayerTeam.Count == 0 || HeroTeam.Count == 0;
+        IsClear = false;
+        LoadHeroTeam();
+        LoadPlayerTeam();
+        PlayerUnitSpawner.SpawnAll();
+        HeroUnitSpawner.SpawnAll();
     }
-    
+    public void StartBattle()
+    {
+        StateComponent.FSMStart((int)BattlePhaseEnum.ReadyBattlePhase);
+    }
 }
