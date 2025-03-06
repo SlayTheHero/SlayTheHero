@@ -76,7 +76,7 @@ public class UI_BaseToolTipEventHandler : UI_EventHandler ,  IDeselectHandler
             ToolTipInstance.transform.SetParent(ToolTipGroupObject.transform);
             ToolTipRect = ToolTipInstance.GetComponent<RectTransform>();
             
-            OnClickHandler += setActiveToolTip;  
+            OnHoldHandler += setActiveToolTip;  
 
              
             ToolTipInstance.SetActive(false);
@@ -152,8 +152,9 @@ public class UI_BaseToolTipEventHandler : UI_EventHandler ,  IDeselectHandler
     /// <param name="data"></param>
     /// <returns></returns>
     private Vector2 adjustToolTipPosition(PointerEventData data)
-    {
-        Vector2 newPosition = data.position + offSet + new Vector2(ToolTipRect.rect.width / 2, ToolTipRect.rect.height / 2); 
+    { 
+        Vector2 newPosition = data.selectedObject.transform.position;
+        newPosition += offSet + new Vector2(ToolTipRect.rect.width / 2, ToolTipRect.rect.height / 2); 
         if (newPosition.x + ToolTipRect.rect.width / 2 > Screen.width)
         {
             newPosition.x = Screen.width - ToolTipRect.rect.width/2;
