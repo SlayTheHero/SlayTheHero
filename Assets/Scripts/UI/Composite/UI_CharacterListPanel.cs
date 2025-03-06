@@ -1,9 +1,10 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Jobs;
 using UnityEngine;
 using UnityEngine.EventSystems;
-using UnityEngine.UI; 
+using UnityEngine.UI;
 
 public class UI_CharacterListPanel : UI_EventHandler
 {
@@ -13,15 +14,23 @@ public class UI_CharacterListPanel : UI_EventHandler
     public Scrollbar scrollbar;
 
     GridLayoutGroup CharacterGrid;
-    List<UI_UnitButton> UnitButtons = new List<UI_UnitButton> ();
-    public void LoadPlayerData()
-    {
-        if (manager == null)
-            manager = GameManager.getInstance();
-        UnitList = new List<GameObject>();
-        int unitCount = manager.PlayerData.unitDeque.GetUnitCount(); 
+    List<UI_UnitButton> UnitButtons = new List<UI_UnitButton>();
+    public List<UnitBase> unitList = new List<UnitBase>();
 
-        if(CharacterGridPanel.transform.childCount > 0 )
+    private void LoadPlayerData()
+    {
+        int unitCount = manager.PlayerData.unitDeque.GetUnitCount();
+        unitList = new List<UnitBase>();
+        for (int i = 0; i < unitCount; i++)
+        {
+            unitList.Add(manager.PlayerData.unitDeque.GetUnit(i));
+        }
+    }
+    private void DisplayUnitButtons()
+    {
+        int unitCount = unitList.Count;
+        UnitList = new List<GameObject>();
+        if (CharacterGridPanel.transform.childCount > 0)
         {
             foreach (Transform child in CharacterGridPanel.transform)
             {
@@ -37,7 +46,7 @@ public class UI_CharacterListPanel : UI_EventHandler
         {
             GameObject temp = GameObject.Instantiate(prefab, CharacterGridPanel.transform);
             temp.name = "UI_Character_" + i;
-            UnitBase unit = manager.PlayerData.unitDeque.GetUnit(i); 
+            UnitBase unit = unitList[i];
 
             UnitButtons.Add(temp.GetComponent<UI_UnitButton>());
             UnitButtons[i].SetSynergyData(((int)Synergy.FromUnitEnumToSynergy(unit.Race),
@@ -46,7 +55,7 @@ public class UI_CharacterListPanel : UI_EventHandler
             UnitButtons[i].SetImage(ImageDB.GetImage(ImageDB.ImageType.Unit, unit.ID));
             UnitList.Add(temp);
         }
-        if(unitCount <= 4)
+        if (unitCount <= 4)
         {
             canScroll = false;
             scrollbar.gameObject.SetActive(false);
@@ -54,29 +63,102 @@ public class UI_CharacterListPanel : UI_EventHandler
         else
         {
             canScroll = true;
-            if(unitCount %2 == 0)
+            if (unitCount % 2 == 0)
             {
                 maxPaddingTop = unitCount / 2 * 310 + (unitCount / 2 - 1) * 30 - 810;
             }
             else
-            {  
+            {
                 maxPaddingTop = (unitCount / 2 + 1) * 310 + (unitCount / 2) * 30 - 810;
             }
         }
     }
+    public void Initialize(Type type = null)
+    {
+        if (manager == null)
+            manager = GameManager.getInstance();
+
+        LoadPlayerData();
+        SortUnitList(type);
+        DisplayUnitButtons();
+        ApplyUnitEvent();
+    }
+
+    private static readonly Dictionary<Type, object> Enum_Sort_Data = new Dictionary<Type, object>
+    {
+    // ë§ˆìˆ˜, ëª½ë§ˆ, ë±€íŒŒì´ì–´, ìœ ë ¹, ì¸ê°„
+    { typeof(Race), new Dictionary<Race, int> {
+        { Race.DemonBeast, 0 }, { Race.NightMare, 1 }, { Race.Vampire, 2 }, { Race.Ghost, 3 }, { Race.Human, 4 } } },
+
+    // ê²€ì‚¬, ê¶ì‚¬, ë§ˆë²•ì‚¬, ê¸°ì‚¬, ë†ë¶€, ìš©ë³‘, ì„±ê¸°ì‚¬, ì„±ì§ì
+    { typeof(Job), new Dictionary<Job, int> {
+        { Job.SwordMan, 0 }, { Job.Archer, 1 }, { Job.Magician, 2 }, { Job.Knight, 3 }, { Job.Farmer, 4 }, { Job.Paladin, 5 }, { Job.Priest, 6 } } },
+
+    // ë‚˜íƒœ, ì‹ ì†, ì˜ì‹¬ì•”ê·€, ì§ˆíˆ¬, ê·€ì¡±, ê¿ˆê¾¸ì§€ì•ŠëŠ”ì, ë¶ˆêµ´, ì‚¬ëƒ¥ê¾¼, ì‹ ì, ì •ì˜
+    { typeof(Feature), new Dictionary<Feature, int> {
+        { Feature.Sloth, 0 }, { Feature.Swiftness, 1 }, { Feature.SuspiciousGhost, 2 }, { Feature.Envy, 3 }, { Feature.Noble, 4 },
+        { Feature.Dreamless, 5 }, { Feature.Fortify, 6 }, { Feature.Hunter, 7 }, { Feature.Faithful, 8 }, { Feature.Justice, 9 } } }
+    };
+
+    private void SortUnitsByEnum<T>(List<UnitBase> units, Type enumType, Func<UnitBase, T> getEnum) where T : Enum
+    {
+        if (!Enum_Sort_Data.TryGetValue(enumType, out object sortOrderObj) || !(sortOrderObj is Dictionary<T, int> sortOrder))
+        {
+            throw new ArgumentException("UndeFined Enum Value.");
+        }
+
+        unitList.Sort((a, b) =>
+        {
+            int indexA = sortOrder.TryGetValue(getEnum(a), out int aIndex) ? aIndex : int.MaxValue;
+            int indexB = sortOrder.TryGetValue(getEnum(b), out int bIndex) ? bIndex : int.MaxValue;
+
+            return indexA.CompareTo(indexB);
+        });
+    }
+
+
+    private void SortUnitList(Type type)
+    {
+        if (type == null || unitList.Count == 0)
+        {
+            return;
+        }
+        if (type == typeof(Race))
+        {
+            SortUnitsByEnum(unitList, type, u => u.Race);
+        }
+        if (type == typeof(Feature))
+        {
+            SortUnitsByEnum(unitList, type, u => u.Feature);
+        }
+        if (type == typeof(Job))
+        {
+            SortUnitsByEnum(unitList, type, u => u.Job);
+        }
+        Debug.Log("sorted");
+    }
 
     public void SetSynergy(bool isSynergyShow)
     {
-        foreach(UI_UnitButton ui in UnitButtons)
+        foreach (UI_UnitButton ui in UnitButtons)
         {
             ui.SetSynergyVisible(isSynergyShow);
         }
     }
+
+    List<(Action<PointerEventData>, UI_EventHandler.UIEvent)> UnitEvents = new List<(Action<PointerEventData>, UI_EventHandler.UIEvent)>();
     public void SetUnitEvent(Action<PointerEventData> ev, UI_EventHandler.UIEvent type)
     {
-        for (int i = 0; i < UnitList.Count; i++)
+        UnitEvents.Add((ev,type));
+    }
+    private void ApplyUnitEvent()
+    {
+        for (int i = 0; i < UnitEvents.Count; i++)
         {
-            UnitList[i].AddUIEvent(ev, type);
+            for (int j = 0; j < UnitList.Count; j++)
+            {
+                UnitList[j].AddUIEvent(UnitEvents[i].Item1, UnitEvents[i].Item2);
+            }
         }
     }
 
@@ -101,15 +183,15 @@ public class UI_CharacterListPanel : UI_EventHandler
         scrollbar.onValueChanged.AddListener(OnScroll);
     }
 
-    public float inertiaDuration = 0.5f; // °ü¼º Áö¼Ó ½Ã°£
-    public float inertiaDamping = 0.9f;  // °ü¼º °¨¼Ó·ü
-     
+    public float inertiaDuration = 0.5f; // ê´€ì„± ì§€ì† ì‹œê°„
+    public float inertiaDamping = 0.9f;  // ê´€ì„± ê°ì†ë¥ 
+
     private float lastDragDeltaY;
     private float dragSpeed;
     private bool isDragging = false;
     private Coroutine inertiaCoroutine;
-     
-     
+
+
     public void OnBeginDrag(PointerEventData eventData)
     {
         if (!canScroll) return;
@@ -118,7 +200,7 @@ public class UI_CharacterListPanel : UI_EventHandler
         lastDragDeltaY = 0f;
         isDragging = true;
 
-        // °ü¼º Ã³¸® ÁßÀÌ¸é ¸ØÃã
+        // ê´€ì„± ì²˜ë¦¬ ì¤‘ì´ë©´ ë©ˆì¶¤
         if (inertiaCoroutine != null)
         {
             StopCoroutine(inertiaCoroutine);
@@ -126,39 +208,39 @@ public class UI_CharacterListPanel : UI_EventHandler
         }
     }
 
-    // µå·¡±× Áß È£Ãâ
+    // ë“œë˜ê·¸ ì¤‘ í˜¸ì¶œ
     public void OnDrag(PointerEventData eventData)
     {
         if (!canScroll) return;
         if (scrollbar == null)
             return;
 
-        // µå·¡±×ÇÑ °Å¸® °è»ê
+        // ë“œë˜ê·¸í•œ ê±°ë¦¬ ê³„ì‚°
         float dragDeltaY = eventData.position.y - dragStartPosY;
         float screenHeight = Screen.height;
         float scrollValueDelta = dragDeltaY / screenHeight;
-         
+
         scrollbar.value = Mathf.Clamp(scrollbarStartValue + scrollValueDelta, 0f, 1f);
 
-        // µå·¡±× ¼Óµµ °è»ê 
+        // ë“œë˜ê·¸ ì†ë„ ê³„ì‚° 
         dragSpeed = (dragDeltaY - lastDragDeltaY) / Time.deltaTime;
         lastDragDeltaY = dragDeltaY;
     }
 
-    // µå·¡±× Á¾·á ½Ã È£Ãâ
+    // ë“œë˜ê·¸ ì¢…ë£Œ ì‹œ í˜¸ì¶œ
     public void OnEndDrag(PointerEventData eventData)
     {
         if (!canScroll) return;
         isDragging = false;
 
-        // µå·¡±×°¡ ³¡³²
+        // ë“œë˜ê·¸ê°€ ëë‚¨
         if (inertiaCoroutine == null)
         {
             inertiaCoroutine = StartCoroutine(HandleInertia());
         }
     }
 
-    // °ü¼ºÀ» Ã³¸®ÇÏ´Â ÄÚ·çÆ¾
+    // ê´€ì„±ì„ ì²˜ë¦¬í•˜ëŠ” ì½”ë£¨í‹´
     private IEnumerator HandleInertia()
     {
         float inertiaTimer = inertiaDuration;
@@ -167,38 +249,38 @@ public class UI_CharacterListPanel : UI_EventHandler
         {
             inertiaTimer -= Time.deltaTime;
 
-            // °ü¼º °¨¼Ó
+            // ê´€ì„± ê°ì†
             dragSpeed *= inertiaDamping;
 
-            // ½ºÅ©·Ñ¹Ù °ª ¾÷µ¥ÀÌÆ®
+            // ìŠ¤í¬ë¡¤ë°” ê°’ ì—…ë°ì´íŠ¸
             float scrollValueDelta = (dragSpeed / Screen.height) * Time.deltaTime;
             scrollbar.value = Mathf.Clamp(scrollbar.value + scrollValueDelta, 0f, 1f);
 
-            yield return null; 
+            yield return null;
         }
 
-        //Á¾·á
+        //ì¢…ë£Œ
         inertiaCoroutine = null;
     }
 
     public int ScrollAdjustValue = 100;
 
-    public float maxPaddingTop; // ÆĞµùÀÇ ÃÖ´ë ³ôÀÌ
+    public float maxPaddingTop; // íŒ¨ë”©ì˜ ìµœëŒ€ ë†’ì´
 
     void OnScroll(float scrollPosition)
     {
         if (!canScroll) return;
         float newPaddingTop = Mathf.Lerp(-maxPaddingTop, 0, 1f - scrollPosition);
-         
+
         CharacterGrid.padding.top = 50 + Mathf.RoundToInt(newPaddingTop);
-         
+
         CharacterGrid.SetLayoutVertical();
     }
 
     bool canScroll = false;
     void SetScroll()
     {
-        if(canScroll)
+        if (canScroll)
         {
             scrollbar.gameObject.SetActive(false);
         }
@@ -208,12 +290,21 @@ public class UI_CharacterListPanel : UI_EventHandler
         }
     }
 
+
+    private void SetSortEvent()
+    {
+        Utility.FindChild<Transform>(transform.gameObject, "UI_Tab_1", true).gameObject.AddUIEvent((p) => { Initialize(typeof(Race)); }, UIEvent.LClick);
+        Utility.FindChild<Transform>(transform.gameObject, "UI_Tab_2", true).gameObject.AddUIEvent((p) => { Initialize(typeof(Feature)); }, UIEvent.LClick);
+        Utility.FindChild<Transform>(transform.gameObject, "UI_Tab_3", true).gameObject.AddUIEvent((p) => { Initialize(typeof(Job)); }, UIEvent.LClick);
+        Utility.FindChild<Transform>(transform.gameObject, "UI_Tab_4", true).gameObject.AddUIEvent((p) => { Initialize(); }, UIEvent.LClick);
+    }
     void Start()
     {
         SetDragEvent();
+        SetSortEvent();
         CharacterGrid = CharacterGridPanel.GetComponent<GridLayoutGroup>();
     }
-     
+
 
 
 }
