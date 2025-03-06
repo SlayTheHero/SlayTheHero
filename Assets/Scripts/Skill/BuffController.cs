@@ -18,6 +18,11 @@ public class BuffController
     private UnitBase Unit;
     private Queue<Skill> BuffQueue;
 
+    public Queue<Skill> GetBuffQueue()
+    {
+        return BuffQueue;
+    }
+
     public BuffController(UnitBase unitSave, UnitBase unit, Queue<Skill> buffQueue)
     {
     }
@@ -25,6 +30,17 @@ public class BuffController
     public BuffController()
     {
         BuffQueue = new Queue<Skill>();
+    }
+
+    public BuffController(BuffController buff)
+    {
+        BuffQueue = new Queue<Skill>();
+        foreach (Skill sk in buff.BuffQueue)
+        {
+            BuffQueue.Enqueue(sk);
+        }
+        UnitSave = buff.UnitSave;
+        Unit = buff.Unit;
     }
 
     /// <summary>
@@ -47,7 +63,7 @@ public class BuffController
         switch(skill.sk_DurationType)
         {
             case Skill.SK_DurationType.Passive:
-                AddPassive(skill);
+                AddQueue(skill);
                 break;
             case Skill.SK_DurationType.Buff:
                 AddQueue(skill);
@@ -114,5 +130,5 @@ public class BuffController
         Unit.Status = new Status(status);
         Unit.Status.HP = hp > Unit.Status.MaxHP ? hp : Unit.Status.MaxHP;
     }
-
+     
 }

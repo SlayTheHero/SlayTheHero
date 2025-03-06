@@ -1,11 +1,21 @@
+using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Collections.Generic; 
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using static Synergy;
 
 public class UI_UnitRecruit : UI_Base
 {
+
+    private static readonly Dictionary<int, List<SynergyType>> INDEX_SYNERGY_DATA = new Dictionary<int, List<SynergyType>>
+    {    
+        { 0, new List<SynergyType> { SynergyType.SwordMan, SynergyType.Vampire, SynergyType.SuspiciousGhost, SynergyType.Sloth  } },
+        { 1, new List<SynergyType> { SynergyType.Magician, SynergyType.Ghost, SynergyType.Envy } },
+        { 2, new List<SynergyType> { SynergyType.Archer, SynergyType.DemonBeast, SynergyType.Swiftness } }
+    };
+
     enum GameObjects
     { 
     }
@@ -46,11 +56,19 @@ public class UI_UnitRecruit : UI_Base
     {
         string[] nameArr = data.selectedObject.gameObject.name.Split("_");
         int index = int.Parse(nameArr[2]);
-        manager.PlayerData.unitDeque.AddUnit(UnitDB.GetUnit(3 + index));
+        GetNewUnit(index);
         manager.UI.ClosePopupUI();
         manager.UI.ShowPopupUI<UI_UnitRecruit_Hunting>();
     }
     
+
+    void GetNewUnit(int index)
+    {
+        List<SynergyType> list = INDEX_SYNERGY_DATA[index];
+        int unitIndex = UnityEngine.Random.Range(0, list.Count);
+        UnitBase unit = UnitDB.GetUnitForSynergy(list[unitIndex]);
+        manager.PlayerData.unitDeque.AddUnit(unit);
+    }
 
 }
      

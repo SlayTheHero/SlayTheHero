@@ -60,7 +60,7 @@ public class BattleManager : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            BattleStart?.Invoke(1);
+            BattleStart?.Invoke(1); 
         }
     }
     void LoadHeroTeam()

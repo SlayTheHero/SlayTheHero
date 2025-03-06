@@ -62,7 +62,7 @@ public class UI_SynergyUpgrade : UI_Base
         GameObject UI_CharacterListPanel = GetGameObject((int)GameObjects.UI_CharacterListPanel);
         characterList = UI_CharacterListPanel.GetComponent<UI_CharacterListPanel>();
 
-        characterList.LoadPlayerData();
+        characterList.Initialize();
         characterList.SetSynergy(true);
         characterList.SetUnitEvent(OnCharacterClicked, UI_EventHandler.UIEvent.LClick);
     }

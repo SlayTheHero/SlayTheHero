@@ -7,10 +7,12 @@ using UnityEngine.UI;
 public class UnitObject : MonoBehaviour
 {
     public Slider HPBar;
+    public BuffViewer BuffViewer;
     public UnitBase Unit;
     // Start is called before the first frame update
     void Start()
     {
+        BuffViewerRefresh();
 
         if (Unit.IsPlayerUnit)
         {
@@ -47,5 +49,10 @@ public class UnitObject : MonoBehaviour
     public void Scale(float x, float y,float duration)
     {
         transform.DOScale(new Vector2(x, y),duration);
+    }
+
+    public void BuffViewerRefresh()
+    {
+        BuffViewer.SetBuff(Unit);
     }
 }

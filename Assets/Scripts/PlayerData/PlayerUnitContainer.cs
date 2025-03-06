@@ -21,8 +21,30 @@ public static class PlayerUnitContainer
             selectUnitList.Add(UnitDB.GetUnit(0));
             selectUnitList.Add(UnitDB.GetUnit(0));
         }
+        else
+        {
+
+        }
+        
+        SetBuffController();
+
         return selectUnitList;
     }
+
+    private static void SetBuffController()
+    {
+        List<(int,bool)> synergyData = SynergyDB.getSynergyFromUnitList(selectUnitList);
+
+        for (int i = 0; i < 3; i++)
+        {
+            selectUnitList[i].BuffController.Init(selectUnitList[i]);
+            for (int j = 0; j < synergyData.Count; j++)
+            {
+                SynergyController.setSynergy(selectUnitList[i], (Synergy.SynergyType)synergyData[j].Item1, synergyData[j].Item2);
+            }
+        }
+    }
+
     public static void ClearUnitList()
     {
         selectUnitList.Clear();

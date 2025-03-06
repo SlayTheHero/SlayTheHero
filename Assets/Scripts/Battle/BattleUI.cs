@@ -12,6 +12,7 @@ using UnityEngine.Events;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
 using static UnityEngine.GraphicsBuffer;
+using static UnityEngine.UI.CanvasScaler;
 using static UnityEngine.UI.Image;
 
 public class BattleUI : MonoBehaviour
@@ -110,7 +111,7 @@ public class BattleUI : MonoBehaviour
         {
 
             m_SkillBtns[i].GetComponent<Button>().enabled = is_interatable;
-            m_SkillBtns[i].SetActive(true);
+            m_SkillBtns[i].SetActive(true); 
         }
     }
     public void SkillBtnOff()
@@ -225,6 +226,7 @@ public class BattleUI : MonoBehaviour
         m_CurUnitImage.sprite = ImageDB.GetImage(ImageDB.ImageType.Unit, cur_unit.ID);
         for (int i = 0; i < cur_unit.SkillList.Count; i++)
         {
+            m_SkillBtns[i].gameObject.GetComponent<UI_SkillToolTipEventHandler>().setSkillID(cur_unit.SkillList[i].id);
             m_SkillBtns[i].GetComponent<Image>().sprite = ImageDB.GetImage(ImageDB.ImageType.Skill, cur_unit.SkillList[i].id);
         }
     }

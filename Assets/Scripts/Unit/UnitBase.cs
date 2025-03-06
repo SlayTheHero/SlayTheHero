@@ -25,7 +25,6 @@ public class UnitBase : ISerializableToCSV
     public List<Skill> SkillList;
     public int Turn;
     public BuffController BuffController;
-    public SynergyController SynergyController;
 
 
     // 기본생성자
@@ -68,7 +67,8 @@ public class UnitBase : ISerializableToCSV
         {
             SkillList.Add(other.SkillList[i]);
         }
-        BuffController = new BuffController();
+        BuffController = new BuffController(other.BuffController);
+        
     }
 
     /// <summary>

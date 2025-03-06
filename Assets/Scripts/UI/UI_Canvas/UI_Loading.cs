@@ -52,8 +52,8 @@ public class UI_Loading : MonoBehaviour
                     StopCoroutine(StartProgressBar());
                 }
                 timer += Time.unscaledDeltaTime;
-                progressBar.fillAmount = Mathf.Lerp(0.45f, 0.5f, timer);
-                if(progressBar.fillAmount >= 0.5f)
+                destProgress = Mathf.Lerp(0.45f, 0.5f, timer);
+                if(progressBar.fillAmount >= 0.48f)
                 {
                     destProgress = 0.5f;
                     op.allowSceneActivation = true;
@@ -86,8 +86,8 @@ public class UI_Loading : MonoBehaviour
                     StopCoroutine(StartProgressBar());
                 }
                 timer += Time.fixedDeltaTime;
-                progressBar.fillAmount = Mathf.Lerp(0.9f, 1f, timer);
-                if (progressBar.fillAmount >= 1f)
+                destProgress = Mathf.Lerp(0.9f, 1f, timer);
+                if (progressBar.fillAmount >= 0.98f)
                 { 
                     backGround.SetActive(false);
                     cover.SetActive(true);
@@ -100,12 +100,13 @@ public class UI_Loading : MonoBehaviour
     }
     private IEnumerator StartProgressBar()
     {
-        while(true)
+        while (true)
         {
-            progressBar.fillAmount = Mathf.Lerp(progressBar.fillAmount, destProgress, 0.3f);
+            progressBar.fillAmount = Mathf.Lerp(progressBar.fillAmount, destProgress, 0.3f * Time.deltaTime * 10f);
             yield return null;
         }
     }
+
 
     private void OnSceneLoaded(Scene arg0, LoadSceneMode arg1)
     {

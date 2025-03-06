@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 7430217952000617052}
   - component: {fileID: 4007877264126885473}
   m_Layer: 5
-  m_Name: UI_SkillToolTip
+  m_Name: UI_BuffToolTip
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -90,7 +90,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5823949926442243775, guid: ba386f8884ba12243afb62d668fd3b66, type: 3}
       propertyPath: m_Name
-      value: UI_SkillExplanation
+      value: UI_BuffExplanation
       objectReference: {fileID: 0}
     - target: {fileID: 7194128061827384765, guid: ba386f8884ba12243afb62d668fd3b66, type: 3}
       propertyPath: m_fontSize
@@ -421,7 +421,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5823949926442243775, guid: ba386f8884ba12243afb62d668fd3b66, type: 3}
       propertyPath: m_Name
-      value: UI_SkillType
+      value: UI_BuffType
       objectReference: {fileID: 0}
     - target: {fileID: 7194128061827384765, guid: ba386f8884ba12243afb62d668fd3b66, type: 3}
       propertyPath: m_fontSize
@@ -583,7 +583,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 5823949926442243775, guid: ba386f8884ba12243afb62d668fd3b66, type: 3}
       propertyPath: m_Name
-      value: UI_SkillName
+      value: UI_BuffName
       objectReference: {fileID: 0}
     - target: {fileID: 7194128061827384765, guid: ba386f8884ba12243afb62d668fd3b66, type: 3}
       propertyPath: m_fontSize
@@ -745,7 +745,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 545303965584955818, guid: 4945302032ba7f44f9f00c037d2db4e8, type: 3}
       propertyPath: m_Name
-      value: UI_SkillImage
+      value: UI_BuffImage
       objectReference: {fileID: 0}
     - target: {fileID: 4007877264126885473, guid: 4945302032ba7f44f9f00c037d2db4e8, type: 3}
       propertyPath: m_Sprite

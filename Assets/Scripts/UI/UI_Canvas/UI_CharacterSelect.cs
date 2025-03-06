@@ -102,7 +102,7 @@ public class UI_CharacterSelect : UI_Base
         int unitCount = manager.PlayerData.unitDeque.GetUnitCount();
         GameObject UI_CharacterListPanel = GetGameObject((int)GameObjects.UI_CharacterListPanel);
         characterList = UI_CharacterListPanel.GetComponent<UI_CharacterListPanel>();
-        characterList.LoadPlayerData();
+        characterList.Initialize();
         characterList.SetUnitEvent(OnCharacterClicked, UI_EventHandler.UIEvent.LClick);
 
         selectedArr = new int[3]; Array.Fill(selectedArr, -1);
@@ -130,7 +130,7 @@ public class UI_CharacterSelect : UI_Base
     {
         string[] nameArr = data.selectedObject.gameObject.name.Split("_");
         int index = int.Parse(nameArr[2]);
-        UnitBase unit = manager.PlayerData.unitDeque.GetUnit(index);
+        UnitBase unit = characterList.unitList[index];
 
         GetGameObject((int)GameObjects.UI_CharacterDialoguePanel).GetComponent<UI_CharacterDialoguePanel>().SetCharacterData(unit);
  

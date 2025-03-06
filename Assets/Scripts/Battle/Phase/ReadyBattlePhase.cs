@@ -13,9 +13,9 @@ public class ReadyBattlePhase : BattlePhaseBase
         ui.SortWaitingUI(BattleManager.Instance.WaitingUnitsList);
         bm.UnitSort();
         var unit = bm.CurUnit;
+        ui.SkillBtnOn(unit.SkillList.Count, false);
         ui.SetCurUnitInfo(unit);
         ui.SetCursorEnable(true,unit.Position);
-        ui.SkillBtnOn(unit.SkillList.Count, false);
         m_duration = Duration;
 
     }

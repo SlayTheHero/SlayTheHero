@@ -5,14 +5,22 @@ using System.Linq;
 using Unity.Jobs;
 using Unity.Mathematics;
 using Unity.VisualScripting;
+using UnityEditor.ShaderKeywordFilter;
 using UnityEngine;
+using static UnityEngine.UI.CanvasScaler;
 
 public static class UnitDB 
 {
 
     private static List<UnitBase> UnitList = new List<UnitBase>();
     private static List<Dictionary<string, object>> UnitDict;
-
+    private static readonly Dictionary<Job,List<int>> JOB_STAT_DATA = new Dictionary<Job,List<int>>
+    {    
+        // speed, health, attack, defence
+        { Job.Archer, new List<int> { 150, 80, 120, 100 } },
+        { Job.SwordMan, new List<int> { 80, 150, 100, 150 } },
+        { Job.Magician, new List<int> { 100, 80, 180, 80 } }
+    };
     // '-' 가 입력 되었을때
     private const int RANDOM_SKILL_VALUE = int.MaxValue;    
     // 타입 이름이 입력되었을때
@@ -86,9 +94,133 @@ public static class UnitDB
         return outunit;
     }
     
-    public static UnitBase GetUnitForSynergy(Synergy synergy)
-    {
-        return new UnitBase();
+    public static UnitBase GetUnitForSynergy(Synergy.SynergyType synergy)
+    { 
+        UnitBase unit = new UnitBase();
+        bool isEnemy = true;
+        Type type = typeof(int);
+        // 적군 아군 판별 
+        if (Enum.IsDefined(typeof(Job), synergy.ToString()))
+        {
+            Job now = (Job)Enum.Parse(typeof(Job), synergy.ToString());
+            type = typeof(Job);
+            if(now < Job.Farmer)
+            {
+                isEnemy = false;
+            } 
+        }
+        if (Enum.IsDefined(typeof(Feature), synergy.ToString()))
+        {
+            Feature now = (Feature)Enum.Parse(typeof(Feature), synergy.ToString());
+            type = typeof(Feature);
+            if (now < Feature.Justice)
+            {
+                isEnemy = false;
+            }
+        }
+        if (Enum.IsDefined(typeof(Race), synergy.ToString()))
+        {
+            Race now = (Race)Enum.Parse(typeof(Race), synergy.ToString());
+            type = typeof(Race);
+            if (now < Race.Human)
+            {
+                isEnemy = false;
+            }
+        } 
+
+        //랜덤 삽입
+        if(isEnemy)
+        {
+            unit.Job = GetRandomEnumValue<Job>(Job.Priest, Job.Farmer);
+            unit.Feature = GetRandomEnumValue<Feature>(Feature.Faithful, Feature.Justice); ;
+            unit.Race = Race.Human;
+        }
+        else
+        {
+            unit.Job = GetRandomEnumValue<Job>(Job.SwordMan, Job.Magician);
+            unit.Feature = GetRandomEnumValue<Feature>(Feature.Swiftness, Feature.Envy);
+            unit.Race = GetRandomEnumValue<Race>(Race.Ghost);
+        }
+
+        switch (type)
+        {
+            case Type t when t == typeof(Job):
+                unit.Job = (Job)Enum.Parse(typeof(Job), synergy.ToString());
+                break;
+            case Type t when t == typeof(Feature):
+                unit.Feature = (Feature)Enum.Parse(typeof(Feature), synergy.ToString());
+                break;
+            case Type t when t == typeof(Race):
+                unit.Race = (Race)Enum.Parse(typeof(Race), synergy.ToString());
+                break;
+            default:
+                Debug.LogError("Unexpected type");
+                break;
+        } 
+        //직업군 분류
+        Job nowStatType = unit.Job;
+
+        //직업 특성 분류
+        if (isEnemy)
+        {
+            switch(unit.Job)
+            {
+                case Job.Farmer:
+                    nowStatType = Job.SwordMan;
+                    break;
+                case Job.Mercenary:
+                    nowStatType = Job.SwordMan;
+                    break;
+                case Job.Knight:
+                    nowStatType = Job.Archer;
+                    break;
+                case Job.Paladin:
+                    nowStatType = Job.Archer;
+                    break;
+                case Job.Priest:
+                    nowStatType = Job.Priest;
+                    break;
+                case Job.Magician:
+                    nowStatType = Job.Magician;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        //스탯부여
+        List<int> stat = JOB_STAT_DATA[nowStatType];
+        unit.Status.Speed = stat[0];
+        unit.Status.MaxHP = stat[1];
+        unit.Status.HP = stat[1];
+        unit.Status.ATK = stat[2];
+        unit.Status.DEF = stat[3];
+         
+        //스킬 랜덤 부여
+        for (int i = 0; i < 4; i++)
+        {
+            Skill now = new Skill();
+            switch (i)
+            {
+                case 0:
+                    now = GetPassiveSkill(unit.Job);
+                    break;
+                case 1:
+                    now = GetRandomSkill<Job>(unit.Job);
+                    break;
+                case 2:
+                    now = GetRandomSkill<Race>(unit.Race);
+                    break;
+                case 3:
+                    now = GetRandomSkill<Feature>(unit.Feature);
+                    break;
+            }
+            unit.SkillList.Add(now);
+        }
+        //외형 부여
+        unit.outFit = OutfitChooser.GetOutFitFromUnit(unit);
+
+        return unit;
     }
      
 
@@ -172,12 +304,14 @@ public static class UnitDB
         int[] minMax = Array.ConvertAll(input.Split('~'), int.Parse);
         return (minMax[0], minMax[1]);
     }
-    private static T GetRandomEnumValue<T>(T targetMax) where T : Enum
+    private static T GetRandomEnumValue<T>(T targetMax, T targetMin = default(T)) where T : Enum
     {
-        int maxValue = Convert.ToInt32(targetMax);  
-        int rand = UnityEngine.Random.Range(0, maxValue + 1);  
-        return (T)Enum.ToObject(typeof(T), rand);  
+        int minValue = Convert.ToInt32(targetMin);
+        int maxValue = Convert.ToInt32(targetMax);
+        int rand = UnityEngine.Random.Range(minValue, maxValue + 1);
+        return (T)Enum.ToObject(typeof(T), rand);
     }
+
 
     private static Skill GetRandomSkill<T>(T enumValue) where T : Enum
     {
@@ -193,4 +327,53 @@ public static class UnitDB
         return SkillDB.GetSkill(rand);
     }
        
+
+    private static Skill GetPassiveSkill(Job enumValue)
+    {
+        Job nowStatType = enumValue;
+
+        //직업 특성 분류
+        if (nowStatType > Job.Magician)
+        {
+            switch (enumValue)
+            {
+                case Job.Farmer:
+                    nowStatType = Job.SwordMan;
+                    break;
+                case Job.Mercenary:
+                    nowStatType = Job.SwordMan;
+                    break;
+                case Job.Knight:
+                    nowStatType = Job.Archer;
+                    break;
+                case Job.Paladin:
+                    nowStatType = Job.Archer;
+                    break;
+                case Job.Priest:
+                    nowStatType = Job.Priest;
+                    break;
+                case Job.Magician:
+                    nowStatType = Job.Magician;
+                    break;
+                default:
+                    break;
+            }
+        }
+
+        switch(nowStatType)
+        {
+            case Job.SwordMan:
+                return SkillDB.GetSkill(0);
+            break;
+            case Job.Archer:
+                return SkillDB.GetSkill(1);
+                break;
+            case Job.Magician:
+                return SkillDB.GetSkill(2);
+                break;
+            default:
+                return new Skill();
+                break;
+        }
+    }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using TMPro;
 using UnityEditor;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 public class UI_SkillToolTipEventHandler : UI_BaseToolTipEventHandler
@@ -46,7 +47,14 @@ public class UI_SkillToolTipEventHandler : UI_BaseToolTipEventHandler
 
         // 크기조정
         RectTransform ToolTipRect = ToolTipInstance.GetComponent<RectTransform>(); 
-        ToolTipRect.sizeDelta = new Vector2(600, 300);
+        if(SceneManager.GetActiveScene().name.Contains("Battle"))
+        {
+            ToolTipRect.sizeDelta = new Vector2(6, 3);
+        }
+        else
+        {
+            ToolTipRect.sizeDelta = new Vector2(600, 300);
+        }
     }
 
 }
