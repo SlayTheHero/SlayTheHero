@@ -14,17 +14,17 @@ public class Synergy : Skill
 
     public enum SynergyType
     {
-        Vampire, DemonBeast, NightMare, Ghost, Human, // Á¾Á·
-        SwordMan, Archer, Magician, // Á÷¾÷
-        Farmer, Mercenary, Knight, Paladin, Priest, // Àû Á÷¾÷
-        Swiftness, SuspiciousGhost, Sloth, Envy, // ¾Æ±º Æ¯¼º
-        Justice, Hunter, Dreamless, Fortify, Noble, Faithful, // Àû±º Æ¯¼º
+        Vampire, DemonBeast, NightMare, Ghost, Human, // ï¿½ï¿½ï¿½ï¿½
+        SwordMan, Archer, Magician, // ï¿½ï¿½ï¿½ï¿½
+        Farmer, Mercenary, Knight, Paladin, Priest, // ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+        Swiftness, SuspiciousGhost, Sloth, Envy, // ï¿½Æ±ï¿½ Æ¯ï¿½ï¿½
+        Justice, Hunter, Dreamless, Fortify, Noble, Faithful, // ï¿½ï¿½ï¿½ï¿½ Æ¯ï¿½ï¿½
     }
     public Synergy()
     {
 
     }
-    // ÆÄ¶ó¹ÌÅÍ »ý¼ºÀÚ
+    // ?????? ??????
     public Synergy(
         int id,
         string name,
@@ -51,7 +51,7 @@ public class Synergy : Skill
         this.threeImpact = threeImpact;
 
     }
-    // º¹»ç »ý¼ºÀÚ
+    // ???? ??????
     public Synergy(Synergy other) : base(other)
     {
         this.twoImpact = other.twoImpact;
@@ -81,12 +81,12 @@ public class Synergy : Skill
         {
             string enumName = enumValue.ToString();
 
-            // enumNameÀÌ Job, Feature, Race Áß ÇÏ³ª¿¡ ¼ÓÇÏ´ÂÁö È®ÀÎ
+            // enumNameï¿½ï¿½ Job, Feature, Race ï¿½ï¿½ ï¿½Ï³ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½Ï´ï¿½ï¿½ï¿½ È®ï¿½ï¿½
             if (Enum.IsDefined(typeof(Job), enumName) ||
                 Enum.IsDefined(typeof(Feature), enumName) ||
                 Enum.IsDefined(typeof(Race), enumName))
             {
-                // enumNameÀÌ SynergyType¿¡µµ Á¸ÀçÇÏ¸é º¯È¯
+                // enumNameï¿½ï¿½ SynergyTypeï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½Ï¸ï¿½ ï¿½ï¿½È¯
                 if (Enum.IsDefined(typeof(SynergyType), enumName))
                 {
                     return (SynergyType)Enum.Parse(typeof(SynergyType), enumName);
@@ -102,9 +102,9 @@ public static class SynergyDB
 { 
     private static List<Synergy> SynergyList = new List<Synergy>();
     /// <summary>
-    /// ½ºÅ³ ID¸¦ ÅëÇØ ½ºÅ³ Á¤º¸¸¦ °¡Á®¿À´Â ÇÔ¼ö
+    /// ??? ID?? ???? ??? ?????? ???????? ???
     /// </summary>
-    /// <param name="id">½ºÅ³ ID</param>
+    /// <param name="id">??? ID</param>
     /// <returns></returns>
     public static Synergy GetSynergy(int id)
     {
@@ -172,11 +172,11 @@ public static class SynergyDB
 
         if (unit.Count > 1)
         {
-            short[] raceCount = new short[Enum.GetValues(typeof(Race)).Length];
-            short[] featCount = new short[Enum.GetValues(typeof(Feature)).Length];
-            short[] jobCount = new short[Enum.GetValues(typeof(Job)).Length];
+            short[] raceCount = new short[5];
+            short[] featCount = new short[6];
+            short[] jobCount = new short[3];
 
-            // À¯´Ö Á¤º¸¿¡¼­ Ä«¿îÆ®¸¦ ¼À
+            // ???? ???????? ?????? ??
             for (int i = 0; i < unit.Count; i++)
             {
                 UnitBase nowUnit = unit[i];
@@ -185,7 +185,6 @@ public static class SynergyDB
                 jobCount[(int)nowUnit.Job]++;
             }
 
-            // Ä«¿îÆ®¸¦ ±âÁØÀ¸·Î ½Ã³ÊÁö °è»ê
             (int, bool) raceSynergy = ExtractMax<Race>(raceCount);
             (int, bool) jobSynergy = ExtractMax<Job>(jobCount);
             (int, bool) featSynergy = ExtractMax<Feature>(featCount);
@@ -207,13 +206,12 @@ public static class SynergyDB
         return synergyList;
     }
 
-    // °øÅë ·ÎÁ÷À» Ã³¸®ÇÏ´Â ÇÔ¼ö
     private static (int, bool) ExtractMax<T>(short[] countArray) where T : Enum
     { 
         int max = 0;
         int maxIndex = 0;
 
-        // ÃÖ´ë°ª Ã£±â
+        // ??ï¿½S ???
         for (int i = 0; i < countArray.Length; i++)
         {
             if (countArray[i] > max)
@@ -223,7 +221,7 @@ public static class SynergyDB
             }
         }
 
-        T enumValue = (T)(object)maxIndex; // maxIndex¸¦ T·Î Ä³½ºÆÃ
+        T enumValue = (T)(object)maxIndex; // maxIndexï¿½ï¿½ Tï¿½ï¿½ Ä³ï¿½ï¿½ï¿½ï¿½
         int synergy = (int)Synergy.FromUnitEnumToSynergy(enumValue);
         switch (max)
         {

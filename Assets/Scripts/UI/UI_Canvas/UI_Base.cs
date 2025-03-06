@@ -73,7 +73,7 @@ public abstract class UI_Base : MonoBehaviour
     /// </summary>
     /// <param name="index">(int)enum 값을 인자에 넣습니다.</param>
     /// <returns></returns>
-    public Image GetImage(int index) { return GetUI<Image>(index); } 
+    public Image GetImage(int index) { return GetUI<Image>(index); }
     /// <summary>
     /// Enum 값을 이용해 Enum 값에 해당하는 GameObject를 가져옵니다.
     /// </summary>
@@ -101,7 +101,7 @@ public abstract class UI_Base : MonoBehaviour
         {
             case UI_EventHandler.UIEvent.LClick:
                 handler.OnClickHandler -= action;
-                handler.OnClickHandler += action; 
+                handler.OnClickHandler += action;
                 break;
             case UI_EventHandler.UIEvent.Enter:
                 handler.OnPointerEnterHandler -= action;
@@ -111,6 +111,13 @@ public abstract class UI_Base : MonoBehaviour
                 handler.OnPointerExitHandler -= action;
                 handler.OnPointerExitHandler += action;
                 break;
+            case UI_EventHandler.UIEvent.Deselect:
+                handler.OnDeselectHandler -= action;
+                handler.OnDeselectHandler += action;
+
+                break;
+
         }
     }
+    
 }

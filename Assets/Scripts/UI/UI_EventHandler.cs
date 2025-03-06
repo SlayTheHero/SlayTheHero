@@ -4,26 +4,27 @@ using UnityEngine;
 using UnityEngine.EventSystems;
 
 public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IPointerEnterHandler, IPointerExitHandler,
-                                              IPointerMoveHandler, IPointerDownHandler,  IPointerUpHandler
+                                              IPointerMoveHandler, IPointerDownHandler,  IPointerUpHandler, IDeselectHandler
 {
     public enum UIEvent
     {
         LClick,
         Enter,
         Exit,
-        Hold
-    }
-
+        Hold,
+        Deselect
+    } 
     public Action<PointerEventData> OnClickHandler = null;
     public Action<PointerEventData> OnPointerEnterHandler = null;
     public Action<PointerEventData> OnPointerMoveHandler = null;
     public Action<PointerEventData> OnPointerExitHandler = null;
     public Action<PointerEventData> OnPointerDownHandler = null;
     public Action<PointerEventData> OnPointerUpHandler = null;
-    public Action<PointerEventData> OnHoldHandler = null; // Å¬¸¯À» À¯ÁöÇÒ ¶§ È£Ãâ
+    public Action<PointerEventData> OnHoldHandler = null; // Å¬ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ È£ï¿½ï¿½
 
     private Coroutine _holdCoroutine;
-    private readonly float _holdThreshold = 0.5f; // 0.5ÃÊ ÀÌ»ó ´©¸£¸é "Hold"·Î ÆÇÁ¤
+    private readonly float _holdThreshold = 0.5f; // 0.5ï¿½ï¿½ ï¿½Ì»ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ "Hold"ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
+    public Action<PointerEventData> OnDeselectHandler = null;
 
     public void OnPointerClick(PointerEventData eventData)
     {
@@ -43,6 +44,11 @@ public class UI_EventHandler : MonoBehaviour, IPointerClickHandler, IPointerEnte
     public void OnPointerMove(PointerEventData eventData)
     {
         OnPointerMoveHandler?.Invoke(eventData);
+    }
+    public void OnDeselect(BaseEventData eventData)
+    {
+        if (OnDeselectHandler != null)
+            OnDeselectHandler.Invoke(eventData as PointerEventData);
     }
 
     public void OnPointerDown(PointerEventData eventData)

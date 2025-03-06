@@ -18,8 +18,8 @@ public class EndBattlePhase : BattlePhase
         bool has_hero = false;
         var bm = BattleManager.Instance;
         var ui = bm.BattleUI;
-
-        ui.SkillTargetingOff();
+/*
+        ui.SkillTargetingOff();*/
         bm.UnitWaitingDecrease();
 
         
@@ -32,8 +32,10 @@ public class EndBattlePhase : BattlePhase
                 has_dead = true;
                 has_player = unit.IsPlayerUnit || has_player;
                 has_hero = (!unit.IsPlayerUnit) || has_hero;
-                bm.UnitDestroy(unit);
-                ui.OnUnitDead(unit);
+
+                BattleManager.Instance.UnitDead.Invoke(unit);
+                bm.UnitDestroy(unit);/*
+                ui.OnUnitDead(unit);*/
             }
         }
 
@@ -46,7 +48,8 @@ public class EndBattlePhase : BattlePhase
         }
         if (bm.PlayerTeam.Count == 0)
         {
-            bm.StageFail();
+            bm.StateComponent.FSMStop();
+            bm.StageClear.Invoke();
         }
         if (bm.HeroTeam.Count == 0)
         {
@@ -71,7 +74,11 @@ public class EndBattlePhase : BattlePhase
         m_is_clear = false;
         var bm = BattleManager.Instance;
         if (bm.MoveNextStage() == null)
-            bm.StageClear();
+        {
+            bm.StateComponent.FSMStop();
+            bm.IsClear = true;
+            bm.StageClear.Invoke();
+        }
     }
     public override void OnStateInit()
     {

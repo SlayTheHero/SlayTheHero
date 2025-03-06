@@ -53,7 +53,6 @@ public class Skill
     public SK_Attribute sK_Attribute;
     public SK_ChangeType sK_ChangeType;
 
-    // 애니메이션?
 
     // 세부정보
     public int range; // 캐릭터부터 사용할 수 있는 최대 거리
@@ -62,7 +61,10 @@ public class Skill
     public int coolTime; //  스킬 쿨타임
     public int nowCoolDown = 0; // 현재 쿨타임
     public int nowDuration = 0; // 현재 지속시간
+    public float projectileSpeed = 1;
 
+    //애니메이션 데이터
+    public SkillAnimDataSO SkillAnimData;
 
     public Skill()
     {
@@ -71,7 +73,7 @@ public class Skill
     {
         id = _id;
     }
-    public Skill(string  _name)
+    public Skill(string _name)
     {
         name = _name;
     }
@@ -89,6 +91,7 @@ public class Skill
     /// <param name="impact">스킬 강도</param>
     /// <param name="duration">스킬 지속시간</param>
     /// <param name="coolTime">스킬 쿨타임</param>
+    /// <param name="projectileSpeed">투사체 속도</param>
     public Skill(
         int id,
         string name,
@@ -100,7 +103,8 @@ public class Skill
         int range,
         int impact,
         int duration,
-        int coolTime
+        int coolTime,
+        float projectileSpeed = 1f
     )
     {
         this.id = id;
@@ -114,6 +118,7 @@ public class Skill
         this.impact = impact;
         this.duration = duration;
         this.coolTime = coolTime;
+        this.projectileSpeed = projectileSpeed;
     }
     // 복사 생성자
     public Skill(Skill other)
@@ -129,11 +134,13 @@ public class Skill
         this.impact = other.impact;
         this.duration = other.duration;
         this.coolTime = other.coolTime;
+        projectileSpeed = other.projectileSpeed;
+        SkillAnimData = other.SkillAnimData;
+
     }
     public void Invoke(UnitBase Attacker, UnitBase Target)
     {
         SkillExecuter.Execute(Attacker, Target, this);
-
     }
     UnitBase blankUnit = new UnitBase();
     public void Invoke(UnitBase Target)
@@ -188,7 +195,7 @@ public static class SkillDB
             }
             else
             {
-                SkillTypeData.Add(type,new List<int>() { id });
+                SkillTypeData.Add(type, new List<int>() { id });
                 SkillTypeDataForenum.Add(Utility.KoreanToEnum(type), new List<int>() { id });
             }
 
@@ -211,8 +218,11 @@ public static class SkillDB
             }
             int duration = getIntValueOrZero("Duration");
             int coolDown = getIntValueOrZero("CoolTime");
-
-            Skill tempSkill = new Skill(id, name, description, Behavtype, durType, attr, cType, range, impact, duration, coolDown);
+            float projectileSpeed;
+            if (!float.TryParse(item["ProjectileSpeed"].ToString(), out projectileSpeed))
+                projectileSpeed = 1f;
+            Skill tempSkill = new Skill(id, name, description, Behavtype, durType, attr, cType, range, impact, duration, coolDown, projectileSpeed);
+            tempSkill.SkillAnimData = Resources.Load<SkillAnimDataSO>("Animation/SkillAnimData/" + id.ToString());
             SkillList.Add(tempSkill);
 
             int getIntValueOrZero(string type)
@@ -228,7 +238,7 @@ public static class SkillDB
             }
 
         }
-        
+
     }
 
 }

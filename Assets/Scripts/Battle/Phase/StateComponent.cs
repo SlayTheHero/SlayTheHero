@@ -27,11 +27,11 @@ public class StateComponent : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        int next;
         if (m_is_stop)
             return;
         if (m_curState == null)
             return;
+        int next = 0;
         if (m_curState.CheckTransition(out next))
             ChangeState(next);
         else
@@ -57,6 +57,7 @@ public class StateComponent : MonoBehaviour
         m_is_stop = false;
         m_curState = m_states[start_state];
         m_curState.OnStateEnter();
+        StateChanged.Invoke(0, start_state);
     }
     public void FSMStop()
     {

@@ -1,3 +1,4 @@
+using DG.Tweening;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -6,7 +7,11 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 using Unity.Burst.CompilerServices;
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
+using static SkillAnimDataSO;
+using static UnityEngine.GraphicsBuffer;
 
 public static class SkillExecuter
 {
@@ -55,22 +60,23 @@ public static class SkillExecuter
     }
     private static async Task MeleeBehavior(UnitBase Attacker, UnitBase Target, Skill skill)
     {
-
-        Stopwatch sw = new();
-        var anim = BattleManager.Instance.Units[Attacker.Position].GetComponent<UnitAnimationController>();
-        anim.Attack();
-        sw.Start();
-        await Task.Delay(millisecondsDelay: anim.AttackAnimDuration);
-        sw.Stop();
-        UnityEngine.Debug.Log(sw.ElapsedMilliseconds);
-        anim = BattleManager.Instance.Units[Target.Position].GetComponent<UnitAnimationController>();
-        anim.Hit();
-        await Task.Delay(millisecondsDelay: anim.hit_anim_length);
-
+        var skill_data = skill.SkillAnimData;
+        var attacker_obj = BattleManager.Instance.Units[Attacker.Position];
+        var target_obj = BattleManager.Instance.Units[Target.Position];
+        attacker_obj.transform.DOLocalMoveX( Attacker.IsPlayerUnit ? 0.5f:-0.5f, 1).SetRelative();
+        attacker_obj.transform.DOScale(2.3f, 1);
+        await RunAllSkillAnimAsync(skill_data, attacker_obj, target_obj);
+        attacker_obj.transform.DOLocalMoveX(Attacker.IsPlayerUnit ? -0.5f : 0.5f, 1).SetRelative();
+        attacker_obj.transform.DOScale(2.0f, 1);
+        await Task.Delay(1500);
     }
     private static async Task ProjectileBehavior(UnitBase Attacker, UnitBase Target, Skill skill)
     {
+        var skill_data = skill.SkillAnimData;
+        var attacker_obj = BattleManager.Instance.Units[Attacker.Position];
+        var target_obj = BattleManager.Instance.Units[Target.Position];
 
+        await RunAllSkillAnimAsync(skill_data, attacker_obj, target_obj);
     }
     private static async Task BuffBehavior(UnitBase Attacker, UnitBase Target, Skill skill)
     {
@@ -97,5 +103,47 @@ public static class SkillExecuter
     }
     #endregion ApplyBuff
 
+    private static async Task RunAllSkillAnimAsync(SkillAnimDataSO skill_data, GameObject attacker_obj, GameObject target_obj)
+    {
+        bool has_hit = false;
+        int progress_time = 0;
+        var attacker_anim = attacker_obj.GetComponent<Animator>();
+        var target_anim = target_obj.GetComponent<Animator>();
+        skill_data.AllAnim.Sort((a, b) => a.StartDelay.CompareTo(b.StartDelay));
+        foreach (var skillAnim in skill_data.AllAnim)
+        {
+            if (skillAnim.StartDelay > progress_time)
+            {
+                int d = skillAnim.StartDelay - progress_time;
+                await Task.Delay(d);
+                progress_time += d;
+            }
+            switch (skillAnim.Type)
+            {
+                case AnimType.UnitMotion:
+                    attacker_anim.SetTrigger(skillAnim.Name);
+                    break;
+                case AnimType.UnitEffect:
+                    EffectManager.Instance.CreateEffect(skillAnim.Clip, attacker_obj.transform.position +(Vector3)skillAnim.StartLocalPos,skillAnim.Layer, skillAnim.IsAutoReleased).Invoke();
+                    break;
+                case AnimType.HitEffect:
+                    EffectManager.Instance.CreateEffect(skillAnim.Clip, target_obj.transform.position +(Vector3)skillAnim.StartLocalPos, skillAnim.Layer, skillAnim.IsAutoReleased).Invoke(); 
+                    if (!has_hit) { target_anim.SetTrigger("Hit"); has_hit = true; };
+                    break;
+                case AnimType.TargetedEffect:
+                    EffectManager.Instance.CreateEffect(skillAnim.Clip, target_obj.transform.position +(Vector3)skillAnim.StartLocalPos, skillAnim.Layer, skillAnim.IsAutoReleased).Invoke();
+                    break;
+                case AnimType.ProjectileFly:
+                    var obj = Projectile.Pool.Get();
+                    var proj = obj.GetComponent<Projectile>();
+                    proj.transform.position = attacker_obj.transform.position;
+                    proj.Init(skill_data.TrajectoryData, target_obj.transform.position +(Vector3)skillAnim.StartLocalPos);
+                    proj.Shoot();
+                    break;
+                default: break;
+
+            }
+        }
+    }
 
 }

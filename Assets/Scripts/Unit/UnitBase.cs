@@ -8,7 +8,7 @@ using UnityEngine.Events;
 using UnityEngine.Windows;
 
 
-public class UnitBase : ISerializableToCSV
+public class UnitBase : ISerializableToCSV,IComparable<UnitBase>
 {
     public int Order;
     public bool IsDead;
@@ -101,7 +101,6 @@ public class UnitBase : ISerializableToCSV
             // 사망 로직 Status쪽에서 해도 될지도
             if (Status.HP <= 0)
             {
-                BattleManager.Instance.UnitDead.Invoke(this);
                 IsDead = true;
             }
         }
@@ -167,5 +166,10 @@ public class UnitBase : ISerializableToCSV
     public static int SpeedCompare(UnitBase a, UnitBase b)
     {
         return (int)(a.Status.Waiting - b.Status.Waiting);
+    }
+
+    public int CompareTo(UnitBase other)
+    {
+        return Status.Waiting.CompareTo(other.Status.Waiting);
     }
 }

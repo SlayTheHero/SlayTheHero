@@ -8,16 +8,13 @@ public class ReadyBattlePhase : BattlePhaseBase
     public override void OnStateEnter()
     {
         var bm = BattleManager.Instance;
-        var ui = bm.BattleUI;
-        
-        ui.SortWaitingUI(BattleManager.Instance.WaitingUnitsList);
         bm.UnitSort();
-        var unit = bm.CurUnit;
-        ui.SkillBtnOn(unit.SkillList.Count, false);
-        ui.SetCurUnitInfo(unit);
-        ui.SetCursorEnable(true,unit.Position);
         m_duration = Duration;
-
+        bm.Units[bm.WaitingUnitsList[0].Position].GetComponent<UnitController>().SetState(UnitController.UnitState.Attacker);
+        for (int i = 1; i < bm.WaitingUnitsList.Count; i++)
+        {
+            bm.Units[bm.WaitingUnitsList[i].Position].GetComponent<UnitController>().SetState(UnitController.UnitState.Default);
+        }
     }
 
     public override void OnStateUpdate()
@@ -32,7 +29,7 @@ public class ReadyBattlePhase : BattlePhaseBase
     }
     public override void OnStateInit()
     {
-        
+
         AddTransition((int)BattlePhaseEnum.BattlePhase, IsDurationExpired);
     }
 }

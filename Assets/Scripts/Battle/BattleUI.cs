@@ -17,7 +17,7 @@ using static UnityEngine.UI.Image;
 
 public class BattleUI : MonoBehaviour
 {
-    [SerializeField]
+   /* [SerializeField]
     GameObject m_Cursors;
     [SerializeField]
     GameObject m_TargetCursors;
@@ -29,8 +29,14 @@ public class BattleUI : MonoBehaviour
     SortableGrid m_SortableGrid;
     [SerializeField]
     Image m_CurUnitImage;
+    [SerializeField]
+    UI_SynergyDisplay m_UI_SynergyDisplay;
+    [SerializeField]
+    GameObject m_UI_StageClearPanel;
+    [SerializeField]
+    GameObject m_UI_StageFailPanel;
 
-    UnitObject m_SelectedUnit;
+    UnitController m_SelectedUnit;
 
     int? m_SelectedSkillNum = null;
 
@@ -53,25 +59,32 @@ public class BattleUI : MonoBehaviour
         if (m_SelectedSkillNum != null)
         {
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-            RaycastHit hit;
-            if (Physics.Raycast(ray, out hit))
+            if (Physics.Raycast(ray, out RaycastHit hit))
             {
-                if (hit.transform.tag == "Unit")
+                if (hit.transform.CompareTag("Unit"))
                 {
-                    if (!m_SelectedUnit.IsDestroyed())
-                        m_SelectedUnit?.Scale(2.5f, 2.5f, 0.5f);
-                    m_SelectedUnit = hit.transform.GetComponent<UnitObject>();
-                    m_SelectedUnit.Scale(3f, 3f, 0.5f);
+                    if (m_SelectedUnit && m_SelectedUnit != hit.transform.gameObject)
+                        m_SelectedUnit.Scale(2f, 2f, 0.5f);
+                    m_SelectedUnit = hit.transform.GetComponent<UnitController>();
+                    m_SelectedUnit.Scale(2.5f, 2.5f, 0.5f);
                     SetTargetCursorEnable(true, m_SelectedUnit.Unit.Position);
+                }
+                else
+                {
+                    if (m_SelectedUnit)
+                    {
+                        m_SelectedUnit.Scale(2f, 2f, 0.5f);
+                        SetTargetCursorEnable(false, m_SelectedUnit.Unit.Position);
+                        m_SelectedUnit = null;
+                    }
                 }
                 if (Input.GetMouseButtonDown(0))
                 {
-                    if (hit.transform.tag == "Unit")
+                    if (hit.transform.CompareTag("Unit"))
                     {
-                        Debug.Log("HIT");
-                        BattleManager.Instance.SkillUsed.Invoke(m_SelectedSkillNum.Value,
-                            m_SelectedUnit.Unit);
-                        m_SelectedUnit?.Scale(2.5f, 2.5f, 0.5f);
+                        *//*BattleManager.Instance.SkillUsed.Invoke(m_SelectedSkillNum.Value,
+                            m_SelectedUnit.Unit);*//*
+                        m_SelectedUnit.Scale(2f, 2f, 0.5f);
                         SkillTargetingOff();
                         SkillBtnOn(BattleManager.Instance.CurUnit.SkillList.Count, false);
                     }
@@ -86,22 +99,24 @@ public class BattleUI : MonoBehaviour
             {
                 if (m_SelectedUnit != null)
                 {
-                    m_SelectedUnit.Scale(2.5f, 2.5f, 0.5f);
+                    m_SelectedUnit.Scale(2f, 2f, 0.5f);
                     SetTargetCursorEnable(false, 0);
                 }
+                if (Input.GetMouseButtonDown(0))
+                    SkillTargetingOff();
             }
         }
     }
     public void SetCursorEnable(bool value, int pos)
     {
         m_Cursors.SetActive(value);
-        var dist = pos < 5 ? ((pos - 1f) * -2f) - 1.5f : (pos - 5f) * 2f + 1.5f;
+        var dist = pos < 5 ? ((pos - 1f) * -1.5f) - 1.5f : (pos - 5f) * 1.5f + 1.5f;
         m_Cursors.transform.position = new Vector3(dist, m_Cursors.transform.position.y, 0);
     }
     public void SetTargetCursorEnable(bool value, int pos)
     {
         m_TargetCursors.SetActive(value);
-        var dist = pos < 5 ? ((pos - 1f) * -2f) - 1.5f : (pos - 5f) * 2f + 1.5f;
+        var dist = pos < 5 ? ((pos - 1f) * -1.5f) - 1.5f : (pos - 5f) * 1.5f + 1.5f;
         m_TargetCursors.transform.position = new Vector3(dist, m_TargetCursors.transform.position.y, 0);
     }
     public void SkillBtnOn(int count, bool is_interatable)
@@ -129,14 +144,13 @@ public class BattleUI : MonoBehaviour
     }
     void SkillTargetingOn(int idx)
     {
-        if (m_SelectedSkillNum == null)
-        {
-            m_SelectedSkillNum = idx;
-            var unit = BattleManager.Instance.CurUnit;
-            var range = unit.SkillList[idx].range;
-            ShowTargetableUnit(range, unit.Position);
-            SetTargetingEnable(range, unit.Position, true);
-        }
+
+        m_SelectedSkillNum = idx;
+        var unit = BattleManager.Instance.CurUnit;
+        var range = unit.SkillList[idx].range;
+        ShowTargetableUnit(range, unit.Position);
+        SetTargetingEnable(range, unit.Position, true);
+
     }
     void ShowTargetableUnit(int range, int origin)
     {
@@ -190,22 +204,8 @@ public class BattleUI : MonoBehaviour
         SetTargetingEnable(8, 0, false);
     }
 
-    public void InitWaitingUnitInfo(List<UnitBase> waiting_list)
-    {
-        m_SortableGrid.ItemsReset(waiting_list.Count);
-        for (int i = 0; i < waiting_list.Count; i++)
-        {
-            SetWaitingUnitInfo(i, waiting_list[i], true);
+    
 
-        }
-    }
-
-    public void SetWaitingUnitInfo(int pos, UnitBase data, bool is_enabled)
-    {
-        m_WaitingUnitInfoUIs[pos].SetActive(is_enabled);
-        m_WaitingUnitInfoUIs[pos].GetComponent<Image>().sprite = ImageDB.GetImage(ImageDB.ImageType.Unit, data.ID);
-        m_WaitingUnitInfoUIs[pos].GetComponentInChildren<TextMeshProUGUI>().text = data.Position.ToString();
-    }
 
     public void SortWaitingUI(List<UnitBase> waiting_list)
     {
@@ -230,4 +230,26 @@ public class BattleUI : MonoBehaviour
             m_SkillBtns[i].GetComponent<Image>().sprite = ImageDB.GetImage(ImageDB.ImageType.Skill, cur_unit.SkillList[i].id);
         }
     }
+
+    public void SetSynergyUI(List<UnitBase> units)
+    {
+        m_UI_SynergyDisplay.InitializeDisplay(units);
+    }
+
+    public void OpenStageClearPanel()
+    {
+        m_UI_StageClearPanel.gameObject.SetActive(true);
+    }
+    public void CloseStageClearPanel()
+    {
+        m_UI_StageClearPanel.gameObject.SetActive(false);
+    }
+    public void OpenStageFailPanel()
+    {
+        m_UI_StageFailPanel.gameObject.SetActive(true);
+    }
+    public void CloseStageFailPanel()
+    {
+        m_UI_StageFailPanel.SetActive(false);
+    }*/
 }
