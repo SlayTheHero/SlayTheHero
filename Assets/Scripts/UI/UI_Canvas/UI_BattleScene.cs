@@ -16,6 +16,7 @@ public class UI_BattleScene : UI_Base
         BattleInfoPanel,
         TurnGridPanel,
         BattleControlPanel,
+        UI_SynergyDisplay,
     }
     enum Images
     {
@@ -66,6 +67,7 @@ public class UI_BattleScene : UI_Base
         GetUI<Image>((int)Images.BattleSceneBgdImage).gameObject.AddUIEvent((p) => OnSceneBgdClicked());
         BattleControlPanel_Init();
         BattleInfoPanel_Init();
+        GetUI<GameObject>((int)GameObjects.UI_SynergyDisplay).GetComponent<UI_SynergyDisplay>().InitializeDisplay(BattleManager.Instance.PlayerTeam);
     }
 
     // Start is called before the first frame update

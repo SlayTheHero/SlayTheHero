@@ -33,7 +33,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7809148395940388298}
-  - {fileID: 1714338627827931820}
+  - {fileID: 315744207130194411}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!95 &7775001633163380162
@@ -119,7 +119,7 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.65, y: 1.1}
   m_EdgeRadius: 0
---- !u!1001 &2536908160473079553
+--- !u!1001 &3503759618604168262
 PrefabInstance:
   m_ObjectHideFlags: 0
   serializedVersion: 2
@@ -181,19 +181,19 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3818601004776261037, guid: df3cf6e357c581543a3d83f0037154de, type: 3}
       propertyPath: m_LocalRotation.x
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3818601004776261037, guid: df3cf6e357c581543a3d83f0037154de, type: 3}
       propertyPath: m_LocalRotation.y
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3818601004776261037, guid: df3cf6e357c581543a3d83f0037154de, type: 3}
       propertyPath: m_LocalRotation.z
-      value: -0
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 3818601004776261037, guid: df3cf6e357c581543a3d83f0037154de, type: 3}
       propertyPath: m_AnchoredPosition.x
-      value: -0.1
+      value: -0.099975586
       objectReference: {fileID: 0}
     - target: {fileID: 3818601004776261037, guid: df3cf6e357c581543a3d83f0037154de, type: 3}
       propertyPath: m_AnchoredPosition.y
@@ -211,6 +211,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 4477350992917712458, guid: df3cf6e357c581543a3d83f0037154de, type: 3}
+      propertyPath: m_PresetInfoIsWorld
+      value: 1
+      objectReference: {fileID: 0}
     - target: {fileID: 5214355280274997917, guid: df3cf6e357c581543a3d83f0037154de, type: 3}
       propertyPath: m_AnchorMax.x
       value: 0
@@ -224,10 +228,10 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: df3cf6e357c581543a3d83f0037154de, type: 3}
---- !u!224 &1714338627827931820 stripped
+--- !u!224 &315744207130194411 stripped
 RectTransform:
   m_CorrespondingSourceObject: {fileID: 3818601004776261037, guid: df3cf6e357c581543a3d83f0037154de, type: 3}
-  m_PrefabInstance: {fileID: 2536908160473079553}
+  m_PrefabInstance: {fileID: 3503759618604168262}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &8894746825219859476
 PrefabInstance:

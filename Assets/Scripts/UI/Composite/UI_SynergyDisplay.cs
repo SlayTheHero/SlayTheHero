@@ -13,7 +13,7 @@ public class UI_SynergyDisplay : MonoBehaviour
     List<(int,bool)> nowSynergy = new List<(int, bool)>();
     // Using BattleManager's PlayerTeam, Apply to Its Display 
     // if input especial unitList, Apply that list's synergy
-    public void InitializeDisplay(List<UnitBase> unitLists = null)
+    public void InitializeDisplay(IEnumerable<UnitBase> unitLists = null)
     {
         if(unitLists == null)
         {

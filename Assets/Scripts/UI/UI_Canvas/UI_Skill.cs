@@ -33,6 +33,7 @@ public class UI_Skill : UI_Base
             return;
         }
         GetImage((int)Images.SkillImage).sprite = ImageDB.GetImage(ImageDB.ImageType.Skill, BattleManager.Instance.CurUnit.SkillList[m_skill_idx].id);
+        transform.gameObject.GetComponent<UI_SkillToolTipEventHandler>().setSkillID(BattleManager.Instance.CurUnit.SkillList[m_skill_idx].id);
         GetComponent<UI_EventHandler>().enabled = BattleManager.Instance.CurUnit.IsPlayerUnit;
     }
 

@@ -17,6 +17,7 @@ public class BuffController
 
     private UnitBase Unit;
     private Queue<Skill> BuffQueue;
+    
 
     public Queue<Skill> GetBuffQueue()
     {
@@ -69,6 +70,7 @@ public class BuffController
                 AddQueue(skill);
                 break;
             case Skill.SK_DurationType.Special:
+                AddQueue(skill);
                 break;
         }
     }

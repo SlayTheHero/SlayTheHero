@@ -1,6 +1,7 @@
 using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 using static UnityEditor.PlayerSettings;
@@ -11,7 +12,9 @@ public class UI_UnitPanel : UI_Base
     Color _attaker_cursor_color;
     [SerializeField]
     Color _target_cursor_color;
+    BuffViewer buff;
     int _pos;
+    UnitBase unit;
     enum Sliders
     {
         HPBar
@@ -19,6 +22,10 @@ public class UI_UnitPanel : UI_Base
     enum Images
     {
         Cursor
+    }
+    enum GameObjects
+    {
+        BuffViewer
     }
     private void Start()
     {
@@ -28,15 +35,18 @@ public class UI_UnitPanel : UI_Base
     {
         Bind<Slider>(typeof(Sliders));
         Bind<Image>(typeof(Images));
+        Bind<GameObject>(typeof(GameObjects));
         GetUI<Image>((int)Images.Cursor).gameObject.SetActive(false);
 
         transform.parent.GetComponent<UnitController>().UnitStateChange.AddListener(OnUnitStateChanged);
+        buff = GetUI<GameObject>((int)GameObjects.BuffViewer).GetComponent<BuffViewer>();
 
-        GetUI<Slider>((int)Sliders.HPBar).maxValue = transform.parent.GetComponent<UnitController>().Unit.Status.MaxHP;
+        unit = transform.parent.GetComponent<UnitController>().Unit;
+        buff.SetBuff(unit);
+        GetUI<Slider>((int)Sliders.HPBar).maxValue = unit.Status.MaxHP;
     }
     void HPChanged()
-    {
-        var unit = BattleManager.Instance.Units[_pos].GetComponent<UnitController>().Unit;
+    { 
         GetUI<Slider>((int)Sliders.HPBar).DOValue(unit.Status.HP, 1f);
     }
     void OnUnitStateChanged(UnitController.UnitState state)
@@ -45,6 +55,7 @@ public class UI_UnitPanel : UI_Base
         {
             case UnitController.UnitState.Hit:
                 HPChanged();
+                buff.SetBuff(unit); 
                 break;
             case UnitController.UnitState.Attacker:
                 GetImage((int)Images.Cursor).gameObject.SetActive(true);

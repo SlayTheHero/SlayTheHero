@@ -24,7 +24,7 @@ public class Synergy : Skill
     {
 
     }
-    // ?????? ??????
+    // �Ķ���� ������
     public Synergy(
         int id,
         string name,
@@ -35,7 +35,7 @@ public class Synergy : Skill
         int twoImpact,
         int threeImpact
     ) : base(
-         id, name,  description,
+         id, name, description,
          SK_BehaviorType.Special,
          sk_DurationType,
          sk_Attribute,
@@ -44,14 +44,14 @@ public class Synergy : Skill
     {
         this.id = id;
         this.name = name;
-        this.description = description; 
+        this.description = description;
         this.sk_DurationType = sk_DurationType;
-        this.sK_Attribute = sk_Attribute;  
+        this.sK_Attribute = sk_Attribute;
         this.twoImpact = twoImpact;
         this.threeImpact = threeImpact;
 
     }
-    // ???? ??????
+    // ���� ������
     public Synergy(Synergy other) : base(other)
     {
         this.twoImpact = other.twoImpact;
@@ -76,7 +76,7 @@ public class Synergy : Skill
     }
 
     public static SynergyType FromUnitEnumToSynergy(Enum enumValue)
-    { 
+    {
         if (enumValue is Enum)
         {
             string enumName = enumValue.ToString();
@@ -99,12 +99,12 @@ public class Synergy : Skill
 
 }
 public static class SynergyDB
-{ 
+{
     private static List<Synergy> SynergyList = new List<Synergy>();
     /// <summary>
-    /// ??? ID?? ???? ??? ?????? ???????? ???
+    /// ��ų ID�� ���� ��ų ������ �������� �Լ�
     /// </summary>
-    /// <param name="id">??? ID</param>
+    /// <param name="id">��ų ID</param>
     /// <returns></returns>
     public static Synergy GetSynergy(int id)
     {
@@ -137,10 +137,10 @@ public static class SynergyDB
             Skill.SK_ChangeType cType = Utility.StringToEnum<Skill.SK_ChangeType>((string)item["ChangeType"]);
             int twoImpact = getIntValueOrZero("TwoImpact");
             int threeImpact = getIntValueOrZero("ThreeImpact");
-            Synergy tempSkill = new Synergy(id, name, description, durType, attr, cType, twoImpact,threeImpact);
+            Synergy tempSkill = new Synergy(id, name, description, durType, attr, cType, twoImpact, threeImpact);
             SynergyList.Add(tempSkill);
-            
-            
+
+
             int getIntValueOrZero(string type)
             {
                 if (item[type] == "")
@@ -160,23 +160,23 @@ public static class SynergyDB
     /// </summary>
     /// <param name="unit"></param>
     /// <returns></returns>
-    public static List<(int,bool)> getSynergyFromUnitList(List<UnitBase> unit)
+    public static List<(int, bool)> getSynergyFromUnitList(List<UnitBase> unit)
     {
         if (unit.Count == 0)
         {
             Debug.Log("Error : UnitList is Empty");
-            return null; 
+            return null;
         }
 
-        List<(int,bool)> synergyList = new List<(int, bool)>();
+        List<(int, bool)> synergyList = new List<(int, bool)>();
 
         if (unit.Count > 1)
         {
-            short[] raceCount = new short[5];
-            short[] featCount = new short[6];
-            short[] jobCount = new short[3];
+            short[] raceCount = new short[Enum.GetValues(typeof(Race)).Length];
+            short[] featCount = new short[Enum.GetValues(typeof(Feature)).Length];
+            short[] jobCount = new short[Enum.GetValues(typeof(Job)).Length];
 
-            // ???? ???????? ?????? ??
+            // ���� �������� ī��Ʈ�� ��
             for (int i = 0; i < unit.Count; i++)
             {
                 UnitBase nowUnit = unit[i];
@@ -185,11 +185,12 @@ public static class SynergyDB
                 jobCount[(int)nowUnit.Job]++;
             }
 
+            // ī��Ʈ�� �������� �ó��� ���
             (int, bool) raceSynergy = ExtractMax<Race>(raceCount);
             (int, bool) jobSynergy = ExtractMax<Job>(jobCount);
             (int, bool) featSynergy = ExtractMax<Feature>(featCount);
 
-            if(raceSynergy.Item1 != -1)
+            if (raceSynergy.Item1 != -1)
             {
                 synergyList.Add(raceSynergy);
             }
@@ -206,12 +207,13 @@ public static class SynergyDB
         return synergyList;
     }
 
+    // ���� ������ ó���ϴ� �Լ�
     private static (int, bool) ExtractMax<T>(short[] countArray) where T : Enum
-    { 
+    {
         int max = 0;
         int maxIndex = 0;
 
-        // ??�S ???
+        // �ִ밪 ã��
         for (int i = 0; i < countArray.Length; i++)
         {
             if (countArray[i] > max)

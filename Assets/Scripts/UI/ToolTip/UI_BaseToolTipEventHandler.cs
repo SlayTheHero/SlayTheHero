@@ -26,7 +26,7 @@ public class UI_BaseToolTipEventHandler : UI_EventHandler ,  IDeselectHandler
     /// <summary>
     /// hierarchy 정렬용 오브젝트입니다.
     /// </summary>
-    private GameObject ToolTipGroupObject;
+    public static GameObject ToolTipGroupObject;
     private GameObject canvas;
 
     /// <summary>
@@ -39,10 +39,14 @@ public class UI_BaseToolTipEventHandler : UI_EventHandler ,  IDeselectHandler
         {
             Debug.Log($"{transform.name} does not have parent");
         }
-        canvas = transform.GetComponentInParent<Canvas>().gameObject;
         // 정렬용
         if (ToolTipGroupObject == null)
         {
+            canvas = transform.GetComponentInParent<Canvas>().gameObject;
+            if(canvas == null)
+            {
+                canvas = GameObject.FindObjectOfType<Canvas>().gameObject;
+            }
             // 캔버스가 여러개일 수 있으므로 찾아서 들어갑니다.
             GameObject group = canvas.transform.GetChild(canvas.transform.childCount-1).gameObject;
             if (group.name.Equals("@ToolTipGroupObject"))
@@ -54,6 +58,10 @@ public class UI_BaseToolTipEventHandler : UI_EventHandler ,  IDeselectHandler
                 ToolTipGroupObject.transform.SetParent(canvas.transform);
                 ToolTipGroupObject.transform.SetAsLastSibling();
             }
+        }
+        else
+        {
+            canvas = ToolTipGroupObject.transform.parent.gameObject;
         }
         // 툴팁 프리팹
         if (ToolTipInstance == null && ToolTipName != "")
