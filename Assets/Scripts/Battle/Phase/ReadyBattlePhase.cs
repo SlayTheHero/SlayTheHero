@@ -19,17 +19,15 @@ public class ReadyBattlePhase : BattlePhaseBase
 
     public override void OnStateUpdate()
     {
-
         m_duration -= Time.deltaTime;
-
     }
 
     public override void OnStateExit()
     {
+
     }
     public override void OnStateInit()
     {
-
         AddTransition((int)BattlePhaseEnum.BattlePhase, IsDurationExpired);
     }
 }

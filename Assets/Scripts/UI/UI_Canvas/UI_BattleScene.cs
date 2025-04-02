@@ -92,10 +92,10 @@ public class UI_BattleScene : UI_Base
         GetUI<UI_Skill>((int)Skills.UI_Skill_2).SetInfo((int)Skills.UI_Skill_2);
         GetUI<UI_Skill>((int)Skills.UI_Skill_3).SetInfo((int)Skills.UI_Skill_3);
 
-        GetUI<UI_Skill>((int)Skills.UI_BaseAttack).gameObject.AddUIEvent((p) => OnSkillClicked((int)Skills.UI_BaseAttack));
-        GetUI<UI_Skill>((int)Skills.UI_Skill_1).gameObject.AddUIEvent((p) => OnSkillClicked((int)Skills.UI_Skill_1));
-        GetUI<UI_Skill>((int)Skills.UI_Skill_2).gameObject.AddUIEvent((p) => OnSkillClicked((int)Skills.UI_Skill_2));
-        GetUI<UI_Skill>((int)Skills.UI_Skill_3).gameObject.AddUIEvent((p) => OnSkillClicked((int)Skills.UI_Skill_3));
+        GetUI<UI_Skill>((int)Skills.UI_BaseAttack).gameObject.GetComponent<Button>().onClick.AddListener (() => OnSkillClicked((int)Skills.UI_BaseAttack));
+        GetUI<UI_Skill>((int)Skills.UI_Skill_1).gameObject.GetComponent<Button>().onClick.AddListener(() => OnSkillClicked((int)Skills.UI_Skill_1));
+        GetUI<UI_Skill>((int)Skills.UI_Skill_2).gameObject.GetComponent<Button>().onClick.AddListener(() => OnSkillClicked((int)Skills.UI_Skill_2));
+        GetUI<UI_Skill>((int)Skills.UI_Skill_3).gameObject.GetComponent<Button>().onClick.AddListener(() => OnSkillClicked((int)Skills.UI_Skill_3));
 
         GetUI<Button>((int)Buttons.SkipButton).gameObject.AddUIEvent((p) => OnSkipButtonClicked());
         SetSkipButtonEnable(false);
@@ -105,22 +105,32 @@ public class UI_BattleScene : UI_Base
             {
                 BattleControlPanel_RefreshUI();
                 if (BattleManager.Instance.CurUnit.IsPlayerUnit)
+                {
                     SetSkipButtonEnable(true);
+                    SetSkillBtnEnable(true);
+                }
             }
             else if (next == (int)BattlePhaseEnum.EndBattlePhase)
             {
                 SetSkipButtonEnable(false);
             }
         });
+        BattleManager.Instance.SkillUsed.AddListener((n) => { SetSkillBtnEnable(false); });
     }
     void BattleControlPanel_RefreshUI()
     {
         GetImage((int)Images.Portrait).sprite = ImageDB.GetImage(ImageDB.ImageType.Unit, BattleManager.Instance.CurUnit.ID);
-
         GetUI<UI_Skill>((int)Skills.UI_BaseAttack).RefreshUI();
         GetUI<UI_Skill>((int)Skills.UI_Skill_1).RefreshUI();
         GetUI<UI_Skill>((int)Skills.UI_Skill_2).RefreshUI();
         GetUI<UI_Skill>((int)Skills.UI_Skill_3).RefreshUI();
+    }
+    void SetSkillBtnEnable(bool enable)
+    {
+        GetUI<UI_Skill>((int)Skills.UI_BaseAttack).gameObject.GetComponent<Button>().interactable = enable;
+        GetUI<UI_Skill>((int)Skills.UI_Skill_1).gameObject.GetComponent<Button>().interactable = enable;
+        GetUI<UI_Skill>((int)Skills.UI_Skill_2).gameObject.GetComponent<Button>().interactable = enable;
+        GetUI<UI_Skill>((int)Skills.UI_Skill_3).gameObject.GetComponent<Button>().interactable = enable;
     }
     void SetSkipButtonEnable(bool enable)
     {

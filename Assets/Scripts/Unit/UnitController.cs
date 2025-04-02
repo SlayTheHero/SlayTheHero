@@ -11,6 +11,11 @@ public class UnitController : MonoBehaviour, IPointerClickHandler, IPointerEnter
 {
     public UnityEvent<UnitState> UnitStateChange;
     public UnitBase Unit;
+    [Header("Debug")]
+    [SerializeField]
+    int _pos;
+    [SerializeField]
+    int _order;
 
     [SerializeField]
     float _default_scale = 2f;
@@ -27,7 +32,11 @@ public class UnitController : MonoBehaviour, IPointerClickHandler, IPointerEnter
     {
         _state = UnitState.Default;
     }
-
+    private void Update()
+    {
+        _pos = Unit.Position;
+        _order = Unit.Order;
+    }
     public void MoveFront()
     {
         if (Unit.IsPlayerUnit)

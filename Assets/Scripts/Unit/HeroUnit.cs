@@ -7,6 +7,7 @@ using UnityEngine;
 
 public class HeroUnit : UnitBase
 {
+    public bool is_boss;
     public HeroUnit() : base()
     {
         IsPlayerUnit = false;
@@ -16,7 +17,7 @@ public class HeroUnit : UnitBase
 
         IsPlayerUnit = false;
     }
-    public void Behave()
+    public virtual void Behave()
     {
         //보유 스킬중 랜덤으로 사용
         //사용 범위 고려
@@ -43,5 +44,10 @@ public class HeroUnit : UnitBase
                 return true;
         }
         return false;
+    }
+
+    void BossBehaviorLogic()
+    {
+        
     }
 }

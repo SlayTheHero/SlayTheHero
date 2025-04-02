@@ -1635,9 +1635,9 @@ MonoBehaviour:
   HeroUnitSpawner: {fileID: 0}
   StateComponent: {fileID: 1204665344}
   IsClear: 0
-  ready_duration: 1
-  battle_duration: 2.5
-  end_duration: 2
+  ready_duration: 2
+  battle_duration: 3
+  end_duration: 3
   SelectedSkillNum: 0
   InitDone:
     m_PersistentCalls:
