@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5251f9e6d2d7e5646a588836c928e97c, type: 3}
+  m_Name: 72
+  m_EditorClassIdentifier: 
+  SkillID: 0
+  UnitMotions:
+  - Type: 0
+    Name: Attack
+    StartDelay: 333
+    Layer: 0
+    Clip: {fileID: 0}
+    IsLoop: 0
+    IsAutoReleased: 0
+    StartLocalPos: {x: 0, y: 1.6}
+    IsParticle: 0
+  UnitEffects: []
+  HitEffects: []
+  TargetedEffects:
+  - Type: 3
+    Name: 
+    StartDelay: 1000
+    Layer: 0
+    Clip: {fileID: 7400000, guid: 76e5912929e19ce459a6263d0c844e71, type: 2}
+    IsLoop: 0
+    IsAutoReleased: 1
+    StartLocalPos: {x: 0, y: 2}
+    IsParticle: 0
+  ProjectileFlys: []
+  ProjectileEffects: []
+  TrajectoryData: {fileID: 0}

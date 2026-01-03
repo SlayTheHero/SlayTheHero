@@ -2834,6 +2834,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Prefab: {fileID: 3416408445691650800, guid: 840cabb247e2bda48a5fffcee335aa23, type: 3}
+  m_ParticlePrefab: {fileID: 9094964407763047058, guid: cfc108139a0187c4bb87da42ef2e88ce, type: 3}
 --- !u!4 &1929745345
 Transform:
   m_ObjectHideFlags: 0

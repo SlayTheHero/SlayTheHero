@@ -92,7 +92,7 @@ public class UI_BattleScene : UI_Base
         GetUI<UI_Skill>((int)Skills.UI_Skill_2).SetInfo((int)Skills.UI_Skill_2);
         GetUI<UI_Skill>((int)Skills.UI_Skill_3).SetInfo((int)Skills.UI_Skill_3);
 
-        GetUI<UI_Skill>((int)Skills.UI_BaseAttack).gameObject.GetComponent<Button>().onClick.AddListener (() => OnSkillClicked((int)Skills.UI_BaseAttack));
+        GetUI<UI_Skill>((int)Skills.UI_BaseAttack).gameObject.GetComponent<Button>().onClick.AddListener(() => OnSkillClicked((int)Skills.UI_BaseAttack));
         GetUI<UI_Skill>((int)Skills.UI_Skill_1).gameObject.GetComponent<Button>().onClick.AddListener(() => OnSkillClicked((int)Skills.UI_Skill_1));
         GetUI<UI_Skill>((int)Skills.UI_Skill_2).gameObject.GetComponent<Button>().onClick.AddListener(() => OnSkillClicked((int)Skills.UI_Skill_2));
         GetUI<UI_Skill>((int)Skills.UI_Skill_3).gameObject.GetComponent<Button>().onClick.AddListener(() => OnSkillClicked((int)Skills.UI_Skill_3));
@@ -227,6 +227,7 @@ public class UI_BattleScene : UI_Base
         BattleManager.Instance.UnitPositionChanged.AddListener(OnUnitPositionChanged);
         BattleManager.Instance.UnitDead.AddListener(OnUnitDead);
         BattleManager.Instance.UnitSorted.AddListener(OnUnitSorted);
+        BattleManager.Instance.SubStageClear.AddListener((a,b)=> OnUnitSpawned());
     }
     void BattleInfoPanel_RefreshUI()
     {
@@ -256,6 +257,19 @@ public class UI_BattleScene : UI_Base
             _enable_turn_ui_list[i].OrderChange(order);
         }
     }
-
+    void OnUnitSpawned()
+    {
+        var list = BattleManager.Instance.HeroTeam;
+        for (int i = 0; i < list.Count; i++)
+        {
+            var temp = _disable_turn_ui_list[0];
+            _disable_turn_ui_list.Remove(temp);
+            
+            temp.SetInfo(list[i].Position);
+            temp.AppearAndEnable();
+            _enable_turn_ui_list.Add(temp);
+        }
+        
+    }
     #endregion
 }

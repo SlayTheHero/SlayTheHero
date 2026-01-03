@@ -134,8 +134,8 @@ public class Skill
         this.impact = other.impact;
         this.duration = other.duration;
         this.coolTime = other.coolTime;
-        projectileSpeed = other.projectileSpeed;
-        SkillAnimData = other.SkillAnimData;
+        this.projectileSpeed = other.projectileSpeed;
+        this.SkillAnimData = other.SkillAnimData;
 
     }
     public void Invoke(UnitBase Attacker, UnitBase Target)

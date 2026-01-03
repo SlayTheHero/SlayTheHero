@@ -16,8 +16,22 @@ public class BossUnit : HeroUnit
     }
     State m_CurState;
 
-    public BossUnit()
+    public BossUnit(HeroUnit other)
     {
+        Position = other.Position;
+        ID = other.ID;
+        Name = other.Name;
+        Status = new Status(other.Status);
+        Job = other.Job;
+        Feature = other.Feature;
+        Race = other.Race;
+        SkillList = new List<Skill>();
+        for (int i = 0; i < other.SkillList.Count; i++)
+        {
+            SkillList.Add(other.SkillList[i]);
+        }
+        BuffController = new BuffController(other.BuffController);
+
         m_CurState = State.Default;
 
     }
@@ -43,13 +57,13 @@ public class BossUnit : HeroUnit
     }
     public override void Behave()
     {
-        var bm = BattleManager.Instance;
+            var bm = BattleManager.Instance;
         switch (m_CurState)
         {
             case State.Default:
-                bm.SelectedSkillNum = 0;
+                bm.SelectedSkillNum = 2;
                 bm.SkillUsed.Invoke(bm.PlayerTeam.First());
-                break;
+                return;
             case State.Rage:
                 skill1_delay--;
                 if (skill1_delay == 0)
@@ -63,22 +77,20 @@ public class BossUnit : HeroUnit
                     bm.SelectedSkillNum = 0;
                     bm.SkillUsed.Invoke(bm.PlayerTeam.First());
                 }
-                break;
+                return;
             case State.Fury:
                 if (is_fury)
                 {
-                    Status.ATK -= 10;
                     bm.SelectedSkillNum = 0;
                     bm.SkillUsed.Invoke(bm.PlayerTeam.First());
                 }
                 else
                 {
                     is_fury = true;
-                    Status.ATK += 10;
                     bm.SelectedSkillNum = 2;
                     bm.SkillUsed.Invoke(this);
                 }
-                break;
+                return;
         }
         //보유 스킬중 랜덤으로 사용
         //사용 범위 고려

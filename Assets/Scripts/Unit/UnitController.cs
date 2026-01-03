@@ -120,4 +120,5 @@ public class UnitController : MonoBehaviour, IPointerClickHandler, IPointerEnter
             c.color = new Color(c.color.r, c.color.g, c.color.b, alpha);
         }
     }
+    
 }

@@ -76,12 +76,20 @@ public class BattleManager : MonoBehaviour
     {
         int pos = 5;
         HeroTeam = CurStage.HeroUnits;
-        foreach (var item in HeroTeam)
+        for (int i = 0; i < HeroTeam.Count; i++)
         {
+            var item = HeroTeam[i];
+            if (item.ID == 9)
+            {
+                var boss = new BossUnit(item);
+                item = boss;
+                HeroTeam[i] = boss;
+            }
             WaitingUnitsList.Add(item);
             item.Position = pos++;
             item.Status.HP = 1;
         }
+        
     }
     void LoadPlayerTeam()
     {
@@ -178,6 +186,7 @@ public class BattleManager : MonoBehaviour
                     }
                     Units.Remove(pos);
                     Units.Add(unit.Position, uo);
+                        UnitPositionChanged.Invoke(pos, pos - diff);
                 }
             }
         else
@@ -194,8 +203,10 @@ public class BattleManager : MonoBehaviour
                         uo.GetComponent<UnitController>().MoveFront();
                         unit.Position--;
                     }
+
                     Units.Remove(pos);
                     Units.Add(unit.Position, uo);
+                    UnitPositionChanged.Invoke(pos, pos - diff);
                 }
             }
 

@@ -8,6 +8,8 @@ public class EffectManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject m_Prefab;
+    [SerializeField]
+    private GameObject m_ParticlePrefab;
     private ObjectPool<Effect> m_Pool;
     private static EffectManager m_Instance;
     public static EffectManager Instance
@@ -27,6 +29,7 @@ public class EffectManager : MonoBehaviour
     void Start()
     {
         m_Pool = new ObjectPool<Effect>(OnCreateEffectFromPool, OnGetEffectFromPool, OnReleaseEffectFromPool);
+        CreateEffect("MagicCircle");
     }
     Effect OnCreateEffectFromPool()
     {
@@ -70,6 +73,11 @@ public class EffectManager : MonoBehaviour
         var effect = CreateEffect(name, is_auto_released);
         effect.transform.position = position;
         return effect;
+    }
+    public GameObject CreateParticle(string name)
+    {
+        var prefab = Resources.Load<GameObject>("Prefabs/" + name);
+        return Instantiate<GameObject>(prefab);
     }
     public void ReleaseToPool(Effect effect)
     {

@@ -72,6 +72,11 @@ public class UI_Turn : UI_Base
     {
         m_RectTransform.DOSizeDelta(Vector2.zero, 0.5f).OnComplete(() => gameObject.SetActive(false));
     }
+    public void AppearAndEnable()
+    {
+        gameObject.SetActive(true);
+        m_RectTransform.DOSizeDelta(Vector2.one, 0.5f);
+    }
     public void RefreshUI()
     {
 

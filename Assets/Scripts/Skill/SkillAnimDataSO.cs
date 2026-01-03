@@ -17,7 +17,8 @@ public class SkillAnimDataSO : ScriptableObject
         public bool IsLoop;
         public bool IsAutoReleased;
         public Vector2 StartLocalPos;
-        public Anim(AnimType type, string name, int startDelay,int layer, AnimationClip clip, bool isLoop, Vector2 startLocalPos)
+        public bool IsParticle;
+        public Anim(AnimType type, string name, int startDelay,int layer, AnimationClip clip, bool isLoop, Vector2 startLocalPos, bool isParticle)
         {
             Type = type;
             Name = name;
@@ -26,6 +27,7 @@ public class SkillAnimDataSO : ScriptableObject
             Clip = clip;
             IsLoop = isLoop;
             StartLocalPos = startLocalPos;
+            IsParticle = isParticle;
         }
     }
     [Serializable]

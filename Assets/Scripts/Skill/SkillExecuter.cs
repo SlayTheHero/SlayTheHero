@@ -63,7 +63,7 @@ public static class SkillExecuter
         var skill_data = skill.SkillAnimData;
         var attacker_obj = BattleManager.Instance.Units[Attacker.Position];
         var target_obj = BattleManager.Instance.Units[Target.Position];
-        attacker_obj.transform.DOLocalMoveX( Attacker.IsPlayerUnit ? 0.5f:-0.5f, 1).SetRelative();
+        attacker_obj.transform.DOLocalMoveX(Attacker.IsPlayerUnit ? 0.5f : -0.5f, 1).SetRelative();
         attacker_obj.transform.DOScale(2.3f, 1);
         await RunAllSkillAnimAsync(skill_data, attacker_obj, target_obj);
         attacker_obj.transform.DOLocalMoveX(Attacker.IsPlayerUnit ? -0.5f : 0.5f, 1).SetRelative();
@@ -80,7 +80,11 @@ public static class SkillExecuter
     }
     private static async Task BuffBehavior(UnitBase Attacker, UnitBase Target, Skill skill)
     {
+        var skill_data = skill.SkillAnimData;
+        var attacker_obj = BattleManager.Instance.Units[Attacker.Position];
+        var target_obj = BattleManager.Instance.Units[Target.Position];
 
+        await RunAllSkillAnimAsync(skill_data, attacker_obj, target_obj);
     }
 
     private static Dictionary<int, SkillDelegate> SpecialSkillDict = new Dictionary<int, SkillDelegate>();
@@ -124,20 +128,27 @@ public static class SkillExecuter
                     attacker_anim.SetTrigger(skillAnim.Name);
                     break;
                 case AnimType.UnitEffect:
-                    EffectManager.Instance.CreateEffect(skillAnim.Clip, attacker_obj.transform.position +(Vector3)skillAnim.StartLocalPos,skillAnim.Layer, skillAnim.IsAutoReleased).Invoke();
+                    if (!skillAnim.IsParticle)
+                        EffectManager.Instance.CreateEffect(skillAnim.Clip, attacker_obj.transform.position + (Vector3)skillAnim.StartLocalPos, skillAnim.Layer, skillAnim.IsAutoReleased).Invoke();
+                    EffectManager.Instance.CreateParticle(skillAnim.Name);
                     break;
                 case AnimType.HitEffect:
-                    EffectManager.Instance.CreateEffect(skillAnim.Clip, target_obj.transform.position +(Vector3)skillAnim.StartLocalPos, skillAnim.Layer, skillAnim.IsAutoReleased).Invoke(); 
+                    if (!skillAnim.IsParticle)
+                        EffectManager.Instance.CreateEffect(skillAnim.Clip, target_obj.transform.position + (Vector3)skillAnim.StartLocalPos, skillAnim.Layer, skillAnim.IsAutoReleased).Invoke();
+                    else
+                        EffectManager.Instance.CreateParticle(skillAnim.Name);
                     if (!has_hit) { target_anim.SetTrigger("Hit"); has_hit = true; };
                     break;
                 case AnimType.TargetedEffect:
-                    EffectManager.Instance.CreateEffect(skillAnim.Clip, target_obj.transform.position +(Vector3)skillAnim.StartLocalPos, skillAnim.Layer, skillAnim.IsAutoReleased).Invoke();
+                    if (!skillAnim.IsParticle)
+                        EffectManager.Instance.CreateEffect(skillAnim.Clip, target_obj.transform.position + (Vector3)skillAnim.StartLocalPos, skillAnim.Layer, skillAnim.IsAutoReleased).Invoke();
+                    EffectManager.Instance.CreateParticle(skillAnim.Name);
                     break;
                 case AnimType.ProjectileFly:
                     var obj = Projectile.Pool.Get();
                     var proj = obj.GetComponent<Projectile>();
                     proj.transform.position = attacker_obj.transform.position;
-                    proj.Init(skill_data.TrajectoryData, target_obj.transform.position +(Vector3)skillAnim.StartLocalPos);
+                    proj.Init(skill_data.TrajectoryData, target_obj.transform.position + (Vector3)skillAnim.StartLocalPos);
                     proj.Shoot();
                     break;
                 default: break;
@@ -145,5 +156,6 @@ public static class SkillExecuter
             }
         }
     }
+
 
 }
